@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+{% load static%}
+{% load crispy_forms_tags %}
+{% block extra_head %}
+<link rel="stylesheet" id="bg-switcher-css" href="{% static 'webapp/assets/css/backgrounds/bg-4.css' %}">
+<link rel="stylesheet" href="{% static 'webapp/assets/css/style.css' %}" />
+<link rel="stylesheet" href="{% static 'webapp/assets/css/responsive.css' %}" />
+<link rel="stylesheet" href="{% static 'webapp/assets/css/vendor/ecicons.min.css' %}" />
+
+<style>
+    .blink_me {
+        animation: blinker 1s linear infinite;
+      }
+      
+      @keyframes blinker {
+        50% {
+          opacity: 0;
+        }
+      }
+</style>
+{% endblock %}
+{% block content %}
+    
+
+    <!-- Ec breadcrumb start -->
+    <div class="sticky-header-next-sec  ec-breadcrumb section-space-mb">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row ec_breadcrumb_inner">
+                        <div class="col-md-6 col-sm-12">
+                            <h2 class="ec-breadcrumb-title">User Profile</h2>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <!-- ec-breadcrumb-list start -->
+                            <ul class="ec-breadcrumb-list">
+                                <li class="ec-breadcrumb-item"><a href="/">Home</a></li>
+                                <li class="ec-breadcrumb-item active">Profile</li>
+                            </ul>
+                            <!-- ec-breadcrumb-list end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="ec-page-content ec-vendor-uploads ec-user-account section-space-p">
+        <div class="container">
+            <div class="row">
+                <div class="ec-shop-rightside col-lg-12 col-md-12">
+                    <div class="ec-vendor-dashboard-card ec-vendor-setting-card">
+                        <div class="ec-vendor-card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="ec-vendor-block-profile">
+                                        <div class="ec-vendor-block-img space-bottom-30" style="float:right;">
+                                            
+                                            {% if profile.banner_pic.url %}
+                                            <div  class="svg_img pro_svg" alt="edit" style="float:right; background-image:url({{ profile_data.profile_picture }});"></div> <a href="javasript:void(0)" data-link-action="editmodal" title="Edit Detail" data-bs-toggle="modal" data-bs-target="#edit_modal"><img src="{% static 'webapp/assets/images/icons/edit.svg' %}"
+                                                class="svg_img pro_svg" alt="edit" /></a>
+                                            </div>
+                                            {% else %}
+                                            <div class="ec-vendor-block-detail" style="float: right;">
+                                            {% endif %}
+                                                
+
+                                                {% if profile_data.profile_picture != "webapp/assets/images/user/user.png" %}
+                                                <img class="v-img svg_img pro_svg" src="{{ profile_data.profile_picture }}"  alt="user image">
+                                                {% else %}
+                                                <img class="v-img" src="{% static 'webapp/assets/images/user/user.png' %}" alt="user image">
+                                                {% endif %}
+                                                
+                                            </div>
+                                            <h2>Hey, <b><span>{{profile.full_name}}!</span></b></h2>
+                                            <p>From your account you can easily view and track orders. You can manage and change your account information like address, contact information and history of orders.</p>
+                                           <br> <h6> <a href="javasript:void(0)" data-link-action="editmodal" title="Edit Detail" data-bs-toggle="modal" data-bs-target="#edit_modal"><button class="btn" style="background-color:black; color:white; border-radius:15px;">Update Profile <img src="{% static 'webapp/assets/images/icons/edit.svg' %}"
+                                                class="svg_img pro_svg" alt="edit" /></button></a></h6>
+                                            {% for message in messages %} 
+                                            <br>
+                                            <strong> <h5 class="blink_me">{{ message }}</h5></strong>
+					                            {% endfor %}
+                                        </div>
+                                        <h5>Account Information</h5>
+
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-12">
+                                                <div class="ec-vendor-detail-block ec-vendor-block-email space-bottom-30">
+                                                    <h6>Email Address <a href="javasript:void(0)" data-link-action="editmodal" title="Edit Detail" data-bs-toggle="modal" data-bs-target="#edit_modal"><img src="{% static 'webapp/assets/images/icons/edit.svg' %}"
+                                                        class="svg_img pro_svg" alt="edit" /></a></h6>
+                                                    <ul>
+                                                        <li><strong>Email Address : </strong>{{profile.email}}</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-sm-12">
+                                                <div class="ec-vendor-detail-block ec-vendor-block-contact space-bottom-30">
+                                                    <h6>Contact nubmer<a href="javasript:void(0)" data-link-action="editmodal" title="Edit Detail" data-bs-toggle="modal" data-bs-target="#edit_modal"><img src="{% static 'webapp/assets/images/icons/edit.svg' %}"
+                                                        class="svg_img pro_svg" alt="edit" /></a></h6>
+                                                    <ul>
+                                                        <li><strong>Phone Nubmer: </strong>{{profile.phone_number}}</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-sm-12">
+                                                <div class="ec-vendor-detail-block ec-vendor-block-address mar-b-30">
+                                                    <h6>Shipping Address<a href="javasript:void(0)" data-link-action="editmodal" title="Edit Detail" data-bs-toggle="modal" data-bs-target="#edit_modal"><img src="{% static 'webapp/assets/images/icons/edit.svg' %}"
+                                                        class="svg_img pro_svg" alt="edit" /></a></h6>
+                                                    <ul>
+                                                        <li><strong>Home Address: </strong>{{profile_data.full_address}}</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-sm-12">
+                                                <div class="ec-vendor-detail-block ec-vendor-block-address">
+                                                    <h6>My Bio<a href="javasript:void(0)" data-link-action="editmodal" title="Edit Detail" data-bs-toggle="modal" data-bs-target="#edit_modal"><img src="{% static 'webapp/assets/images/icons/edit.svg' %}"
+                                                        class="svg_img pro_svg" alt="edit" /></a></h6>
+                                                    <ul>
+                                                        <li><strong> </strong>"{{profile_data.bio}}"</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End User profile section -->
+
+    {% comment %} modal {% endcomment %}
+
+    <!-- Modal -->
+    <div class="modal fade" id="edit_modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="ec-vendor-block-img space-bottom-30 p-4">
+                      
+                            <h4 style="text-align:center; margin-bottom:20px;"><b>Edit Profile</b></h4><div style="height:2px; background-color:#f7f7f7;"></div>
+                            <div class="ec-vendor-upload-detail">
+                                <form class="row g-3" action="{% url 'edit_profile' %}" method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="col-md-6 space-t-15">
+                                        <label class="form-label">Full Name</label>
+                                        {{user_form.full_name }}
+                                    </div>
+                                    <div class="col-md-6 space-t-15">
+                                        <label class="form-label">User Name</label>
+                                        {{user_form.username }}
+                                    </div>
+                                    <div class="col-md-6 space-t-15">
+                                        <label class="form-label">Phone Number</label>
+                                        {{user_form.phone_number }}
+                                    </div>
+                                    <div class="col-md-6 space-t-15">
+                                        <label class="form-label">Profile Picture</label>
+                                        <div class="custom-file">
+{#                                            <label class="custom-file-label" for="profile_picture">Choose file...</label>#}
+                                            <input type="file" class="custom-file-input" id="profile_picture" name="profile_picture">
+                                            
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 space-t-15">
+                                        <label class="form-label" for="date_of_birth">Birthday</label>
+                                        <input type="date" class="form-control" id="date_of_birth"
+                                               value="{{ profile_data.date_of_birth|date:'Y-m-d' }}" name="date_of_birth" required max="{% now "Y-m-d" %}">
+                                    </div>
+                                    <div class="col-md-6 space-t-15">
+                                        <label class="form-label" for="sex">Sex</label>
+                                        <select class="form-control" id="sex" name="sex">
+                                            <option {% if profile_data.sex == "male" %} value="male" selected {% endif %}>Male </option>
+                                            <option {% if profile_data.sex == "female" %} value="female"  selected{% endif %}>Female</option>
+                                            <option {% if profile_data.sex == "other" or not profile_data.sex %} value="other" selected {% endif %}>Other</option>
+                                        </select>
+                                    </div>
+                                   
+                                    <div class="col-md-6 space-t-15">
+                                        <label class="form-label" for="city">City</label>
+                                        <select class="form-control" id="city" name="city">
+                                             <option value="{{ profile_data.city }}" selected>{{ profile_data.city_name }}</option>
+                                         </select>
+                                    </div>
+                                    <div class="col-md-6 space-t-15">
+                                        <label class="form-label" for="district">District</label>
+                                         <select class="form-control" id="district" name="district">
+                                             <option value="{{ profile_data.district }}" selected>{{ profile_data.district_name }}</option>
+                                         </select>
+                                    </div>
+                                    <div class="col-md-6 space-t-15">
+                                        <label class="form-label" for="ward">Ward</label>
+                                        <select class="form-control" id="ward" name="ward">
+                                            <option value="{{ profile_data.ward }}" selected>{{ profile_data.ward_name }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 space-t-15">
+                                        <label class="form-label">Road</label>
+                                        {{profile_form.road}}
+                                    </div>
+                                    <div class="col-md-12 space-t-15">
+                                        <label class="form-label">Bio</label>
+                                        {{profile_form.bio}}
+                                    </div>
+                                    <div class="col-md-12 space-t-15">
+                                        <button type="submit" class="btn btn-primary rounded-3">Update</button>
+                                        <a href="#" class="btn btn-lg  btn-secondary rounded-3  qty_close" data-bs-dismiss="modal"
+                                            aria-label="Close">Close</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block jsblock %}
+    <script>
+        function updateSelect(selectId, data, selectedValue) {
+            let select = $('#' + selectId);
+            select.empty();
+            select.append($('<option>', {
+                value: '',
+                text: 'Choose...'
+            }));
+            data.forEach(item => {
+                select.append($('<option>', {
+                    value: item.id,
+                    text: item.displayName,
+                    selected: item.id === selectedValue 
+                }));
+            });
+        }
+
+        function loadLocations(type, parentId = '', selectedValue = '') {
+            $.ajax({
+                url: '{% url 'get_locations' %}',
+                type: 'GET',
+                data: {type: type, parentId: parentId},
+                success: function (data) {
+                    updateSelect(type, data, selectedValue);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            let profile = {
+                city: '{{ profile_data.city }}',
+                district: '{{  profile_data.district }}',
+                ward: '{{  profile_data.ward }}'
+            };
+
+            loadLocations('city', '', profile.city);
+            loadLocations('district', profile.city, profile.district);
+            loadLocations('ward', profile.district, profile.ward);
+            
+            $('#city').on('change', function () {
+                loadLocations('district', $(this).val(), profile.district);
+            });
+
+            $('#district').on('change', function () {
+                loadLocations('ward', $(this).val(), profile.ward);
+            });
+        });
+
+    </script>
+{% endblock %}
