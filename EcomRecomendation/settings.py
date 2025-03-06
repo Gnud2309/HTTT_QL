@@ -100,7 +100,7 @@ DATABASES = {
         'USER': config('DB_USERNAME'),
         'PASSWORD': config('DB_PASS'),
         'HOST': config('DB_HOST'),
-        'PORT': 3306,
+        'PORT': config('DB_PORT'),
         'OPTIONS': {
             'charset': 'utf8mb4',
         },

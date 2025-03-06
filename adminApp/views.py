@@ -503,7 +503,7 @@ def download_order_report(request):
         ws.append(columns)
 
         for order in orders:
-            address = f'{order['road']}, {get_locations(order['ward'], order['district'])}, {get_locations(order['district'], order['city'])}, {get_locations(order['city'], "")}'
+            address = f"{order['road']}, {get_locations(order['ward'], order['district'])}, {get_locations(order['district'], order['city'])}, {get_locations(order['city'], '')}"
             row = [
                 order['id'], order['order_number'], order['user__full_name'], order['phone'],
                 order['user__email'], address, order['created_at'].strftime('%Y-%m-%d %H:%M:%S'), order['payment__status'],
