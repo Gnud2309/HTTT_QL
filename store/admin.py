@@ -20,7 +20,6 @@ class Product_modeladmin(admin.ModelAdmin):
 
 admin.site.register(Product, Product_modeladmin)
 
-
 class Variation_modeladmin(admin.ModelAdmin):
     list_display = ('Product', 'Variation_category', 'Variation_value', 'is_active')
     list_editable = ('is_active',)
