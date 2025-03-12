@@ -319,13 +319,14 @@ def product_detail(request, category_slug=None, sub_category_slug=None, product_
     if product_slug:
         product = get_object_or_404(Product, slug=product_slug)
         in_cart = cart_item.objects.filter(cart__cart_id=_cart_id(request), product=product).exists()
-
-        if OrderProduct.objects.filter(product_id=product.id).exists():
-            latest_order_product = OrderProduct.objects.filter(product_id=product.id, user_id=request.user.id).latest(
-                'created_at')
-            if latest_order_product.reviews.exists():
+        
+        queryset = OrderProduct.objects.filter(product_id=product.id, user_id=request.user.id)
+        if queryset.exists():  # Kiểm tra nếu có dữ liệu
+            latest_order_product = queryset.latest('created_at')  # Lấy đơn hàng mới nhất
+            if latest_order_product.reviews.exists():  # Kiểm tra có đánh giá không
                 rv = None
-
+        else:
+            latest_order_product = None  # Gán None nếu không có đơn hàng nào
         related_products = Product.objects.filter(
             Q(category_main=product.category_main),
             Q(sub_category=product.sub_category),
