@@ -321,12 +321,12 @@ def product_detail(request, category_slug=None, sub_category_slug=None, product_
         in_cart = cart_item.objects.filter(cart__cart_id=_cart_id(request), product=product).exists()
         
         queryset = OrderProduct.objects.filter(product_id=product.id, user_id=request.user.id)
-        if queryset.exists():  # Kiểm tra nếu có dữ liệu
-            latest_order_product = queryset.latest('created_at')  # Lấy đơn hàng mới nhất
-            if latest_order_product.reviews.exists():  # Kiểm tra có đánh giá không
+        if queryset.exists():
+            latest_order_product = queryset.latest('created_at')
+            if latest_order_product.reviews.exists():
                 rv = None
         else:
-            latest_order_product = None  # Gán None nếu không có đơn hàng nào
+            latest_order_product = None
         related_products = Product.objects.filter(
             Q(category_main=product.category_main),
             Q(sub_category=product.sub_category),
@@ -334,6 +334,12 @@ def product_detail(request, category_slug=None, sub_category_slug=None, product_
             Q(gender=product.gender),
             Q(season=product.season),
         ).exclude(id=product.id).distinct().order_by('-rating')[:8]
+
+        # Debug dữ liệu ảnh
+        print("Product:", product)
+        print("Images:", product.images.all())
+        for image in product.images.all():
+            print(f"Image Type: {image.image_type}, URL: {image.image.url if image.image else 'No image'}")
 
     context = {
         'product': product,
@@ -343,8 +349,6 @@ def product_detail(request, category_slug=None, sub_category_slug=None, product_
         'rv': rv
     }
     return render(request, 'store/product_detail.html', context)
-
-
 # Hàm để lấy embedding của ảnh
 def get_embedding(model, img_bytes):
     try:

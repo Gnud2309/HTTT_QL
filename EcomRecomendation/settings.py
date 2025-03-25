@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'image_embeddings',
     'cloudinary',
     'cloudinary_storage',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -53,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = "EcomRecomendation.urls"
@@ -144,9 +146,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
+    'CLOUD_NAME': 'dk5vlc4oa',
+    'API_KEY': '516937378196245',
+    'API_SECRET': '_38ASMRMTQhsYe8In-x8gvPgUWQ',
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
@@ -169,8 +171,8 @@ STATICFILES_DIRS = [
 
 MODEL_DIR = BASE_DIR / 'static' / 'model'
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -196,3 +198,8 @@ VNPAY_PAYMENT_URL = 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html'
 VNPAY_API_URL = 'https://sandbox.vnpayment.vn/merchant_webapi/api/transaction'
 VNPAY_TMN_CODE = config('VNPAY_TMN_CODE')
 VNPAY_HASH_SECRET_KEY = config('VNPAY_HASH_SECRET_KEY')
+
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]

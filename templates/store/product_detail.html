@@ -58,11 +58,11 @@
                                                 <div class="swiper-wrapper">
                                                     <!-- Các slide ảnh -->
                                                     {% for image in product.images.all %}
-                                                        {% if image.image_url %}
+                                                        {% if image.image.url %}
                                                         <div class="swiper-slide">
-                                                            <a class="popup-gallery" href="{{ image.image_url }}"
+                                                            <a class="popup-gallery" href="{{ image.image.url }}"
                                                                 title="{{ product.name }}">
-                                                                <img src="{{ image.image_url }}" alt="Image description">
+                                                                <img src="{{ image.image.url }}" alt="Image description">
                                                             </a>
                                                         </div>
                                                         {% endif %}

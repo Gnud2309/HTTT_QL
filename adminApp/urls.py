@@ -40,6 +40,8 @@ urlpatterns = [
     path('product_list', views.product_list, name='product_list'),
     path('product_edit/<int:pk>', views.product_edit, name='product_edit'),
     path('product_delete/<int:pk>', views.product_delete, name='product_delete'),
+    # product based urls
+    # path('api/products/add/', views.add_product, name='add_product'),
 
     #Variations based urls
     path('add_variations', views.add_variations, name='add_variations'),

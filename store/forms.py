@@ -11,6 +11,7 @@ class variationForm(forms.ModelForm):
             'Variation_category': forms.Select(attrs={'placeholder': 'Variation Category', 'class': 'form-control here'}),
             'Variation_value': forms.TextInput(attrs={'placeholder': 'Variation Value', 'class': 'form-control here'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            
         }
         
 
