@@ -110,7 +110,7 @@
                                         <td width="20%">
                                         {% for image in item.product.images.all %}
                                             {% if image.image_type == 'default' %}
-                                                <img src="{{ image.image_url }}" width="90">
+                                                <img src="{{ image.image.url }}" width="90">
                                             {% endif %}
                                         {% endfor %}
                                             </td>

@@ -1,5 +1,3 @@
-
-
 from pathlib import Path
 import os
 from decouple import config
@@ -199,6 +197,9 @@ VNPAY_API_URL = 'https://sandbox.vnpayment.vn/merchant_webapi/api/transaction'
 VNPAY_TMN_CODE = config('VNPAY_TMN_CODE')
 VNPAY_HASH_SECRET_KEY = config('VNPAY_HASH_SECRET_KEY')
 
+# Crispy Forms
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_FAIL_SILENTLY = not DEBUG
 
 INTERNAL_IPS = [
     '127.0.0.1',

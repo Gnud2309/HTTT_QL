@@ -28,7 +28,7 @@ class Product(models.Model):
         return self.product_name
 
     def get_url(self):
-        return reverse('product_detail', args=[self.slug])
+        return reverse('product_detail', args=[self.category_main.slug, self.sub_category.slug, self.slug])
 
 class VariationManager(models.Manager):
     def colors(self):
