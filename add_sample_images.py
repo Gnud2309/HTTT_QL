@@ -70,3 +70,4 @@ if __name__ == '__main__':
     print("Bắt đầu thêm ảnh mẫu...")
     add_sample_images()
     print("Hoàn thành!") 
+    

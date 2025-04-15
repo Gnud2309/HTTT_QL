@@ -1,0 +1,16 @@
+{% load crispy_forms_field %}
+
+<div class="form-group">
+    {% if field.label and not field|is_checkbox %}
+        <label for="{{ field.id_for_label }}" class="col-form-label">
+            {{ field.label|safe }}
+        </label>
+    {% endif %}
+
+    <div class="controls">
+        {% crispy_field field %}
+        {% if field.help_text %}
+            <small class="form-text text-muted">{{ field.help_text|safe }}</small>
+        {% endif %}
+    </div>
+</div> 

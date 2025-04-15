@@ -1,10 +1,4 @@
-/**
-    Item Name: Ecart - Multi Vendor Ecommerce HTML Template.
-    Author: ashishmaraviya
-    Version: 3.2
-    Copyright 2021
-	Author URI: https://jassy.in/
-**/
+
 // Function To Create New Cookie 
 function ecCreateCookie(cookieName,cookieValue,daysToExpire)
 {
