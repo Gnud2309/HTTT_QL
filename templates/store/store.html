@@ -71,12 +71,12 @@
                             <span class="sort-by">| Sort by</span>
                             <div class="ec-select-inner">
                                 <select name="ec-select" id="ec-select">
-                                    <option selected disabled>Position</option>
-                                    <option value="1">Relevance</option>
-                                    <option value="2">Name, A to Z</option>
-                                    <option value="3">Name, Z to A</option>
-                                    <option value="4">Price, low to high</option>
-                                    <option value="5">Price, high to low</option>
+                                    <option value="default" {% if current_sort == 'default' %}selected{% endif %}>Position</option>
+                                    <option value="relevance" {% if current_sort == 'relevance' %}selected{% endif %}>Relevance</option>
+                                    <option value="name_asc" {% if current_sort == 'name_asc' %}selected{% endif %}>Name, A to Z</option>
+                                    <option value="name_desc" {% if current_sort == 'name_desc' %}selected{% endif %}>Name, Z to A</option>
+                                    <option value="price_asc" {% if current_sort == 'price_asc' %}selected{% endif %}>Price, low to high</option>
+                                    <option value="price_desc" {% if current_sort == 'price_desc' %}selected{% endif %}>Price, high to low</option>
                                 </select>
                             </div>
                         </div>
@@ -97,7 +97,7 @@
                                                     <a href="{{ product.category_main.get_url }}{{ product.sub_category.slug }}/{{ product.slug }}" class="product-session">
                                                         {% for image in product.images.all %}
                                                             {% if image.image_type == "default" %}
-                                                                <img src="{{ image.image_url }}" class="img-center" alt="">
+                                                                <img src="{{ image.image.url }}" class="img-center" alt="">
                                                             {% endif %}
                                                         {% endfor %}
                                                     </a>
@@ -377,17 +377,25 @@
     <!-- End Shop page -->
 {% endblock %}
 {% block jsblock %}
-    <script>
-        $(document).ready(function () {
-            $('.post-link').click(function (e) {
-                e.preventDefault();  // Ngăn không cho liên kết mở theo cách thông thường
-                var page = $(this).data('page');  // Lấy giá trị data-page
-                if (page) {
-                    window.location.href = '?page=' + page;  // Thay đổi URL hiện tại
-                }
-            });
-        });
-        
-    </script>
+<script>
+$(document).ready(function() {
+    // Xử lý click vào các link phân trang
+    $('.post-link').click(function(e) {
+        e.preventDefault();
+        var page = $(this).data('page');
+        var currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('page', page);
+        window.location.href = currentUrl.toString();
+    });
 
+    // Xử lý thay đổi giá trị sắp xếp
+    $('#ec-select').change(function() {
+        var sortValue = $(this).val();
+        var currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('sort', sortValue);
+        currentUrl.searchParams.delete('page'); // Reset về trang 1 khi thay đổi sắp xếp
+        window.location.href = currentUrl.toString();
+    });
+});
+</script>
 {% endblock %}

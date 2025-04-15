@@ -31,18 +31,18 @@ function ecCheckCookie() {
     var c = ecAccessCookie("bgImageModeCookie");
     if ("" != c) {
         var d = c.split("||"), e = d[0], f = d[1];
-        $("body").removeClass("body-bg-1"), $("body").removeClass("body-bg-2"), $("body").removeClass("body-bg-3"), $("body").removeClass("body-bg-4"), $("body").addClass(f), $("#bg-switcher-css").attr("href", "assets/css/backgrounds/" + e + ".css")
+        $("body").removeClass("body-bg-1"), $("body").removeClass("body-bg-2"), $("body").removeClass("body-bg-3"), $("body").removeClass("body-bg-4"), $("body").addClass(f), $("#bg-switcher-css").attr("href", "/static/webapp/assets/css/backgrounds/" + e + ".css")
     }
     if ("" != ecAccessCookie("rtlModeCookie")) {
-        var b = $("<link>", {rel: "stylesheet", href: "assets/css/rtl.css", class: "rtl"});
+        var b = $("<link>", {rel: "stylesheet", href: "/static/webapp/assets/css/rtl.css", class: "rtl"});
         $(".ec-tools-sidebar .ec-change-rtl").toggleClass("active"), b.appendTo("head")
     }
     if ("" != ecAccessCookie("darkModeCookie")) {
-        var b = $("<link>", {rel: "stylesheet", href: "assets/css/dark.css", class: "dark"});
+        var b = $("<link>", {rel: "stylesheet", href: "/static/webapp/assets/css/dark.css", class: "dark"});
         $("link[href='assets/css/responsive.css']").before(b), $(".ec-tools-sidebar .ec-change-mode").toggleClass("active"), $("body").addClass("dark")
     } else {
         var a = ecAccessCookie("themeColorCookie");
-        "" != a && ($("li[data-color = " + a + "]").toggleClass("active").siblings().removeClass("active"), $("li[data-color = " + a + "]").addClass("active"), "01" != a && $("link[href='assets/css/responsive.css']").before('<link rel="stylesheet" href="assets/css/skin-' + a + '.css" rel="stylesheet">'))
+        "" != a && ($("li[data-color = " + a + "]").toggleClass("active").siblings().removeClass("active"), $("li[data-color = " + a + "]").addClass("active"), "01" != a && $("link[href='/static/webapp/assets/css/responsive.css']").before('<link rel="stylesheet" href="/static/webapp/assets/css/skin-' + a + '.css" rel="stylesheet">'))
     }
 }
 
@@ -98,8 +98,15 @@ function ecCheckCookie() {
         2 === a && b > 52 ? (p = a, $("#ec-main-menu-desk").addClass("menu_fixed_up")) : 1 === a && (p = a, $("#ec-main-menu-desk").addClass("menu_fixed"), $("#ec-main-menu-desk").removeClass("menu_fixed_up"))
     };
     $(window).on("scroll", function () {
-        var a = $(".sticky-header-next-sec").offset().top, b = $(window);
-        b.scrollTop() <= a + 50 ? $("#ec-main-menu-desk").removeClass("menu_fixed") : r()
+        if ($(".sticky-header-next-sec").length) {
+            var a = $(".sticky-header-next-sec").offset().top;
+            var b = $(window);
+            if (b.scrollTop() <= a + 50) {
+                $("#ec-main-menu-desk").removeClass("menu_fixed");
+            } else {
+                r();
+            }
+        }
     }), $(document).ready(function () {
         $(".scroll-to ul li a.nav-scroll").bind("click", function (b) {
             $(".scroll-to ul li").removeClass("active"), $(this).parents("li").addClass("active");
@@ -238,23 +245,23 @@ function ecCheckCookie() {
         scrollSpeed: 900,
         animation: "fade"
     }), $("#ec-fs-count-1").countdowntimer({
-        startDate: "2021/10/01 00:00:00",
-        dateAndTime: "2023/01/01 00:00:00",
+        startDate: "2024/04/01 00:00:00",
+        dateAndTime: "2024/06/01 00:00:00",
         labelsFormat: !0,
         displayFormat: "DHMS"
     }), $("#ec-fs-count-2").countdowntimer({
-        startDate: "2021/10/01 00:00:00",
-        dateAndTime: "2022/12/01 00:00:00",
+        startDate: "2024/06/01 00:00:00",
+        dateAndTime: "2024/08/01 00:00:00",
         labelsFormat: !0,
         displayFormat: "DHMS"
     }), $("#ec-fs-count-3").countdowntimer({
-        startDate: "2021/10/01 00:00:00",
-        dateAndTime: "2022/11/01 00:00:00",
+        startDate: "2024/08/01 00:00:00",
+        dateAndTime: "2024/10/01 00:00:00",
         labelsFormat: !0,
         displayFormat: "DHMS"
     }), $("#ec-fs-count-4").countdowntimer({
-        startDate: "2021/10/01 00:00:00",
-        dateAndTime: "2023/03/01 00:00:00",
+        startDate: "2024/10/01 00:00:00",
+        dateAndTime: "2024/12/01 00:00:00",
         labelsFormat: !0,
         displayFormat: "DHMS"
     }), $(".ec-fre-products").slick({
@@ -273,21 +280,21 @@ function ecCheckCookie() {
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1
-    }), $(".ec-change-color").on("click", "li", function () {
-        $('link[href^="assets/css/skin-"]').remove(), $("link.dark").remove(), $(".ec-change-mode").removeClass("active");
+    }), $(".ec-change-color").on("click", "li", function (e) {
+        e.preventDefault(), $('link[href^="/static/webapp/assets/css/skin-"]').remove(), $("link.dark").remove(), $(".ec-change-mode").removeClass("active");
         var a = $(this).attr("data-color");
-        if (!$(this).hasClass("active")) return $(this).toggleClass("active").siblings().removeClass("active"), void 0 != a && ($("link[href='assets/css/responsive.css']").before('<link rel="stylesheet" href="assets/css/skin-' + a + '.css" rel="stylesheet">'), ecCreateCookie("themeColorCookie", a, 1)), !1
+        if (!$(this).hasClass("active")) return $(this).toggleClass("active").siblings().removeClass("active"), void 0 != a && ($("link[href='/static/webapp/assets/css/responsive.css']").before('<link rel="stylesheet" href="/static/webapp/assets/css/skin-' + a + '.css" rel="stylesheet">'), ecCreateCookie("themeColorCookie", a, 1)), !1
     }), $(".ec-tools-sidebar .ec-change-rtl .ec-rtl-switch").click(function (a) {
         a.preventDefault();
-        var b = $("<link>", {rel: "stylesheet", href: "assets/css/rtl.css", class: "rtl"});
+        var b = $("<link>", {rel: "stylesheet", href: "/static/webapp/assets/css/rtl.css", class: "rtl"});
         $(this).parent().toggleClass("active");
         $(this).parent().hasClass("ec-change-rtl") && $(this).parent().hasClass("active") ? (b.appendTo("head"), ecCreateCookie("rtlModeCookie", "rtl", 1)) : $(this).parent().hasClass("ec-change-rtl") && !$(this).parent().hasClass("active") && ($("link.rtl").remove(), ecDeleteCookie("rtlModeCookie", "ltr"))
     }), $(".ec-tools-sidebar .ec-change-mode .ec-mode-switch").click(function (b) {
         b.preventDefault();
-        var c = $("<link>", {rel: "stylesheet", href: "assets/css/dark.css", class: "dark"});
+        var c = $("<link>", {rel: "stylesheet", href: "/static/webapp/assets/css/dark.css", class: "dark"});
         $(this).parent().toggleClass("active");
         var a = "light";
-        $(this).parent().hasClass("ec-change-mode") && $(this).parent().hasClass("active") ? $("link[href='assets/css/responsive.css']").before(c) : $(this).parent().hasClass("ec-change-mode") && !$(this).parent().hasClass("active") && ($("link.dark").remove(), a = "light"), $(this).parent().hasClass("active") ? ($("#ec-fixedbutton .ec-change-color").css("pointer-events", "none"), $("body").addClass("dark"), ecCreateCookie("darkModeCookie", a = "dark", 1)) : ($("#ec-fixedbutton .ec-change-color").css("pointer-events", "all"), $("body").removeClass("dark"), ecDeleteCookie("darkModeCookie", a))
+        $(this).parent().hasClass("ec-change-mode") && $(this).parent().hasClass("active") ? $("link[href='/static/webapp/assets/css/responsive.css']").before(c) : $(this).parent().hasClass("ec-change-mode") && !$(this).parent().hasClass("active") && ($("link.dark").remove(), a = "light"), $(this).parent().hasClass("active") ? ($("#ec-fixedbutton .ec-change-color").css("pointer-events", "none"), $("body").addClass("dark"), ecCreateCookie("darkModeCookie", a = "dark", 1)) : ($("#ec-fixedbutton .ec-change-color").css("pointer-events", "all"), $("body").removeClass("dark"), ecDeleteCookie("darkModeCookie", a))
     }), $(".ec-tools-sidebar .ec-fullscreen-mode .ec-fullscreen-switch").click(function (a) {
         a.preventDefault(), $(this).parent().toggleClass("active"), document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement ? document.exitFullscreen ? document.exitFullscreen() : document.msExitFullscreen ? document.msExitFullscreen() : document.mozCancelFullScreen ? document.mozCancelFullScreen() : document.webkitExitFullscreen && document.webkitExitFullscreen() : document.documentElement.requestFullscreen ? document.documentElement.requestFullscreen() : document.documentElement.msRequestFullscreen ? document.documentElement.msRequestFullscreen() : document.documentElement.mozRequestFullScreen ? document.documentElement.mozRequestFullScreen() : document.documentElement.webkitRequestFullscreen && document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT)
     });
@@ -386,25 +393,25 @@ function ecCheckCookie() {
         })
     }), $(document).ready(function () {
         // Lọc các liên kết có ảnh không rỗng
-            $(".popup-gallery").each(function () {
-                var imageSrc = $(this).attr("href");
-                if (imageSrc) {
-                    // Khởi tạo Magnific Popup chỉ cho những liên kết này
-                    $(this).magnificPopup({
-                        type: "image",
-                        mainClass: "mfp-with-zoom",
-                        gallery: {enabled: true},
-                        zoom: {
-                            enabled: true,
-                            duration: 300,
-                            easing: "ease-in-out",
-                            opener: function (openerElement) {
-                                return openerElement.is("img") ? openerElement : openerElement.find("img");
-                            }
+        $(".popup-gallery").each(function () {
+            var imageSrc = $(this).attr("href");
+            if (imageSrc) {
+                // Khởi tạo Magnific Popup chỉ cho những liên kết này
+                $(this).magnificPopup({
+                    type: "image",
+                    mainClass: "mfp-with-zoom",
+                    gallery: {enabled: true},
+                    zoom: {
+                        enabled: true,
+                        duration: 300,
+                        easing: "ease-in-out",
+                        opener: function (openerElement) {
+                            return openerElement.is("img") ? openerElement : openerElement.find("img");
                         }
-                    });
-                }
-            });
+                    }
+                });
+            }
+        });
     }), $(".ec-gl-btn").on("click", "button", function () {
         $(this).addClass("active").siblings().removeClass("active")
     }), $(document).on("click", ".btn-grid", function (a) {
@@ -500,8 +507,8 @@ function ecCheckCookie() {
         arrows: !0,
         focusOnSelect: !0
     }), $("#ec-single-countdown").countdowntimer({
-        startDate: "2021/10/01 00:00:00",
-        dateAndTime: "2023/01/01 00:00:00",
+        startDate: "2024/01/01 00:00:00",
+        dateAndTime: "2025/01/01 00:00:00",
         labelsFormat: !0,
         displayFormat: "DHMS"
     }), $(document).ready(function () {
@@ -510,22 +517,39 @@ function ecCheckCookie() {
         })
     });
     let a = document.getElementById("ec-sliderPrice");
+
     if (a) {
-        let e = parseInt(a.dataset.min), f = parseInt(a.dataset.max), l = parseInt(a.dataset.step),
-            m = document.querySelectorAll("input.filter__input");
-        noUiSlider.create(a, {
-            start: [e, f],
-            connect: !0,
-            step: l,
-            range: {min: e, max: f},
-            format: {to: a => a, from: a => a}
-        }), a.noUiSlider.on("update", (b, a) => {
-            m[a].value = b[a]
-        }), m.forEach((b, c) => {
-            b.addEventListener("change", () => {
-                a.noUiSlider.setHandle(c, b.value)
-            })
-        })
+        if (!a.noUiSlider) {
+            let e = parseInt(a.dataset.min),
+                f = parseInt(a.dataset.max),
+                l = parseInt(a.dataset.step),
+                m = document.querySelectorAll("input.filter__input");
+
+            noUiSlider.create(a, {
+                start: [e, f],
+                connect: true,
+                step: l,
+                range: {min: e, max: f},
+                format: {
+                    to: function (value) {
+                        return value;
+                    },
+                    from: function (value) {
+                        return value;
+                    }
+                }
+            });
+
+            a.noUiSlider.on("update", (b, c) => {
+                m[c].value = b[c];
+            });
+
+            m.forEach((b, c) => {
+                b.addEventListener("change", () => {
+                    a.noUiSlider.setHandle(c, b.value);
+                });
+            });
+        }
     }
 
     function x(a, b) {
@@ -612,3 +636,40 @@ function ecCheckCookie() {
         $(".ec-tools-sidebar-toggle").addClass("in-out"), $(".ec-tools-sidebar").stop().animate({right: "-200px"}, 100), $(".ec-tools-sidebar-overlay").fadeOut()
     })
 }(jQuery)
+$(document).ready(function () {
+    // Khi nút image-search được click, kích hoạt input file trong cùng form
+    $('.image-search').on('click', function (event) {
+        event.preventDefault();
+        $(this).siblings('.file-input-image').click();
+    });
+
+    // Bắt sự kiện khi người dùng chọn file trong cùng form
+    $('.file-input-image').on('change', function () {
+        const fileInput = $(this);
+        const file = fileInput[0].files[0];
+        const keywordInput = fileInput.siblings('input[name="keyword"]');
+
+        console.log(file); // In ra console để kiểm tra
+
+        if (file) {
+            const fileName = file.name;
+            const validFileExtensions = ['.jpg', '.jpeg', '.heic', '.png', '.webp'];
+            const fileExtension = fileName.slice(fileName.lastIndexOf('.')).toLowerCase();
+
+            // Kiểm tra định dạng file
+            if (validFileExtensions.includes(fileExtension)) {
+                keywordInput.val(fileName);
+                console.log("File selected: " + fileName); // In ra console để kiểm tra
+            } else {
+                alert('Invalid file format. Please select a file with one of the following extensions: ' + validFileExtensions.join(', '));
+                fileInput.val(''); // Reset file input
+                keywordInput.val(''); // Clear file name input
+                console.log("Invalid file format"); // In ra console để kiểm tra
+            }
+        } else {
+            alert('No file selected.');
+            keywordInput.val(''); // Clear file name input
+            console.log("No file selected"); // In ra console để kiểm tra
+        }
+    });
+});

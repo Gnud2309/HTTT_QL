@@ -1,3 +1,4 @@
+import os
 import requests
 from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import Count, Sum
@@ -15,7 +16,7 @@ from decouple import config
 from django.db.models.functions import ExtractHour
 from django.forms import model_to_dict
 from django.utils.dateparse import parse_date, parse_datetime
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from requests import Response
@@ -26,8 +27,8 @@ from accounts.views import upload_image_to_cloudflare
 from django.shortcuts import redirect
 from category.models import CategoryMain, SubCategory
 from category.forms import SubCategoryForm, CategoryMainForm
-from store.models import Product, Variation, VariationManager
-from carts.forms import ProductForm
+from store.models import Product, Variation, VariationManager, ProductImage
+from carts.forms import ProductForm, ProductImageFormSet
 from store.forms import variationForm
 from orders.forms import OrderForm, OrderUpdateForm
 from django.http import HttpResponse, JsonResponse
@@ -38,6 +39,7 @@ import pandas as pd
 from django.utils import timezone
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 
 def get_locations(id, parent_id):
@@ -373,24 +375,34 @@ def sub_category_delete(request, pk):
 
 
 # Product based views ##############################################################
-
 @login_required(login_url='login')
 def product_list(request):
     if request.user.is_superuser:
         product = Product.objects.all()
-        addProductForm = ProductForm
         if request.method == 'POST':
-            addProductForm = ProductForm(request.POST, request.FILES)
-            if addProductForm.is_valid():
-                addProductForm.save()
+            form = ProductForm(request.POST, request.FILES)
+            image_formset = ProductImageFormSet(request.POST, request.FILES)
+            if form.is_valid() and image_formset.is_valid():
+                # Lưu sản phẩm trước
+                product = form.save()
+                # Gán sản phẩm cho các ảnh trong formset
+                image_formset.instance = product
+                image_formset.save()
                 return redirect('product_list')
+            else:
+                print("Form errors:", form.errors)
+                print("Formset errors:", image_formset.errors)
+        else:
+            form = ProductForm()
+            image_formset = ProductImageFormSet()
+
         context = {
             'product': product,
-            'addProduct': addProductForm,
+            'addProduct': form,
+            'image_formset': image_formset,
         }
         return render(request, 'adminApp/Products/product_list.html', context)
     return HttpResponse('You are not authorized to view this page')
-
 
 @login_required(login_url='login')
 def product_edit(request, pk):
@@ -401,7 +413,26 @@ def product_edit(request, pk):
         if request.method == 'POST':
             form = ProductForm(request.POST, request.FILES, instance=product)
             if form.is_valid():
-                form.save()
+                product = form.save()
+                # Xử lý upload ảnh
+                if 'image' in request.FILES:
+                    image_type = request.POST.get('image_type', 'default')
+                    # Kiểm tra xem đã có ảnh với image_type này chưa
+                    try:
+                        product_image = ProductImage.objects.get(
+                            product=product,
+                            image_type=image_type
+                        )
+                        # Nếu đã có ảnh, cập nhật ảnh mới
+                        product_image.image = request.FILES['image']
+                        product_image.save()
+                    except ProductImage.DoesNotExist:
+                        # Nếu chưa có ảnh, tạo mới
+                        ProductImage.objects.create(
+                            product=product,
+                            image_type=image_type,
+                            image=request.FILES['image']
+                        )
                 return redirect('product_list')
             else:
                 print(form.errors)
@@ -449,7 +480,19 @@ def add_variations(request):
 @login_required(login_url='login')
 def edit_variations(request, pk):
     if request.user.is_superuser:
+        # Thêm phân trang
+        page = request.GET.get('page', 1)
+        items_per_page = 10  # Số item trên mỗi trang
+        
         existing_variations = Variation.objects.all()
+        
+        # Phân trang
+        paginator = Paginator(existing_variations, items_per_page)
+        try:
+            variations_page = paginator.page(page)
+        except:
+            variations_page = paginator.page(1)
+            
         variation = Variation.objects.get(pk=pk)
         form = variationForm(instance=variation)
         if request.method == 'POST':
@@ -461,7 +504,7 @@ def edit_variations(request, pk):
                 print(form.errors)
 
         context = {
-            'existing_variations': existing_variations,
+            'existing_variations': variations_page,
             'variation_editing': variation,
             'form': form,
         }
@@ -503,7 +546,7 @@ def download_order_report(request):
         ws.append(columns)
 
         for order in orders:
-            address = f'{order['road']}, {get_locations(order['ward'], order['district'])}, {get_locations(order['district'], order['city'])}, {get_locations(order['city'], "")}'
+            address = f"{order['road']}, {get_locations(order['ward'], order['district'])}, {get_locations(order['district'], order['city'])}, {get_locations(order['city'], '')}"
             row = [
                 order['id'], order['order_number'], order['user__full_name'], order['phone'],
                 order['user__email'], address, order['created_at'].strftime('%Y-%m-%d %H:%M:%S'), order['payment__status'],
@@ -962,3 +1005,15 @@ def process_folder(request):
             return JsonResponse(response.json())
         else:
             return JsonResponse({"status": "error", "message": "Failed to process folder"}, status=500)
+        
+        
+# @login_required(login_url='login')
+# def add_product(request):
+#     if request.method == 'POST':
+#         form = ProductForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             product = form.save()
+#             return JsonResponse({'message': 'Product created', 'id': product.id}, status=201)
+#         return JsonResponse({'error': form.errors}, status=400)
+    
+#     return JsonResponse({'error': 'Invalid request'}, status=405)

@@ -1,10 +1,4 @@
-/**
-    Item Name: Ecart - Multi Vendor Ecommerce HTML Template.
-    Author: ashishmaraviya
-    Version: 3.2
-    Copyright 2021
-	Author URI: https://jassy.in/
-**/
+
 // Function To Create New Cookie 
 function ecCreateCookie(cookieName,cookieValue,daysToExpire)
 {
@@ -58,7 +52,7 @@ function ecCheckCookie()
     
         $("body").addClass(bgClass);
     
-        $("#bg-switcher-css").attr("href", "assets/demo-4/css/backgrounds/" + bgID + ".css");
+        $("#bg-switcher-css").attr("href", "/static/webapp/assets/demo-4/css/backgrounds/" + bgID + ".css");
     }
 
     var rtlMode = ecAccessCookie("rtlModeCookie");
@@ -67,7 +61,7 @@ function ecCheckCookie()
         // alert(rtlMode);    
         var $link = $('<link>', {
             rel: 'stylesheet',
-            href: 'assets/demo-4/css/rtl.css',
+            href: '/static/webapp/assets/demo-4/css/rtl.css',
             class: 'rtl'
         });
         $(".ec-tools-sidebar .ec-change-rtl").toggleClass('active');
@@ -81,11 +75,11 @@ function ecCheckCookie()
     {
         var $link = $('<link>', {
             rel: 'stylesheet',
-            href: 'assets/demo-4/css/dark.css',
+            href: '/static/webapp/assets/demo-4/css/dark.css',
             class: 'dark'
         });
         
-        $("link[href='assets/demo-4/css/responsive.css']").before($link);
+        $("link[href='/static/webapp/assets/demo-4/css/responsive.css']").before($link);
 
         $(".ec-tools-sidebar .ec-change-mode").toggleClass('active');
         $("body").addClass("dark");
@@ -99,7 +93,7 @@ function ecCheckCookie()
             $('li[data-color = '+themeColor+']').addClass('active');
             
             if(themeColor != '01'){
-                $("link[href='assets/demo-4/css/responsive.css']").before('<link rel="stylesheet" href="assets/demo-4/css/skin-'+themeColor+'.css" rel="stylesheet">');
+                $("link[href='/static/webapp/assets/demo-4/css/responsive.css']").before('<link rel="stylesheet" href="/static/webapp/assets/demo-4/css/skin-'+themeColor+'.css" rel="stylesheet">');
             }
         }
     }
