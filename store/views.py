@@ -65,12 +65,10 @@ def store(request, category_slug=None):
     start = 0
     end = 0
 
-    # Get sort parameter from request
-    sort_by = request.GET.get('sort', 'default')
-
     if category_slug:
         if category_slug == "all":
-            products_list = list(Product.objects.all().prefetch_related('images'))
+            products_list = Product.objects.all()
+            products_list = list(products_list)
         else:
             category = get_object_or_404(CategoryMain, slug=category_slug)
             if 'product' in request.session:
@@ -84,16 +82,16 @@ def store(request, category_slug=None):
                         Q(brand_name=product.brand_name) &
                         Q(gender=product.gender) &
                         Q(season=product.season)
-                    ).exclude(id=product_id).prefetch_related('images')
+                    ).exclude(id=product_id).order_by('-rating')
 
                     other_products = Product.objects.filter(category_main=category).exclude(
                         id__in=related_products.values_list('id', flat=True)
-                    ).prefetch_related('images')
+                    ).order_by('-rating')
                     products_list = list(related_products) + list(other_products)
                 else:
-                    products_list = list(Product.objects.filter(category_main=category).prefetch_related('images'))
+                    products_list = list(Product.objects.filter(category_main=category).order_by('-rating'))
             else:
-                products_list = list(Product.objects.filter(category_main=category).prefetch_related('images'))
+                products_list = list(Product.objects.filter(category_main=category).order_by('-rating'))
     else:
         if request.user.is_authenticated:
             subs = recom_product(request.user)
@@ -106,7 +104,7 @@ def store(request, category_slug=None):
             recom_products = Product.objects.filter(
                 sub_category__sub_category_name__in=subs,
                 gender=gender
-            ).prefetch_related('images')
+            ).order_by('-rating')
             if 'product' in request.session:
                 product_id = request.session['product']
                 product = get_object_or_404(Product, id=product_id)
@@ -117,7 +115,7 @@ def store(request, category_slug=None):
                     Q(brand_name=product.brand_name) &
                     Q(gender=gender) &
                     Q(season=product.season)
-                ).exclude(id=product_id).prefetch_related('images')
+                ).exclude(id=product_id).order_by('-rating')
 
                 if recom_products.exists():
                     products_list = list(recom_products) + list(related_products)
@@ -129,34 +127,20 @@ def store(request, category_slug=None):
                         Q(gender=gender) &
                         Q(season=product.season) |
                         Q(id=product_id)
-                    ).prefetch_related('images')
+                    ).order_by('-rating')
 
                     products_list = list(related_products) + list(other_products)
             else:
                 products_list = list(recom_products)
         else:
-            products_list = list(Product.objects.all().prefetch_related('images'))
-
-    # Apply sorting
-    if sort_by == 'name_asc':
-        products_list.sort(key=lambda x: x.product_name.lower() if x.product_name else '')
-    elif sort_by == 'name_desc':
-        products_list.sort(key=lambda x: x.product_name.lower() if x.product_name else '', reverse=True)
-    elif sort_by == 'price_asc':
-        products_list = sorted(products_list, key=lambda x: x.price or float('inf'))
-    elif sort_by == 'price_desc':
-        products_list = sorted(products_list, key=lambda x: x.price or float('-inf'), reverse=True)
-    elif sort_by == 'relevance':
-        products_list.sort(key=lambda x: (-x.rating if x.rating else 0))
-    else:  # default sorting by rating
-        products_list.sort(key=lambda x: (-x.rating if x.rating else 0))
+            products_list = list(Product.objects.all().order_by('-rating'))
 
     products_list = list(set(products_list))
+
+    random.shuffle(products_list)
+
     produ_count = len(products_list)
-    
-    # Phân trang
-    items_per_page = 20  # Số sản phẩm trên mỗi trang
-    paginator = Paginator(products_list, items_per_page)
+    paginator = Paginator(products_list, 100)
     page = request.GET.get('page', 1)
 
     try:
@@ -166,20 +150,18 @@ def store(request, category_slug=None):
     except EmptyPage:
         page_obj = paginator.page(paginator.num_pages)
 
-    # Tính start và end cho hiển thị "Showing X-Y of Z results"
     if page_obj.number == paginator.num_pages:
-        start = produ_count - (page_obj.number - 1) * items_per_page
+        start = produ_count - (page_obj.number - 1) * 100
         end = produ_count
     else:
-        start = (page_obj.number - 1) * items_per_page + 1
-        end = start + len(page_obj.object_list) - 1
+        start = (page_obj.number - 1) * 100
+        end = start + len(page_obj.object_list)
 
     context = {
         'page_obj': page_obj,
         'produ_count': produ_count,
         'start': start,
-        'end': end,
-        'current_sort': sort_by
+        'end': end
     }
     return render(request, 'store/store.html', context)
 
@@ -337,43 +319,20 @@ def product_detail(request, category_slug=None, sub_category_slug=None, product_
     if product_slug:
         product = get_object_or_404(Product, slug=product_slug)
         in_cart = cart_item.objects.filter(cart__cart_id=_cart_id(request), product=product).exists()
-        
-        queryset = OrderProduct.objects.filter(product_id=product.id, user_id=request.user.id)
-        if queryset.exists():
-            latest_order_product = queryset.latest('created_at')
+
+        if OrderProduct.objects.filter(product_id=product.id).exists():
+            latest_order_product = OrderProduct.objects.filter(product_id=product.id, user_id=request.user.id).latest(
+                'created_at')
             if latest_order_product.reviews.exists():
                 rv = None
-        else:
-            latest_order_product = None
 
-        # Lấy related products dựa trên category và subcategory trước
-        related_by_category = Product.objects.filter(
-            category_main=product.category_main,
-            sub_category=product.sub_category,
-        ).exclude(id=product.id)
-
-        # Nếu không đủ 8 sản phẩm, lấy thêm sản phẩm cùng brand hoặc gender
-        if related_by_category.count() < 8:
-            additional_products = Product.objects.filter(
-                Q(brand_name=product.brand_name) | 
-                Q(gender=product.gender)
-            ).exclude(
-                id=product.id
-            ).exclude(
-                id__in=related_by_category.values_list('id', flat=True)
-            )
-            
-            # Kết hợp 2 queryset và lấy 8 sản phẩm đầu tiên
-            related_products = list(related_by_category) + list(additional_products)
-            related_products = sorted(related_products, key=lambda x: x.rating, reverse=True)[:8]
-        else:
-            related_products = related_by_category.order_by('-rating')[:8]
-
-        # Debug dữ liệu ảnh
-        print("Product:", product)
-        print("Images:", product.images.all())
-        for image in product.images.all():
-            print(f"Image Type: {image.image_type}, URL: {image.image.url if image.image else 'No image'}")
+        related_products = Product.objects.filter(
+            Q(category_main=product.category_main),
+            Q(sub_category=product.sub_category),
+            Q(brand_name=product.brand_name),
+            Q(gender=product.gender),
+            Q(season=product.season),
+        ).exclude(id=product.id).distinct().order_by('-rating')[:8]
 
     context = {
         'product': product,
@@ -383,6 +342,7 @@ def product_detail(request, category_slug=None, sub_category_slug=None, product_
         'rv': rv
     }
     return render(request, 'store/product_detail.html', context)
+
 
 # Hàm để lấy embedding của ảnh
 def get_embedding(model, img_bytes):

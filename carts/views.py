@@ -43,9 +43,9 @@ def add_cart(request, product_id):
     if current_user.is_authenticated:
         product_variation = []
         if request.method == 'POST':
-            event = EventUser.objects.filter(user_id=request.user.id, product_id=product_id, event_type='cart').first()
-            if event:  # Kiểm tra nếu có event
-                event.frequency += 1  # ✅ Đã sửa, event giờ là object
+            event = EventUser.objects.filter(user_id=request.user.id, product_id = product_id, event_type='cart')
+            if event:
+                event.frequency += 1
                 event.event_timestamp = timezone.now()
                 event.save()
             else:

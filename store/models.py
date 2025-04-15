@@ -4,14 +4,16 @@ from django.urls import reverse
 
 from category.models import CategoryMain, SubCategory
 
-# store/models.py
+
 class Product(models.Model):
+    # Existing fields
     product_name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=100, unique=True)
     category_main = models.ForeignKey(CategoryMain, on_delete=models.CASCADE, null=True, blank=True, related_name='products')
     sub_category = models.ForeignKey(SubCategory, on_delete=models.CASCADE, null=True, blank=True, related_name='products')
     mrp_price = models.DecimalField(max_digits=10, decimal_places=2)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+
     rating = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
     short_desp = models.CharField(max_length=150)
     description = models.TextField(blank=True)
@@ -19,16 +21,19 @@ class Product(models.Model):
     is_available = models.BooleanField(default=True)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
+
+    # New fields for OLAP
     brand_name = models.CharField(max_length=255, null=True, blank=True)
     gender = models.CharField(max_length=30, null=True, blank=True)
-    season = models.CharField(max_length=50, null=True, blank=True)
+    season = models.CharField(max_length=50,  null=True, blank=True)
     year = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.product_name
 
     def get_url(self):
-        return reverse('product_detail', args=[self.category_main.slug, self.sub_category.slug, self.slug])
+        return reverse('product_detail', args=[self.slug])
+
 
 class VariationManager(models.Manager):
     def colors(self):
@@ -58,8 +63,6 @@ class Variation(models.Model):
         return self.Variation_value
 
 
-# models.py
-# store/models.py
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
     image_type = models.CharField(max_length=50, choices=[
@@ -71,7 +74,7 @@ class ProductImage(models.Model):
         ('right', 'Right'),
         ('bottom', 'Bottom')
     ])
-    image = models.ImageField(upload_to='Product/product_img/', blank=True, null=True)  # Sửa "product_images" thành "product_img"
+    image_url = models.URLField(max_length=2000, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Product Image'
@@ -80,6 +83,7 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"{self.product.product_name} - {self.image_type}"
+
 
 class FolderEvent(models.Model):
     name = models.CharField(max_length=255)

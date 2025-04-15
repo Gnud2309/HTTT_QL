@@ -8,145 +8,108 @@
     <div class="content">
         <div class="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts">
             <h1>Products</h1>
-            <p class="breadcrumbs">
-                <span><a href="{% url 'admin_dashboard' %}">Home</a></span>
-                <span><i class="mdi mdi-chevron-right"></i></span>Products
-            </p>
+            <p class="breadcrumbs"><span><a  href="{%  url 'admin_dashboard' %}">Home</a></span>
+                <span><i class="mdi mdi-chevron-right"></i></span>Products</p>
         </div>
         <div class="row">
             <div class="col-xl-4 col-lg-12">
                 <div class="ec-cat-list card card-default mb-24px">
                     <div class="card-body">
                         <div class="ec-cat-form">
-                            <h4>Add Product</h4>
+                            <h4>Add New Product </h4>
 
                             <form method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
-                                
-                                <!-- Nav tabs -->
-                                <ul class="nav nav-tabs mb-3" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" data-bs-toggle="tab" href="#basic" role="tab">
-                                            <i class="mdi mdi-information-outline"></i> Basic
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-bs-toggle="tab" href="#details" role="tab">
-                                            <i class="mdi mdi-format-list-bulleted"></i> Details
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-bs-toggle="tab" href="#images" role="tab">
-                                            <i class="mdi mdi-image"></i> Images
-                                        </a>
-                                    </li>
-                                </ul>
+                                <div class="form-group row">
+                                    <label for="text" class="col-12 col-form-label">Name</label>
+                                    <div class="col-12">
+                                        {{ addProduct.product_name }}
 
-                                <!-- Tab panes -->
-                                <div class="tab-content">
-                                    <!-- Basic Info Tab -->
-                                    <div class="tab-pane active" id="basic" role="tabpanel">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                {{ addProduct.product_name|as_crispy_field }}
-                                            </div>
-                                            <div class="col-md-6">
-                                                {{ addProduct.slug|as_crispy_field }}
-                                                <small class="text-muted">URL-friendly version of the name</small>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                {{ addProduct.category_main|as_crispy_field }}
-                                            </div>
-                                            <div class="col-md-6">
-                                                {{ addProduct.sub_category|as_crispy_field }}
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                {{ addProduct.mrp_price|as_crispy_field }}
-                                            </div>
-                                            <div class="col-md-6">
-                                                {{ addProduct.price|as_crispy_field }}
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                {{ addProduct.stock|as_crispy_field }}
-                                            </div>
-                                            <div class="col-md-6">
-                                                {{ addProduct.is_available|as_crispy_field }}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Details Tab -->
-                                    <div class="tab-pane" id="details" role="tabpanel">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                {{ addProduct.brand_name|as_crispy_field }}
-                                            </div>
-                                            <div class="col-md-6">
-                                                {{ addProduct.gender|as_crispy_field }}
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                {{ addProduct.season|as_crispy_field }}
-                                            </div>
-                                            <div class="col-md-6">
-                                                {{ addProduct.year|as_crispy_field }}
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-12">
-                                                {{ addProduct.short_desp|as_crispy_field }}
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-12">
-                                                {{ addProduct.description|as_crispy_field }}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Images Tab -->
-                                    <div class="tab-pane" id="images" role="tabpanel">
-                                        {{ image_formset.management_form }}
-                                        {% for form in image_formset %}
-                                            <div class="image-form-row mb-3 p-3 border rounded">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        {{ form.image|as_crispy_field }}
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        {{ form.image_type|as_crispy_field }}
-                                                    </div>
-                                                </div>
-                                                {% if form.instance.pk %}
-                                                    <div class="row mt-2">
-                                                        <div class="col-12">
-                                                            {{ form.DELETE|as_crispy_field }}
-                                                        </div>
-                                                    </div>
-                                                {% endif %}
-                                            </div>
-                                        {% endfor %}
                                     </div>
                                 </div>
 
-                                <div class="row mt-3">
+                                <div class="form-group row">
+                                    <label for="slug" class="col-12 col-form-label">Slug</label>
                                     <div class="col-12">
-                                        <button name="submit" type="submit" class="btn btn-primary">
-                                            <i class="mdi mdi-plus"></i> Add Product
-                                        </button>
+                                        {{ addProduct.slug }}
+                                        <small>The slug is the URL-friendly version of the name. It is usually all
+                                            lowercase and contains only letters, numbers, and hyphens.</small>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="text" class="col-12 col-form-label">Main Category</label>
+                                    <div class="col-12">
+                                        {{ addProduct.category_main }}
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="text" class="col-12 col-form-label">Sub Category </label>
+                                    <div class="col-12">
+                                        {{ addProduct.sub_category }}
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="text" class="col-12 col-form-label">Mrp Price</label>
+                                    <div class="col-12">
+                                        {{ addProduct.mrp_price }}
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="text" class="col-12 col-form-label">Selling Price</label>
+                                    <div class="col-12">
+                                        {{ addProduct.price }}
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="text" class="col-12 col-form-label">Short Description</label>
+                                    <div class="col-12">
+                                        {{ addProduct.short_desp }}
+
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label for="text" class="col-12 col-form-label">Is Available</label>
+                                    <div class="col-12 pl-5 pr-5">
+                                        {{ addProduct.is_available }}
+
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="text" class="col-12 col-form-label">Stock </label>
+                                    <div class="col-12">
+                                        {{ addProduct.stock }}
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="product_image" class="col-12 col-form-label">Product Image</label>
+                                    <div class="col-12">
+                                        {{ addProduct.images }}
+
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="text" class="col-12 col-form-label">Description</label>
+                                    <div class="col-12">
+                                        {{ addProduct.description }}
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button name="submit" type="submit" class="btn btn-primary">Submit</button>
                                     </div>
                                 </div>
                             </form>
@@ -154,7 +117,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-xl-8 col-lg-12">
                 <div class="ec-cat-list card card-default">
                     <div class="card-body">
@@ -167,6 +129,7 @@
                                         <th>Product Name</th>
                                         <th>Category</th>
                                         <th>Available</th>
+                                        {% comment %} <th>Mrp</th> {% endcomment %}
                                         <th>Offer Price</th>
                                         <th>Stock</th>
                                         <th>Short Description</th>
@@ -177,33 +140,36 @@
                                 <tbody>
                                 {% for prodt in product %}
                                     <tr>
-                                        <td><span class="ec-sub-cat-count" title="Total Sub Categories">{{ forloop.counter }}</span></td>
-
-                                        {% if prodt.images %}
-                                        <td>
+                                        <td><span class="ec-sub-cat-count"
+                                                  title="Total Sub Categories">{{ forloop.counter }}</span>
+                                        </td>
                                             {% for image in prodt.images.all %}
                                                 {% if image.image_type == "default" %}
-                                                    <img class="cat-thumb" src="{{ image.image.url }}" alt="Product Image" style="width: 50px; height: 50px; object-fit: cover;" />
+                                                    <td><img class="cat-thumb" src="{{ image.image_url }}" alt="Product Image"/>
+                                                    </td>
                                                 {% endif %}
                                             {% endfor %}
+                                        <td>
+    
+                                        <td><a href="{{ prodt.category_main.get_url }}{{ prodt.sub_category.slug }}/{{ prodt.slug }}">{{ prodt.product_name }}</a>
                                         </td>
-                                        {% else %}
-                                        <td><img class="vendor-thumb" src="{% static 'adminapp/assets/img/vendor/no-image.jpg' %}" alt="No Image" style="width: 50px; height: 50px; object-fit: cover;" /></td>
-                                        {% endif %}
-
-                                        <td><a href="../..{{prodt.category_main.get_url}}{{prodt.sub_category.slug}}/{{prodt.slug}}">{{prodt.product_name}}</a></td>
-
+    
                                         <td>
                                             <span class="ec-sub-cat-list">
-                                                <span class="ec-sub-cat-tag">
-                                                    Main: {{prodt.category_main.category_name}}
-                                                </span>
-                                                <span class="ec-sub-cat-tag">
-                                                    Sub: {{prodt.sub_category.sub_category_name}}
+                                            {% comment %} {% for subc in sub %}
+                                            {% if subc.category == category %}
+                                               <span class="ec-sub-cat-tag">{{subc}}</span>
+                                            {% endif %}
+                                            {% endfor %} {% endcomment %}
+                                            <span class="ec-sub-cat-tag">
+                                            Main: {{ prodt.category_main.category_name }}
+                                            </span>
+                                            <span class="ec-sub-cat-tag">
+                                                Sub: {{ prodt.sub_category.sub_category_name }}
                                                 </span>
                                             </span>
+    
                                         </td>
-
                                         <td>
                                             {% if prodt.stock > 0 %}
                                                 <span class="badge badge-success">Available</span>
@@ -211,21 +177,27 @@
                                                 <span class="badge badge-danger">Not Available</span>
                                             {% endif %}
                                         </td>
-
-                                        <td><b>{{prodt.price}}$</b></td>
-                                        <td>{{prodt.stock}}</td>
-                                        <td>{{prodt.short_desp}}</td>
-
+    
+                                        {% comment %} <td>{{prodt.mrp_price}}$</td> {% endcomment %}
+                                        <td><b>{{ prodt.price }}</b>$</td>
+                                        <td>{{ prodt.stock }}</td>
+                                        <td> {{ prodt.short_desp }}</td>
                                         <td>
                                             <div class="btn-group">
-                                                <button type="button" class="btn btn-outline-success">Info</button>
-                                                <button type="button" class="btn btn-outline-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+                                                <button type="button"
+                                                        class="btn btn-outline-success">Info
+                                                </button>
+                                                <button type="button"
+                                                        class="btn btn-outline-success dropdown-toggle dropdown-toggle-split"
+                                                        data-bs-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false" data-display="static">
                                                     <span class="sr-only">Info</span>
                                                 </button>
-
+    
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="{% url 'product_edit' prodt.id %}">Edit</a>
-                                                    <a class="dropdown-item" href="../product_delete/{{prodt.id}}">Delete</a>
+                                                    <a class="dropdown-item" href="./product_edit/{{ prodt.id }}">Edit</a>
+                                                    <a class="dropdown-item"
+                                                       href="./product_delete/{{ prodt.id }}">Delete</a>
                                                 </div>
                                             </div>
                                         </td>
@@ -238,6 +210,6 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </div> 
+</div> 
 {% endblock %}

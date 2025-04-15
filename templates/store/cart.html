@@ -86,11 +86,13 @@
                                                     <tr>
                                                         <td data-label="Product" class="ec-cart-pro-name">
                                                             <a href="{{ cart_item.product.category_main.get_url }}{{ cart_item.product.sub_category.slug }}/{{ cart_item.product.slug }}">
-                                                                {% for image in cart_item.product.images.all %}
-                                                                    {% if image.image_type == "default" %}
-                                                                        <img class="main-image" src="{{ image.image.url }}" alt="">
-                                                                    {% endif %}
-                                                                {% endfor %}
+                                                                <img class="ec-cart-pro-img mr-4"
+                                                                     {% for image in cart_item.product.images.all %}
+                                                                        {% if image.image_type == "default" %}
+                                                                            src={{ image.image_url }}
+                                                                             {% endif %}
+                                                                     {% endfor %}
+                                                                 alt="">
                                                                 <b><b>{{ cart_item.product.product_name }}</b></b>
                                                             </a>
                                                         

@@ -248,7 +248,7 @@
                                         {{ product.category_main.get_url }}{{ product.sub_category.slug }}/{{ product.slug }}" class="product-session">
                                     {% for image in product.images.all %}
                                         {% if image.image_type == 'default' %}
-                                            <img src="{{ image.image.url }}" class="img-center" alt="">
+                                            <img src="{{ image.image_url }}" class="img-center" alt="">
                                         {% endif %}
                                     {% endfor %}
                                 </a>

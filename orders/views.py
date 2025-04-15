@@ -83,24 +83,20 @@ def payment_return(request):
         cart_items = CartItem.objects.filter(user=request.user)
         for item in cart_items:
             product = Product.objects.get(id=item.product_id)
-            event = EventUser.objects.filter(
-                    user_id=request.user.id, 
-                    product_id=product.id, 
-                    event_type='pay'
-            ).first()  
+            event = EventUser.objects.filter(user_id=request.user.id, product_id=product.id, event_type='pay')
             if event:
                 event.frequency += 1
                 event.event_timestamp = timezone.now()
                 event.save()
             else:
-                EventUser.objects.create(
+                user_event = EventUser(
                     user_id=request.user.id,
                     product_id=product.id,
                     event_type='pay',
                     frequency=1,
                     event_timestamp=timezone.now()
                 )
-                
+                user_event.save()
         if vnp.validate_response(settings.VNPAY_HASH_SECRET_KEY):
             if vnp_ResponseCode == "00":
                 try:
@@ -583,7 +579,7 @@ def order_complete(request):
 #                     message = render_to_string('orders/order_mail.html', {
 #                         'user': request.user,
 #                         'order': order,
-#                         'items': cart_items,  
+#                         'items': cart_items,
 #                         'url': 'http://127.0.0.1:8000/orders/order_complete/?' + 'order_number=' + order.order_number + '&payment_id=' + payment.payment_id,
 #
 #                     })

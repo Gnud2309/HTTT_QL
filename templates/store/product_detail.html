@@ -58,10 +58,11 @@
                                                 <div class="swiper-wrapper">
                                                     <!-- Các slide ảnh -->
                                                     {% for image in product.images.all %}
-                                                        {% if image.image_type == "default" %}
+                                                        {% if image.image_url %}
                                                         <div class="swiper-slide">
-                                                            <a class="popup-gallery" href="{{ image.image.url }}">
-                                                                <img class="main-image" src="{{ image.image.url }}" alt="{{ product.product_name }}">
+                                                            <a class="popup-gallery" href="{{ image.image_url }}"
+                                                                title="{{ product.name }}">
+                                                                <img src="{{ image.image_url }}" alt="Image description">
                                                             </a>
                                                         </div>
                                                         {% endif %}
@@ -73,10 +74,12 @@
                                             </div>
                                         </div>
                                         {% for image in product.images.all %}
-                                            {% if image.image_type == "sub" %}
+                                            {% if image.image_url %}
                                             <div class="d-none d-sm-flex col-md-4 col-sm-4 mt-1">
-                                                <a class="popup-gallery" href="{{ image.image.url }}">
-                                                    <img class="example-image" src="{{ image.image.url }}" alt="{{ product.product_name }}">
+                                                <a class="popup-gallery" href="{{ image.image_url }}"
+                                                    title="Contrast color Purse">
+                                                    <img class="example-image" src="{{ image.image_url }}"
+                                                        alt="portfolio img">
                                                 </a>
                                             </div>
                                             {% endif %}
@@ -358,59 +361,100 @@
         <div class="row">
             <div class="col-md-12 text-center">
                 <div class="section-title">
-                    <h2 class="ec-title">Sản phẩm liên quan</h2>
-                    <p class="sub-title mb-3">Khám phá thêm các sản phẩm tương tự</p>
+                    <h2 class="ec-bg-title">Related products</h2>
+                    <h2 class="ec-title">Related products</h2>
+                    <p class="sub-title">Browse The Collection of Top Products</p>
                 </div>
             </div>
         </div>
-        <div class="row">
-            {% if related_products %}
-                {% for related_product in related_products %}
-                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-6 pro-gl-content">
-                        <div class="ec-product-inner h-100">
-                            <div class="ec-pro-image-outer">
-                                <div class="ec-pro-image">
-                                    <a href="{{ related_product.get_url }}" class="image">
-                                        {% for image in related_product.images.all %}
-                                            {% if image.image_type == "default" %}
-                                                <img class="main-image" 
-                                                     src="{{ image.image.url }}" 
-                                                     alt="{{ related_product.product_name }}"
-                                                     style="width: 100%; height: 300px; object-fit: cover;">
-                                            {% endif %}
-                                        {% endfor %}
-                                    </a>
-                                    {% if related_product.mrp_price and related_product.price %}
-                                        <span class="percentage">
-                                            {% calculate_discount related_product.mrp_price related_product.price %}%
-                                        </span>
-                                    {% endif %}
+        <div class="row margin-minus-b-30">
+            <!-- Related Product Content -->
+            {% for related_product in related_products %}
+                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 mb-6 pro-gl-content">
+                    <div class="ec-product-inner h-100">
+                        <div class="ec-pro-image-outer">
+                            <div class="ec-pro-image">
+                                <a href="{{ related_product.category_main.get_url }}{{ related_product.sub_category.slug }}/{{ related_product.slug }}" class="related_image product-session">
+                                    {% for image in related_product.images.all %}
+                                        {% if image.image_type == "default" %}
+                                            <img class="main-image" src="{{ image.image_url }}" alt="{{ image.image_type }}" />
+                                        {% endif %}
+                                    {% endfor %}
+                                </a>
+                                {% if related_product.mrp_price and related_product.price %}
+                                    <span class="percentage">
+                                        {% calculate_discount related_product.mrp_price related_product.price %}%
+                                    </span>
+                                {% endif %}
+                                <a href="#" class="quickview" data-link-action="quickview" title="Quick view"
+                                   data-bs-toggle="modal" data-bs-target="#ec_quickview_modal"><img
+                                        src="{% static 'webapp/assets/images/icons/quickview.svg' %}"
+                                        class="svg_img pro_svg" alt=""/></a>
+                                <div class="ec-pro-actions">
+                                    <a href="compare.html" class="ec-btn-group compare" title="Compare"><img
+                                            src="{% static 'webapp/assets/images/icons/compare.svg' %}"
+                                            class="svg_img pro_svg" alt="" /></a>
+                                    <button title="Add To Cart" class=" add-to-cart"><img
+                                            src="{% static 'webapp/assets/images/icons/cart.svg' %}" class="svg_img pro_svg"
+                                            alt="" /> Add To Cart
+                                    </button>
+                                    <a class="ec-btn-group wishlist" title="Wishlist"><img
+                                            src="{% static 'webapp/assets/images/icons/wishlist.svg' %}"
+                                            class="svg_img pro_svg" alt="" /></a>
                                 </div>
                             </div>
-                            <div class="ec-pro-content">
-                                <h5 class="ec-pro-title">
-                                    <a href="{{ related_product.get_url }}">{{ related_product.product_name }}</a>
-                                </h5>
-                                <div class="ec-pro-rating">
-                                    {% render_stars related_product.rating %}
+                        </div>
+                        <div class="ec-pro-content">
+                            <h5 class="ec-pro-title">{{ related_product.product_name }}</h5>
+                            <div class="ec-pro-rating pl-5">
+                                {% render_stars related_product.rating %}
+                            </div>
+                            <div class="ec-pro-list-desc">Lorem Ipsum is simply dummy text of the printing and
+                                typesetting industry. Lorem Ipsum is simply dutmmy text ever since the 1500s, when an
+                                unknown printer took a galley.
+                            </div>
+                            <span class="ec-price">
+                                {% if related_product.mrp_price != related_product.price %}
+                                    <span class="old-price pl-5">{{ related_product.mrp_price }}$</span>
+                                    <span class="new-price">{{ related_product.price }}$</span>
+                                {% else %}
+                                     <span class="new-price pl-5">{{ related_product.price }}$</span>
+                                {% endif %}
+                            </span>
+                            <div class="ec-pro-option">
+                                <div class="ec-pro-color">
+                                    <span class="ec-pro-opt-label">Color</span>
+                                    <ul class="ec-opt-swatch ec-change-img">
+                                    {% for i in related_product.variation_set.colors %}
+                                        <li>
+                                            <a href="#" class="ec-opt-clr-img"
+                                            {% for image in related_product.images.all %}
+                                                {% if image.image_type == "default" %}
+                                                    data-src="{{ image.image_url }}"
+                                                    data-src-hover="{{ image.image_url }}"
+                                                    data-tooltip="Orange"
+                                               {% endif %}
+                                            {% endfor %}>
+                                                <span style="background-color:{{i.code}};"></span>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                    </ul>
                                 </div>
-                                <span class="ec-price">
-                                    {% if related_product.mrp_price != related_product.price %}
-                                        <span class="old-price">{{ related_product.mrp_price }}$</span>
-                                        <span class="new-price">{{ related_product.price }}$</span>
-                                    {% else %}
-                                        <span class="new-price">{{ related_product.price }}$</span>
-                                    {% endif %}
-                                </span>
+                                <div class="ec-pro-size">
+                                    <span class="ec-pro-opt-label">Size</span>
+                                    <ul class="ec-opt-size">
+                                    {% for i in related_product.variation_set.sizes %}
+                                        <li><a href="#" class="ec-opt-sz" data-old="{{related_product.mrp_price}}$" data-new="{{ related_product.price }}$"
+                                                data-tooltip="Medium">{{ i.Variation_value }}</a></li>
+                                    {% endfor %}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
-                {% endfor %}
-            {% else %}
-                <div class="col-12 text-center">
-                    <p>Không có sản phẩm liên quan.</p>
                 </div>
-            {% endif %}
+            {% endfor %}
         </div>
     </div>
 </section>

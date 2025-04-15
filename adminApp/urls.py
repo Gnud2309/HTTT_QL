@@ -2,7 +2,7 @@ from django.urls import path
 from .import views
 
 urlpatterns = [
-    path('admin_dashboard', views.index, name='admin_dashboard'),
+    path('', views.index, name='admin_dashboard'),
     path('user_infor', views.user_infor, name='user_infor'),
 
     #dashboard overview
@@ -40,8 +40,6 @@ urlpatterns = [
     path('product_list', views.product_list, name='product_list'),
     path('product_edit/<int:pk>', views.product_edit, name='product_edit'),
     path('product_delete/<int:pk>', views.product_delete, name='product_delete'),
-    # product based urls
-    # path('api/products/add/', views.add_product, name='add_product'),
 
     #Variations based urls
     path('add_variations', views.add_variations, name='add_variations'),
