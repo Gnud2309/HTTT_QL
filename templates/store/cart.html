@@ -2,10 +2,12 @@
 {% load static %}
 
 
+
 {% block extra_head %}
     <link rel="stylesheet" id="bg-switcher-css" href="{% static 'webapp/assets/css/backgrounds/bg-4.css' %}">
     <link rel="stylesheet" href="{% static 'webapp/assets/css/style.css' %}"/>
     <link rel="stylesheet" href="{% static 'webapp/assets/css/responsive.css' %}"/>
+    <link rel="stylesheet" href="{% static 'webapp/assets/css/custom_style.css' %}"/>
 {% endblock %}
 
 
@@ -122,7 +124,7 @@
                                                             style="text-align: center;">
                                                             <div class="cart-qty-plus-minus">
                                                                 <input class="cart-plus-minus" type="number"
-                                                                       value="{{ cart_item.quantity }}" readonly/>
+                                                                       value="{{ cart_item.quantity }}"/>
                                                             <input type="hidden" class ="cartItemId" value="{{ cart_item.id }}">
                                                                 <form action="{% url 'add_cart' cart_item.product.id %}"
                                                                       method="POST">
@@ -159,7 +161,7 @@
                                                     </a>
 
                                                     <a href="{% url 'checkout' %}" class="text-decoration-none">
-                                                        <i class="rounded-3  btn-primary p-2" style=";color:white;">
+                                                        <i class="rounded-3  btn-primary p-2" style="color:white;">
                                                             Checkout
                                                         </i>
                                                     </a>
@@ -296,6 +298,47 @@
                     });
                 }
             });
+                // Sự kiện thay đổi số lượng trong ô nhập
+    $('input.cart-plus-minus').on('change', function () {
+        var $input = $(this);
+        var newVal = parseInt($input.val());
+        var cartItemId = $input.closest('div.cart-qty-plus-minus').find('input.cartItemId').val();
+
+        // Kiểm tra tính hợp lệ
+        if (isNaN(newVal) || newVal < 1) {
+            alert('Số lượng phải lớn hơn hoặc bằng 1.');
+            $input.val(1); // Khôi phục giá trị cũ nếu không hợp lệ
+            return;
+        }
+
+        // Gửi yêu cầu cập nhật đến server
+        $.ajax({
+            url: '{% url "update_cart" %}',
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+                'cartItemId': cartItemId,
+                'quantity': newVal
+            },
+            success: function (response) {
+                if (response.success) {
+                    var priceText = $input.closest('tr').find('.ec-cart-pro-price .amount').text();
+                    var price = parseFloat(priceText.replace('$', ''));
+                    var total = newVal * price;
+                    $input.closest('tr').find('.ec-cart-pro-subtotal').text(total.toFixed(2) + '$');
+                    updateCartSummary();
+                } else {
+                    alert('Có lỗi xảy ra, không thể cập nhật số lượng.');
+                    $input.val($input.data('old-value')); // Khôi phục giá trị cũ nếu có lỗi
+                }
+            }
+        });
+    });
+
+    // Lưu giá trị cũ trước khi chỉnh sửa
+    $('input.cart-plus-minus').on('focus', function () {
+        $(this).data('old-value', $(this).val());
+    });
         });
 
     </script>
