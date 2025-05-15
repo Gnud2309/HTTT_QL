@@ -132,7 +132,7 @@ def login(request):
             return render(request, 'accounts/login.html')
 
         data = {
-            'secret': '6LdygTorAAAAANzhXHco38p5RtzAHUIcsW23D2MS',
+            'secret': settings.CAPTCHA_SECRET_KEY,
             'response': recaptcha_response
         }
         r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
