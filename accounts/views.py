@@ -123,10 +123,28 @@ def register(request):
 def login(request):
     if request.user.is_authenticated:
         return render(request, 'homePage/home.html')
+
     if request.method == "POST":
+        # Kiểm tra reCAPTCHA
+        recaptcha_response = request.POST.get('g-recaptcha-response')
+        if not recaptcha_response:
+            messages.error(request, "Please complete CAPTCHA.")
+            return render(request, 'accounts/login.html')
+
+        data = {
+            'secret': '6LdygTorAAAAANzhXHco38p5RtzAHUIcsW23D2MS',
+            'response': recaptcha_response
+        }
+        r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+        result = r.json()
+
+        if not result.get('success'):
+            messages.error(request, "CAPTCHA invalid. Please try again!")
+            return render(request, 'accounts/login.html')
+
+        # Xử lý đăng nhập
         email = request.POST['email']
         password = request.POST['password']
-
         user = auth.authenticate(email=email, password=password)
 
         if user is not None:
@@ -152,22 +170,19 @@ def login(request):
                         item.user = user
                         # item.save()
 
-                    # Geting the product variations by cat id
                     product_variation = []
                     for item in cart_item:
                         variation = item.variations.all()
                         product_variation.append(list(variation))
 
-                    # Geting the product variations by cat id to acces his product variation
                     cart_item = CartItem.objects.filter(user=user)
                     ex_var_list = []
                     id = []
                     for item in cart_item:
-                        exising_variation = item.variations.all()
-                        ex_var_list.append(list(exising_variation))
+                        existing_variation = item.variations.all()
+                        ex_var_list.append(list(existing_variation))
                         id.append(item.id)
 
-                    # to get common product variations
                     for pr in product_variation:
                         if pr in ex_var_list:
                             index = ex_var_list.index(pr)
@@ -181,24 +196,19 @@ def login(request):
                             for item in cart_item:
                                 item.user = user
                                 item.save()
-
-                    # for item in cart_item:
-                    #     item.user = user
-                    #     item.save()
             except:
                 pass
+
             auth.login(request, user)
             url = request.META.get('HTTP_REFERER')
             try:
-                query = requests.utils.urlparse(url).query
-                params = dict(x.split('=') for x in query.split('&'))
-                if 'next' in params:
-                    return redirect(params['next'])
-
+                query = parse_qs(urlparse(url).query)
+                if 'next' in query:
+                    return redirect(query['next'][0])
             except:
                 return redirect('/')
         else:
-            messages.error(request, "Invalid login credentials")
+            messages.error(request, "Email hoặc mật khẩu không đúng.")
             return redirect('login')
 
     return render(request, 'accounts/login.html')
