@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'crispy_forms',
+    'crispy_bootstrap4',
     'category',
     'accounts',
     'chatbot',

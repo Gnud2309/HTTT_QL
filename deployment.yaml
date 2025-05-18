@@ -31,7 +31,7 @@ networks:
     name: tmdt-network
     driver: bridge
 #docker-compose -f ./deployment.yaml down
-
+#docker-compose -f ./deployment.yaml up -d
 #docker-compose -f ./deployment.yaml rm -s -f mysql8-container
 #docker-compose -f ./deployment.yaml up -d mysql8-container
 

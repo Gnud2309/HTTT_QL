@@ -1,0 +1,120 @@
+<div class="chatbot-container">
+    <a href="http://127.0.0.1:5001/">
+        <div id="chatbot-toggle" class="chatbot-toggle">
+        <i class="ecicon eci-comments" aria-hidden="true"></i>
+    </div>
+    </a>
+    <div id="chatbot-window" class="chatbot-window" style="display: none;">
+        <div class="chatbot-header">
+            <h3 class="mb-0">Chatbot AI Bán Hàng</h3>
+            <button id="chatbot-close" class="chatbot-close">&times;</button>
+        </div>
+        <div id="chatbot-messages" class="chatbot-messages"></div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbot-input" class="form-control" placeholder="Nhập câu hỏi..." />
+            <button id="chatbot-send" class="btn btn-primary">Gửi</button>
+        </div>
+    </div>
+</div>
+
+<style>
+.chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.chatbot-toggle {
+    background-color: #007bff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    font-size: 24px;
+}
+
+.chatbot-window {
+    background-color: #fff;
+    border-radius: 8px;
+    width: 350px;
+    max-height: 450px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+}
+
+.chatbot-header {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chatbot-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.chatbot-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background: #f4f4f4;
+    border-bottom: 1px solid #ddd;
+}
+
+.chatbot-messages .message {
+    padding: 8px 12px;
+    margin: 5px;
+    border-radius: 8px;
+    max-width: 80%;
+    display: inline-block;
+    white-space: pre-line;
+}
+
+.chatbot-messages .user {
+    background: #d1e7fd;
+    text-align: right;
+    float: right;
+    clear: both;
+}
+
+.chatbot-messages .bot {
+    background: #f1f1f1;
+    text-align: left;
+    float: left;
+    clear: both;
+}
+
+.chatbot-input {
+    display: flex;
+    padding: 10px;
+    background: #fff;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+#chatbot-input {
+    flex: 1;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+#chatbot-send {
+    padding: 8px 15px;
+    border-radius: 5px;
+}
+</style>
