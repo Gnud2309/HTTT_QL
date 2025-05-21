@@ -1,104 +1,39 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
-{% load static%}
+{% load static %}
 
 {% block extra_head %}
-<link rel="stylesheet" id="bg-switcher-css" href="{% static 'webapp/assets/css/backgrounds/bg-4.css' %}">
-<link rel="stylesheet" href="{% static 'webapp/assets/css/style.css' %}" />
-<link rel="stylesheet" href="{% static 'webapp/assets/css/responsive.css' %}" />
-<style>
-    .blink_me {
-        animation: blinker 1s linear infinite;
-      }
-      
-      @keyframes blinker {
-        50% {
-          opacity: 0;
+    <link rel="stylesheet" id="bg-switcher-css" href="{% static 'webapp/assets/css/backgrounds/bg-4.css' %}">
+    <link rel="stylesheet" href="{% static 'webapp/assets/css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'webapp/assets/css/responsive.css' %}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="{% static 'validate/validate.js' %}"></script>
+    <style>
+        .blink_me {
+            animation: blinker 1s linear infinite;
         }
-      }
-</style>
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+        .text-danger {
+            color: red;
+            font-size: 0.9em;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-
-    <!-- ekka Cart Start -->
-    <div class="ec-side-cart-overlay"></div>
-    <div id="ec-side-cart" class="ec-side-cart">
-        <div class="ec-cart-inner">
-            <div class="ec-cart-top">
-                <div class="ec-cart-title">
-                    <span class="cart_title">My Cart</span>
-                    <button class=" rounded-3 ec-close">×</button>
-                </div>
-                <ul class="eccart-pro-items">
-                    <li>
-                        <a href="product-left-sidebar.html" class="sidekka_pro_img"><img
-                                src="assets/images/product-image/6_1.jpg" alt="product"></a>
-                        <div class="ec-pro-content">
-                            <a href="product-left-sidebar.html" class="cart_pro_title">T-shirt For Women</a>
-                            <span class="cart-price"><span>$76.00</span> x 1</span>
-                            <div class="qty-plus-minus">
-                                <input class="qty-input" type="text" name="ec_qtybtn" value="1" />
-                            </div>
-                            <a href="javascript:void(0)" class="remove">x</a>
-                        </div>
-                    </li>
-                    <li>
-                        <a href="product-left-sidebar.html" class="sidekka_pro_img"><img
-                                src="assets/images/product-image/12_1.jpg" alt="product"></a>
-                        <div class="ec-pro-content">
-                            <a href="product-left-sidebar.html" class="cart_pro_title">Women Leather Shoes</a>
-                            <span class="cart-price"><span>$64.00</span> x 1</span>
-                            <div class="qty-plus-minus">
-                                <input class="qty-input" type="text" name="ec_qtybtn" value="1" />
-                            </div>
-                            <a href="javascript:void(0)" class="remove">x</a>
-                        </div>
-                    </li>
-                    <li>
-                        <a href="product-left-sidebar.html" class="sidekka_pro_img"><img
-                                src="assets/images/product-image/3_1.jpg" alt="product"></a>
-                        <div class="ec-pro-content">
-                            <a href="product-left-sidebar.html" class="cart_pro_title">Girls Nylon Purse</a>
-                            <span class="cart-price"><span>$59.00</span> x 1</span>
-                            <div class="qty-plus-minus">
-                                <input class="qty-input" type="text" name="ec_qtybtn" value="1" />
-                            </div>
-                            <a href="javascript:void(0)" class="remove">x</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="ec-cart-bottom">
-                <div class="cart-sub-total">
-                    <table class="table cart-table">
-                        <tbody>
-                            <tr>
-                                <td class="text-left">Sub-Total :</td>
-                                <td class="text-right">$300.00</td>
-                            </tr>
-                            <tr>
-                                <td class="text-left">VAT (20%) :</td>
-                                <td class="text-right">$60.00</td>
-                            </tr>
-                            <tr>
-                                <td class="text-left">Total :</td>
-                                <td class="text-right primary-color">$360.00</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="cart_btn">
-                    <a href="cart.html" class="btn btn-primary rounded-3">View Cart</a>
-                    <a href="checkout.html" class="btn  btn-secondary rounded-3 ">Checkout</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- ekka Cart End -->
-
     <!-- Ec breadcrumb start -->
-    <div class="sticky-header-next-sec  ec-breadcrumb section-space-mb">
+    <div class="sticky-header-next-sec ec-breadcrumb section-space-mb">
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -107,12 +42,10 @@
                             <h2 class="ec-breadcrumb-title">Register</h2>
                         </div>
                         <div class="col-md-6 col-sm-12">
-                            <!-- ec-breadcrumb-list start -->
                             <ul class="ec-breadcrumb-list">
-                                <li class="ec-breadcrumb-item"><a href="index.html">Home</a></li>
+                                <li class="ec-breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
                                 <li class="ec-breadcrumb-item active">Register</li>
                             </ul>
-                            <!-- ec-breadcrumb-list end -->
                         </div>
                     </div>
                 </div>
@@ -121,7 +54,7 @@
     </div>
     <!-- Ec breadcrumb end -->
 
-    <!-- Start Register -->
+    <!-- Ec register page -->
     <section class="ec-page-content section-space-p">
         <div class="container">
             <div class="row">
@@ -132,39 +65,41 @@
                         <p class="sub-title mb-3">Best place to buy and sell digital products</p>
                     </div>
                 </div>
-                <div class="ec-register-wrapper">
-                    <div class="ec-register-container">
-                        <div class="ec-register-form">
-                             {% include 'includes/alerts.html' %}<br>
-                            <form action="#" method="post">
+                <div class="ec-login-wrapper">
+                    <div class="ec-login-container">
+                        <div class="ec-login-form">
+                            {% include 'includes/alerts.html' %}
+                            <form action="{% url 'register' %}" method="post" id="registerForm" novalidate>
                                 {% csrf_token %}
-                                <span class="ec-register-wrap ec-register-half">
-                                    {{ form.full_name|as_crispy_field }}
+                                <span class="ec-login-wrap">
+                                    <label for="full_name">Full Name*</label>
+                                    <input type="text" id="full_name" name="full_name" class="form-control" placeholder="Enter your full name..." required />
+                                    <span id="full_name_error" class="text-danger"></span>
                                 </span>
-                                <span class="ec-register-wrap ec-register-half">
-                                    {{ form.email|as_crispy_field }}
+                                <span class="ec-login-wrap">
+                                    <label for="email">Email Address*</label>
+                                    <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email..." required onblur="validateEmail('email', 'email_error')" />
+                                    <span id="email_error" class="text-danger"></span>
                                 </span>
-                                <span class="ec-register-wrap ec-register-half">
-                                    {{ form.phone_number|as_crispy_field }}
+                                <span class="ec-login-wrap">
+                                    <label for="phone_number">Phone Number*</label>
+                                    <input type="text" id="phone_number" name="phone_number" class="form-control" placeholder="Enter your phone number..." required onblur="validatePhone('phone_number', 'phone_error')" />
+                                    <span id="phone_error" class="text-danger"></span>
                                 </span>
-                                <span class="ec-register-wrap ec-register-half">
-                                    {{ form.password|as_crispy_field }}
+                                <span class="ec-login-wrap">
+                                    <label for="password">Password*</label>
+                                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password..." required autocomplete="new-password" />
+                                    <span id="password_error" class="text-danger"></span>
                                 </span>
-                                <span class="ec-register-wrap ec-register-half">
-                                    {{ form.confirm_password|as_crispy_field }}
+                                <span class="ec-login-wrap">
+                                    <label for="confirm_password">Confirm Password*</label>
+                                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Confirm your password..." required autocomplete="new-password" />
+                                    <span id="confirm_password_error" class="text-danger"></span>
                                 </span>
-                                
-                                <span class="ec-register-wrap ec-register-btn blink_me">
-                                    {{ form|as_crispy_errors }} <!--error here prints-->
+                                <span class="ec-login-wrap ec-login-btn">
+                                    <button class="rounded-3 btn btn-primary" type="submit">Đăng ký</button>
+                                    <a href="{% url 'login' %}" class="btn btn-secondary rounded-3">Đăng nhập</a>
                                 </span>
-                                
-                                <span class="ec-register-wrap ec-register-btn">
-                                    <button class=" rounded-3 btn btn-primary" type="submit">Register</button>
-                                    <a href="/accounts/login" class="btn  btn-secondary rounded-3 ">Login </a>
-                                </span>
-
-                             
-                                
                             </form>
                         </div>
                     </div>
@@ -172,6 +107,71 @@
             </div>
         </div>
     </section>
-    <!-- End Register -->
 
-    {% endblock %}
+    <script>
+        $(document).ready(function() {
+            $('#registerForm').on('submit', function(e) {
+                const validFullName = validateField('full_name', 'full_name_error', 'Full Name is required');
+                const validEmail = validateEmail('email', 'email_error');
+                const validPhone = validatePhone('phone_number', 'phone_error');
+                const validPassword = validatePassword();
+                const validConfirmPass = validatePasswordMatch();
+
+                if (!(validFullName && validEmail && validPhone && validPassword && validConfirmPass)) {
+                    e.preventDefault();
+                }
+            });
+
+            function validatePasswordMatch() {
+                const password = document.getElementById('password').value;
+                const confirm_password = document.getElementById('confirm_password').value;
+                const errorSpan = document.getElementById('confirm_password_error');
+                if (confirm_password === '') {
+                    errorSpan.textContent = 'Confirm Password is required';
+                    return false;
+                }
+                if (password !== confirm_password) {
+                    errorSpan.textContent = 'Passwords do not match!';
+                    return false;
+                } else {
+                    errorSpan.textContent = '';
+                    return true;
+                }
+            }
+
+            function validatePassword() {
+                const password = document.getElementById('password').value.trim();
+                const errorSpan = document.getElementById('password_error');
+                if (password === '') {
+                    errorSpan.textContent = 'Password is required';
+                    return false;
+                } else if (password.length < 6) {
+                    errorSpan.textContent = 'Password must be at least 6 characters';
+                    return false;
+                } else {
+                    errorSpan.textContent = '';
+                    return true;
+                }
+            }
+
+            document.getElementById('full_name').addEventListener('input', function() {
+                validateField('full_name', 'full_name_error', 'Full Name is required');
+            });
+            document.getElementById('email').addEventListener('input', function() {
+                validateEmail('email', 'email_error');
+            });
+            document.getElementById('phone_number').addEventListener('input', function() {
+                validatePhone('phone_number', 'phone_error');
+            });
+            document.getElementById('password').addEventListener('input', function() {
+                validatePassword();
+                if (document.getElementById('confirm_password').value.length > 0) {
+                    validatePasswordMatch();
+                }
+            });
+            document.getElementById('confirm_password').addEventListener('input', function() {
+                validatePasswordMatch();
+            });
+        });
+    </script>
+{% endblock %}

@@ -9,7 +9,7 @@ function validateField(fieldId, errorId, errorMessage) {
     if (!field.value.trim()) {
         errorSpan.textContent = errorMessage;
     } else if (!nameRegex.test(field.value.trim())) {
-        errorSpan.textContent = "Name must only contain letters, spaces, and Vietnamese characters.";
+        errorSpan.textContent = "Name must only contain letters, spaces.";
     } else {
         errorSpan.textContent = '';
     }
