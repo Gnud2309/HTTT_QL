@@ -74,7 +74,7 @@ pyphen==0.11.0
 pytest==8.2.0
 python-dateutil==2.8.2
 python-decouple==3.5
-python-dotenv==1.0.1
+python-dotenv==1.0.0
 python-ipware==3.0.0
 python3-openid==3.2.0
 pytz==2021.3
@@ -114,3 +114,14 @@ wheel==0.43.0
 wrapt==1.16.0
 yarg==0.1.9
 zopfli==0.2.3
+cloudinary==1.36.0
+django-crispy-forms==1.13.0
+django-cloudinary-storage==0.3.0
+django-debug-toolbar==4.1.0
+django-extensions==3.2.1
+django-filter==2.4.0
+django-import-export==3.3.1
+mysql-replication==0.30.0
+
+pymysql==1.1.0
+pyodbc==5.0.1

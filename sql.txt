@@ -1,0 +1,2420 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.2
+-- https://www.phpmyadmin.net/
+--
+-- Máy chủ: mysql8-container-new:3306
+-- Thời gian đã tạo: Th6 13, 2025 lúc 06:20 AM
+-- Phiên bản máy phục vụ: 8.0.41
+-- Phiên bản PHP: 8.2.27
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Cơ sở dữ liệu: `EcomRecomendation`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `accounts_account`
+--
+
+CREATE TABLE `accounts_account` (
+  `id` bigint NOT NULL,
+  `password` varchar(128) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `date_joined` datetime(6) NOT NULL,
+  `last_login` datetime(6) NOT NULL,
+  `is_admin` tinyint(1) NOT NULL,
+  `is_active` tinyint(1) NOT NULL,
+  `is_staff` tinyint(1) NOT NULL,
+  `is_superuser` tinyint(1) NOT NULL,
+  `full_name` varchar(50) NOT NULL,
+  `phone_number` varchar(20) NOT NULL,
+  `is_login` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `accounts_account`
+--
+
+INSERT INTO `accounts_account` (`id`, `password`, `username`, `email`, `date_joined`, `last_login`, `is_admin`, `is_active`, `is_staff`, `is_superuser`, `full_name`, `phone_number`, `is_login`) VALUES
+(1, 'pbkdf2_sha256$720000$yPfmriNGV8TjRv7qWGILCd$7KV3oEXRUNbyEIDz2oplBZ7ExnKNgMiOM0jPFBmrU5k=', 'dunghoangcode', 'admin@gmail.com', '2025-04-08 15:12:20.711096', '2025-06-12 14:40:32.057168', 1, 1, 1, 1, '', '', 1),
+(2, 'pbkdf2_sha256$720000$AQLwaVdJFeFTyWHvera3C3$L4pvqH3pNyPTl4syA8vnB5j88ioUNQXb+gwMNmD803s=', 'hoangdungls2309', 'hoangdungls2309@gmail.com', '2025-04-10 19:04:49.132554', '2025-04-21 23:25:19.395261', 0, 1, 0, 0, 'Hoàng Minh Dũng', '0393348819', 0),
+(3, 'pbkdf2_sha256$720000$HNNYJ08eWv3zOZ5DI5BR6m$Lx95J5SZ948X/8Bfg0s8vd5ZTKo+lUXeH8JCEaZIhUs=', 'hoangdunglaptrinh2k3', 'hoangdunglaptrinh2k3@gmail.com', '2025-04-10 20:42:23.956046', '2025-04-10 20:48:20.705331', 0, 1, 0, 0, 'dũng', '0393348819', 1),
+(4, 'pbkdf2_sha256$720000$UbpuCiC2FKTuCmAYpoMPvi$/4FN1oTpWklmb2owNGwQJ4NNL11WOC+Wb9tSj2ddmqs=', 'minhpc2763', 'minhpc2763@gmail.com', '2025-05-18 22:18:46.837673', '2025-05-18 22:18:46.836989', 0, 0, 0, 0, '123`54123', '123456890', 0),
+(5, 'pbkdf2_sha256$720000$cMOt2OEVcMNysxVBjgZ0hq$WZWTc35CwaDaO+ouzuilhrGvyx9KZdliNZfXBeLHYv0=', 'nguyenvana', 'nguyenvana@gmail.com', '2025-06-12 14:29:00.000000', '2025-06-12 14:38:57.069990', 1, 1, 1, 0, 'Nguyen Van A', '0901234567', 0),
+(6, 'pbkdf2_sha256$720000$cMOt2OEVcMNysxVBjgZ0hq$WZWTc35CwaDaO+ouzuilhrGvyx9KZdliNZfXBeLHYv0=', 'tranthib', 'tranthib@gmail.com', '2025-06-12 14:30:00.000000', '2025-06-12 14:30:00.000000', 0, 1, 0, 0, 'Tran Thi B', '0901234568', 0),
+(7, 'pbkdf2_sha256$720000$cMOt2OEVcMNysxVBjgZ0hq$WZWTc35CwaDaO+ouzuilhrGvyx9KZdliNZfXBeLHYv0=', 'levanc', 'levanc@gmail.com', '2025-06-12 14:31:00.000000', '2025-06-12 14:31:00.000000', 0, 1, 0, 0, 'Le Van C', '0901234569', 1),
+(8, 'pbkdf2_sha256$720000$cMOt2OEVcMNysxVBjgZ0hq$WZWTc35CwaDaO+ouzuilhrGvyx9KZdliNZfXBeLHYv0=', 'phamthid', 'phamthid@gmail.com', '2025-06-12 14:32:00.000000', '2025-06-12 14:32:00.000000', 0, 0, 1, 0, 'Pham Thi D', '0901234570', 0),
+(9, 'pbkdf2_sha256$200000$Q5p8J2m9K4L7P1x$6c7e8f9a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9', 'hoangvane', 'hoangvane@gmail.com', '2025-06-12 14:33:00.000000', '2025-06-12 14:33:00.000000', 0, 1, 0, 0, 'Hoang Van E', '0901234571', 1),
+(11, 'pbkdf2_sha256$200000$Q5p8J2m9K4L7P1x$6c7e8f9a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9', 'tranvang', 'tranvang@gmail.com', '2025-06-12 14:35:00.000000', '2025-06-12 14:35:00.000000', 0, 0, 0, 0, 'Tran Van G', '0901234573', 1),
+(12, 'pbkdf2_sha256$200000$Q5p8J2m9K4L7P1x$6c7e8f9a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9', 'lethih', 'lethih@gmail.com', '2025-06-12 14:36:00.000000', '2025-06-12 14:36:00.000000', 0, 1, 1, 0, 'Le Thi H', '0901234574', 0),
+(13, 'pbkdf2_sha256$200000$Q5p8J2m9K4L7P1x$6c7e8f9a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9', 'phamvani', 'phamvani@gmail.com', '2025-06-12 14:37:00.000000', '2025-06-12 14:37:00.000000', 0, 1, 0, 0, 'Pham Van I', '0901234575', 1),
+(14, 'pbkdf2_sha256$200000$Q5p8J2m9K4L7P1x$6c7e8f9a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9', 'hoangthik', 'hoangthik@gmail.com', '2025-06-12 14:38:00.000000', '2025-06-12 14:38:00.000000', 0, 0, 1, 0, 'Hoang Thi K', '0901234576', 0),
+(15, 'pbkdf2_sha256$200000$Q5p8J2m9K4L7P1x$6c7e8f9a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9', 'nguyenvanl', 'nguyenvanl@gmail.com', '2025-06-12 14:39:00.000000', '2025-06-12 14:39:00.000000', 0, 1, 0, 0, 'Nguyen Van L', '0901234577', 1),
+(16, 'pbkdf2_sha256$200000$Q5p8J2m9K4L7P1x$6c7e8f9a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9', 'tranthim', 'tranthim@gmail.com', '2025-06-12 14:40:00.000000', '2025-06-12 14:40:00.000000', 0, 1, 1, 0, 'Tran Thi M', '0901234578', 0),
+(17, 'pbkdf2_sha256$200000$Q5p8J2m9K4L7P1x$6c7e8f9a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9', 'levann', 'levann@gmail.com', '2025-06-12 14:41:00.000000', '2025-06-12 14:41:00.000000', 0, 0, 0, 0, 'Le Van N', '0901234579', 1),
+(18, 'pbkdf2_sha256$200000$Q5p8J2m9K4L7P1x$6c7e8f9a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9', 'phamthip', 'phamthip@gmail.com', '2025-06-12 14:42:00.000000', '2025-06-12 14:42:00.000000', 0, 1, 1, 0, 'Pham Thi P', '0901234580', 0),
+(19, 'pbkdf2_sha256$200000$Q5p8J2m9K4L7P1x$6c7e8f9a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9', 'hoangvanq', 'hoangvanq@gmail.com', '2025-06-12 14:43:00.000000', '2025-06-12 14:43:00.000000', 0, 1, 0, 0, 'Hoang Van Q', '0901234581', 1),
+(20, 'pbkdf2_sha256$200000$Q5p8J2m9K4L7P1x$6c7e8f9a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9', 'nguyenthir', 'nguyenthir@gmail.com', '2025-06-12 14:44:00.000000', '2025-06-12 14:44:00.000000', 0, 0, 1, 0, 'Nguyen Thi R', '0901234582', 0),
+(21, 'pbkdf2_sha256$200000$Q5p8J2m9K4L7P1x$6c7e8f9a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9', 'tranvans', 'tranvans@gmail.com', '2025-06-12 14:45:00.000000', '2025-06-12 14:45:00.000000', 0, 1, 0, 0, 'Tran Van S', '0901234583', 1),
+(22, 'pbkdf2_sha256$200000$Q5p8J2m9K4L7P1x$6c7e8f9a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9', 'lethit', 'lethit@gmail.com', '2025-06-12 14:46:00.000000', '2025-06-12 14:46:00.000000', 0, 1, 1, 0, 'Le Thi T', '0901234584', 0),
+(23, 'pbkdf2_sha256$200000$Q5p8J2m9K4L7P1x$6c7e8f9a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9', 'phamvanu', 'phamvanu@gmail.com', '2025-06-12 14:47:00.000000', '2025-06-12 14:47:00.000000', 0, 0, 0, 0, 'Pham Van U', '0901234585', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `accounts_eventuser`
+--
+
+CREATE TABLE `accounts_eventuser` (
+  `id` bigint NOT NULL,
+  `event_type` varchar(10) NOT NULL,
+  `event_timestamp` datetime(6) NOT NULL,
+  `product_id` bigint DEFAULT NULL,
+  `user_id` bigint NOT NULL,
+  `frequency` int DEFAULT NULL,
+  `rating` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `accounts_eventuser`
+--
+
+INSERT INTO `accounts_eventuser` (`id`, `event_type`, `event_timestamp`, `product_id`, `user_id`, `frequency`, `rating`) VALUES
+(1, 'login', '2025-04-08 15:12:51.996249', NULL, 1, NULL, 0),
+(2, 'cart', '2025-04-08 16:21:28.303954', 52, 1, 1, 0),
+(3, 'pay', '2025-04-08 16:23:28.433241', 52, 1, 1, 0),
+(4, 'logout', '2025-04-08 16:46:34.108134', NULL, 1, NULL, 0),
+(5, 'login', '2025-04-08 16:46:38.178076', NULL, 1, NULL, 0),
+(6, 'logout', '2025-04-08 17:28:52.198968', NULL, 1, NULL, 0),
+(7, 'login', '2025-04-08 17:29:15.512332', NULL, 1, NULL, 0),
+(8, 'cart', '2025-05-22 01:22:04.703778', 2, 1, 5, 0),
+(9, 'logout', '2025-04-10 15:39:03.725842', NULL, 1, NULL, 0),
+(10, 'login', '2025-04-10 15:39:06.622430', NULL, 1, NULL, 0),
+(11, 'pay', '2025-05-22 15:04:24.575769', 2, 1, 5, 0),
+(12, 'cart', '2025-04-10 15:42:05.812900', 62, 1, 1, 0),
+(13, 'pay', '2025-04-10 15:42:50.164458', 62, 1, 1, 0),
+(14, 'logout', '2025-04-10 19:04:36.823120', NULL, 1, NULL, 0),
+(15, 'login', '2025-04-10 19:05:14.794864', NULL, 2, NULL, 0),
+(16, 'login', '2025-04-10 19:07:25.440391', NULL, 1, NULL, 0),
+(17, 'logout', '2025-04-10 19:07:50.417557', NULL, 2, NULL, 0),
+(18, 'login', '2025-04-10 19:07:55.409086', NULL, 1, NULL, 0),
+(19, 'logout', '2025-04-10 19:20:24.354687', NULL, 1, NULL, 0),
+(20, 'login', '2025-04-10 19:20:28.799020', NULL, 2, NULL, 0),
+(21, 'logout', '2025-04-10 19:28:42.275618', NULL, 2, NULL, 0),
+(22, 'login', '2025-04-10 19:28:45.492973', NULL, 2, NULL, 0),
+(23, 'logout', '2025-04-10 19:29:59.889074', NULL, 1, NULL, 0),
+(24, 'login', '2025-04-10 19:30:12.003095', NULL, 2, NULL, 0),
+(25, 'cart', '2025-04-10 20:38:58.394584', 1, 2, 2, 0),
+(26, 'logout', '2025-04-10 20:16:27.577955', NULL, 2, NULL, 0),
+(27, 'login', '2025-04-10 20:16:32.519824', NULL, 1, NULL, 0),
+(28, 'logout', '2025-04-10 20:17:30.323384', NULL, 1, NULL, 0),
+(29, 'login', '2025-04-10 20:17:36.545325', NULL, 2, NULL, 0),
+(30, 'logout', '2025-04-10 20:30:17.875494', NULL, 2, NULL, 0),
+(31, 'login', '2025-04-10 20:38:21.440100', NULL, 2, NULL, 0),
+(32, 'cart', '2025-04-10 20:39:35.555354', 7, 2, 1, 0),
+(33, 'pay', '2025-04-10 20:40:28.159128', 1, 2, 1, 0),
+(34, 'pay', '2025-04-10 20:40:28.204103', 7, 2, 1, 0),
+(35, 'logout', '2025-04-10 20:40:50.209369', NULL, 2, NULL, 0),
+(36, 'login', '2025-04-10 20:41:04.535497', NULL, 2, NULL, 0),
+(37, 'logout', '2025-04-10 20:41:07.865611', NULL, 2, NULL, 0),
+(38, 'login', '2025-04-10 20:43:34.108482', NULL, 1, NULL, 0),
+(39, 'logout', '2025-04-10 20:46:14.222996', NULL, 1, NULL, 0),
+(40, 'logout', '2025-04-10 20:48:01.850651', NULL, 2, NULL, 0),
+(41, 'login', '2025-04-10 20:48:20.663200', NULL, 3, NULL, 0),
+(42, 'login', '2025-04-15 16:51:33.410071', NULL, 1, NULL, 0),
+(43, 'logout', '2025-04-21 23:25:13.351249', NULL, 1, NULL, 0),
+(44, 'login', '2025-04-21 23:25:19.353645', NULL, 2, NULL, 0),
+(45, 'logout', '2025-04-21 23:25:23.677341', NULL, 2, NULL, 0),
+(46, 'login', '2025-04-21 23:26:44.644688', NULL, 1, NULL, 0),
+(47, 'cart', '2025-05-13 16:26:38.479329', 1, 1, 3, 0),
+(48, 'logout', '2025-04-24 14:51:56.672755', NULL, 1, NULL, 0),
+(49, 'login', '2025-04-24 14:55:29.160459', NULL, 1, NULL, 0),
+(50, 'pay', '2025-05-22 01:21:04.159865', 1, 1, 2, 0),
+(51, 'login', '2025-05-09 22:47:59.404830', NULL, 1, NULL, 0),
+(52, 'login', '2025-05-13 16:26:14.056438', NULL, 1, NULL, 0),
+(53, 'cart', '2025-05-13 16:26:50.455275', 41, 1, 1, 0),
+(54, 'logout', '2025-05-18 22:04:23.022345', NULL, 1, NULL, 0),
+(55, 'login', '2025-05-18 22:04:34.042742', NULL, 1, NULL, 0),
+(56, 'logout', '2025-05-18 22:06:13.711875', NULL, 1, NULL, 0),
+(57, 'login', '2025-05-18 22:21:46.217922', NULL, 1, NULL, 0),
+(58, 'view', '2025-05-21 20:35:40.228923', 2, 1, 1, 0),
+(59, 'logout', '2025-05-22 01:17:44.107847', NULL, 1, NULL, 0),
+(60, 'login', '2025-05-22 01:19:09.584824', NULL, 1, NULL, 0),
+(61, 'pay', '2025-05-22 01:21:04.182440', 41, 1, 1, 0),
+(62, 'logout', '2025-05-22 14:40:03.462568', NULL, 1, NULL, 0),
+(63, 'login', '2025-05-22 14:41:10.961230', NULL, 1, NULL, 0),
+(64, 'logout', '2025-05-22 14:58:49.552742', NULL, 1, NULL, 0),
+(65, 'login', '2025-05-22 15:01:47.112544', NULL, 1, NULL, 0),
+(66, 'login', '2025-06-12 14:09:02.672829', NULL, 1, NULL, 0),
+(67, 'logout', '2025-06-12 14:34:35.437375', NULL, 1, NULL, 0),
+(68, 'login', '2025-06-12 14:36:45.402696', NULL, 5, NULL, 0),
+(69, 'logout', '2025-06-12 14:38:17.277386', NULL, 5, NULL, 0),
+(70, 'login', '2025-06-12 14:38:57.029228', NULL, 5, NULL, 0),
+(71, 'cart', '2025-06-12 14:39:12.285669', 2, 5, 1, 0),
+(72, 'pay', '2025-06-12 14:40:09.071513', 2, 5, 1, 0),
+(73, 'logout', '2025-06-12 14:40:25.103721', NULL, 5, NULL, 0),
+(74, 'login', '2025-06-12 14:40:32.017714', NULL, 1, NULL, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `accounts_userprofile`
+--
+
+CREATE TABLE `accounts_userprofile` (
+  `id` bigint NOT NULL,
+  `profile_picture` varchar(500) NOT NULL,
+  `bio` longtext,
+  `user_id` bigint NOT NULL,
+  `date_of_birth` date DEFAULT NULL,
+  `district` varchar(100) NOT NULL,
+  `road` varchar(150) NOT NULL,
+  `sex` varchar(100) NOT NULL,
+  `ward` varchar(100) NOT NULL,
+  `city` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `accounts_userprofile`
+--
+
+INSERT INTO `accounts_userprofile` (`id`, `profile_picture`, `bio`, `user_id`, `date_of_birth`, `district`, `road`, `sex`, `ward`, `city`) VALUES
+(1, 'webapp/assets/images/user/user.png', NULL, 1, NULL, '', '', 'Other', '', ''),
+(2, 'webapp/assets/images/user/user.png', NULL, 2, NULL, '', '', 'Other', '', ''),
+(3, 'webapp/assets/images/user/user.png', NULL, 3, NULL, '', '', 'Other', '', ''),
+(4, 'webapp/assets/images/user/user.png', NULL, 4, NULL, '', '', 'Other', '', ''),
+(5, 'webapp/assets/images/user/user.png', NULL, 5, NULL, '', '', 'Other', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `auth_group`
+--
+
+CREATE TABLE `auth_group` (
+  `id` int NOT NULL,
+  `name` varchar(150) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `auth_group_permissions`
+--
+
+CREATE TABLE `auth_group_permissions` (
+  `id` bigint NOT NULL,
+  `group_id` int NOT NULL,
+  `permission_id` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `auth_permission`
+--
+
+CREATE TABLE `auth_permission` (
+  `id` int NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `content_type_id` int NOT NULL,
+  `codename` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `auth_permission`
+--
+
+INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALUES
+(1, 'Can add log entry', 1, 'add_logentry'),
+(2, 'Can change log entry', 1, 'change_logentry'),
+(3, 'Can delete log entry', 1, 'delete_logentry'),
+(4, 'Can view log entry', 1, 'view_logentry'),
+(5, 'Can add permission', 2, 'add_permission'),
+(6, 'Can change permission', 2, 'change_permission'),
+(7, 'Can delete permission', 2, 'delete_permission'),
+(8, 'Can view permission', 2, 'view_permission'),
+(9, 'Can add group', 3, 'add_group'),
+(10, 'Can change group', 3, 'change_group'),
+(11, 'Can delete group', 3, 'delete_group'),
+(12, 'Can view group', 3, 'view_group'),
+(13, 'Can add content type', 4, 'add_contenttype'),
+(14, 'Can change content type', 4, 'change_contenttype'),
+(15, 'Can delete content type', 4, 'delete_contenttype'),
+(16, 'Can view content type', 4, 'view_contenttype'),
+(17, 'Can add session', 5, 'add_session'),
+(18, 'Can change session', 5, 'change_session'),
+(19, 'Can delete session', 5, 'delete_session'),
+(20, 'Can view session', 5, 'view_session'),
+(21, 'Can add Category', 6, 'add_categorymain'),
+(22, 'Can change Category', 6, 'change_categorymain'),
+(23, 'Can delete Category', 6, 'delete_categorymain'),
+(24, 'Can view Category', 6, 'view_categorymain'),
+(25, 'Can add Sub Category', 7, 'add_subcategory'),
+(26, 'Can change Sub Category', 7, 'change_subcategory'),
+(27, 'Can delete Sub Category', 7, 'delete_subcategory'),
+(28, 'Can view Sub Category', 7, 'view_subcategory'),
+(29, 'Can add account', 8, 'add_account'),
+(30, 'Can change account', 8, 'change_account'),
+(31, 'Can delete account', 8, 'delete_account'),
+(32, 'Can view account', 8, 'view_account'),
+(33, 'Can add user profile', 9, 'add_userprofile'),
+(34, 'Can change user profile', 9, 'change_userprofile'),
+(35, 'Can delete user profile', 9, 'delete_userprofile'),
+(36, 'Can view user profile', 9, 'view_userprofile'),
+(37, 'Can add Event User', 10, 'add_eventuser'),
+(38, 'Can change Event User', 10, 'change_eventuser'),
+(39, 'Can delete Event User', 10, 'delete_eventuser'),
+(40, 'Can view Event User', 10, 'view_eventuser'),
+(41, 'Can add cart', 11, 'add_cart'),
+(42, 'Can change cart', 11, 'change_cart'),
+(43, 'Can delete cart', 11, 'delete_cart'),
+(44, 'Can view cart', 11, 'view_cart'),
+(45, 'Can add cart item', 12, 'add_cartitem'),
+(46, 'Can change cart item', 12, 'change_cartitem'),
+(47, 'Can delete cart item', 12, 'delete_cartitem'),
+(48, 'Can view cart item', 12, 'view_cartitem'),
+(49, 'Can add product', 13, 'add_product'),
+(50, 'Can change product', 13, 'change_product'),
+(51, 'Can delete product', 13, 'delete_product'),
+(52, 'Can view product', 13, 'view_product'),
+(53, 'Can add variation', 14, 'add_variation'),
+(54, 'Can change variation', 14, 'change_variation'),
+(55, 'Can delete variation', 14, 'delete_variation'),
+(56, 'Can view variation', 14, 'view_variation'),
+(57, 'Can add Product Image', 15, 'add_productimage'),
+(58, 'Can change Product Image', 15, 'change_productimage'),
+(59, 'Can delete Product Image', 15, 'delete_productimage'),
+(60, 'Can view Product Image', 15, 'view_productimage'),
+(61, 'Can add folder event', 16, 'add_folderevent'),
+(62, 'Can change folder event', 16, 'change_folderevent'),
+(63, 'Can delete folder event', 16, 'delete_folderevent'),
+(64, 'Can view folder event', 16, 'view_folderevent'),
+(65, 'Can add order', 17, 'add_order'),
+(66, 'Can change order', 17, 'change_order'),
+(67, 'Can delete order', 17, 'delete_order'),
+(68, 'Can view order', 17, 'view_order'),
+(69, 'Can add payment', 18, 'add_payment'),
+(70, 'Can change payment', 18, 'change_payment'),
+(71, 'Can delete payment', 18, 'delete_payment'),
+(72, 'Can view payment', 18, 'view_payment'),
+(73, 'Can add order product', 19, 'add_orderproduct'),
+(74, 'Can change order product', 19, 'change_orderproduct'),
+(75, 'Can delete order product', 19, 'delete_orderproduct'),
+(76, 'Can view order product', 19, 'view_orderproduct'),
+(77, 'Can add review', 20, 'add_review'),
+(78, 'Can change review', 20, 'change_review'),
+(79, 'Can delete review', 20, 'delete_review'),
+(80, 'Can view review', 20, 'view_review'),
+(81, 'Can add embedding', 21, 'add_embedding'),
+(82, 'Can change embedding', 21, 'change_embedding'),
+(83, 'Can delete embedding', 21, 'delete_embedding'),
+(84, 'Can view embedding', 21, 'view_embedding');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `carts_cart`
+--
+
+CREATE TABLE `carts_cart` (
+  `id` bigint NOT NULL,
+  `cart_id` varchar(250) NOT NULL,
+  `date_added` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `carts_cartitem`
+--
+
+CREATE TABLE `carts_cartitem` (
+  `id` bigint NOT NULL,
+  `quantity` int NOT NULL,
+  `is_active` tinyint(1) NOT NULL,
+  `cart_id` bigint DEFAULT NULL,
+  `product_id` bigint NOT NULL,
+  `user_id` bigint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `carts_cartitem_variations`
+--
+
+CREATE TABLE `carts_cartitem_variations` (
+  `id` bigint NOT NULL,
+  `cartitem_id` bigint NOT NULL,
+  `variation_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `category_categorymain`
+--
+
+CREATE TABLE `category_categorymain` (
+  `id` bigint NOT NULL,
+  `category_name` varchar(50) NOT NULL,
+  `slug` varchar(100) NOT NULL,
+  `description` longtext NOT NULL,
+  `cat_main_img` varchar(100) NOT NULL,
+  `parent_category_id` bigint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `category_categorymain`
+--
+
+INSERT INTO `category_categorymain` (`id`, `category_name`, `slug`, `description`, `cat_main_img`, `parent_category_id`) VALUES
+(1, 'Áo', 'ao', 'Các loại áo thời trang', '', NULL),
+(2, 'Quần', 'quan', 'Các loại quần thời trang', '', NULL),
+(3, 'Giày dép', 'giay-dep', 'Các loại giày dép thời trang', '', NULL),
+(4, 'Phụ kiện', 'phu-kien', 'Các loại phụ kiện thời trang', '', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `category_subcategory`
+--
+
+CREATE TABLE `category_subcategory` (
+  `id` bigint NOT NULL,
+  `sub_category_name` varchar(50) NOT NULL,
+  `slug` varchar(100) NOT NULL,
+  `cat_sub_img` varchar(100) NOT NULL,
+  `description` longtext NOT NULL,
+  `category_id` bigint NOT NULL,
+  `is_active` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `category_subcategory`
+--
+
+INSERT INTO `category_subcategory` (`id`, `sub_category_name`, `slug`, `cat_sub_img`, `description`, `category_id`, `is_active`) VALUES
+(1, 'Áo thun', 'ao-thun', '', 'Danh mục Áo thun', 1, 1),
+(2, 'Áo sơ mi', 'ao-so-mi', '', 'Danh mục Áo sơ mi', 1, 1),
+(3, 'Áo khoác', 'ao-khoac', '', 'Danh mục Áo khoác', 1, 1),
+(4, 'Áo len', 'ao-len', '', 'Danh mục Áo len', 1, 1),
+(5, 'Quần jean', 'quan-jean', '', 'Danh mục Quần jean', 2, 1),
+(6, 'Quần kaki', 'quan-kaki', '', 'Danh mục Quần kaki', 2, 1),
+(7, 'Quần tây', 'quan-tay', '', 'Danh mục Quần tây', 2, 1),
+(8, 'Quần short', 'quan-short', '', 'Danh mục Quần short', 2, 1),
+(9, 'Giày thể thao', 'giay-the-thao', '', 'Danh mục Giày thể thao', 3, 1),
+(10, 'Giày tây', 'giay-tay', '', 'Danh mục Giày tây', 3, 1),
+(11, 'Sandal', 'sandal', '', 'Danh mục Sandal', 3, 1),
+(12, 'Dép', 'dep', '', 'Danh mục Dép', 3, 1),
+(13, 'Thắt lưng', 'that-lung', '', 'Danh mục Thắt lưng', 4, 1),
+(14, 'Ví', 'vi', '', 'Danh mục Ví', 4, 1),
+(15, 'Túi xách', 'tui-xach', '', 'Danh mục Túi xách', 4, 1),
+(16, 'Mũ nón', 'mu-non', '', 'Danh mục Mũ nón', 4, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `django_admin_log`
+--
+
+CREATE TABLE `django_admin_log` (
+  `id` int NOT NULL,
+  `action_time` datetime(6) NOT NULL,
+  `object_id` longtext,
+  `object_repr` varchar(200) NOT NULL,
+  `action_flag` smallint UNSIGNED NOT NULL,
+  `change_message` longtext NOT NULL,
+  `content_type_id` int DEFAULT NULL,
+  `user_id` bigint NOT NULL
+) ;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `django_content_type`
+--
+
+CREATE TABLE `django_content_type` (
+  `id` int NOT NULL,
+  `app_label` varchar(100) NOT NULL,
+  `model` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `django_content_type`
+--
+
+INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
+(8, 'accounts', 'account'),
+(10, 'accounts', 'eventuser'),
+(9, 'accounts', 'userprofile'),
+(1, 'admin', 'logentry'),
+(3, 'auth', 'group'),
+(2, 'auth', 'permission'),
+(11, 'carts', 'cart'),
+(12, 'carts', 'cartitem'),
+(6, 'category', 'categorymain'),
+(7, 'category', 'subcategory'),
+(4, 'contenttypes', 'contenttype'),
+(21, 'image_embeddings', 'embedding'),
+(17, 'orders', 'order'),
+(19, 'orders', 'orderproduct'),
+(18, 'orders', 'payment'),
+(20, 'orders', 'review'),
+(5, 'sessions', 'session'),
+(16, 'store', 'folderevent'),
+(13, 'store', 'product'),
+(15, 'store', 'productimage'),
+(14, 'store', 'variation');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `django_migrations`
+--
+
+CREATE TABLE `django_migrations` (
+  `id` bigint NOT NULL,
+  `app` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `applied` datetime(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `django_migrations`
+--
+
+INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
+(1, 'category', '0001_initial', '2025-04-08 15:11:33.905962'),
+(2, 'category', '0002_remove_categorymain_cat_img', '2025-04-08 15:11:34.042289'),
+(3, 'category', '0003_categorymain_cat_main_img_subcategory', '2025-04-08 15:11:34.507455'),
+(4, 'store', '0001_initial', '2025-04-08 15:11:34.856397'),
+(5, 'store', '0002_rename_categorymain_product_category_main', '2025-04-08 15:11:35.089090'),
+(6, 'store', '0003_product_short_desp', '2025-04-08 15:11:35.278169'),
+(7, 'store', '0004_product_mrp_price', '2025-04-08 15:11:35.408448'),
+(8, 'store', '0005_variation', '2025-04-08 15:11:35.594300'),
+(9, 'category', '0004_auto_20240428_1643', '2025-04-08 15:11:35.916421'),
+(10, 'store', '0006_auto_20240428_1643', '2025-04-08 15:11:36.795244'),
+(11, 'store', '0007_auto_20240428_1918', '2025-04-08 15:11:37.105462'),
+(12, 'store', '0008_product_gender', '2025-04-08 15:11:37.233854'),
+(13, 'store', '0009_alter_variation_created_date', '2025-04-08 15:11:37.336906'),
+(14, 'store', '0010_alter_product_product_name', '2025-04-08 15:11:37.392528'),
+(15, 'store', '0011_product_rating', '2025-04-08 15:11:37.534293'),
+(16, 'store', '0012_alter_product_rating', '2025-04-08 15:11:37.543320'),
+(17, 'store', '0013_remove_product_color', '2025-04-08 15:11:37.666683'),
+(18, 'store', '0014_alter_variation_product', '2025-04-08 15:11:37.676613'),
+(19, 'store', '0015_alter_variation_product', '2025-04-08 15:11:37.688679'),
+(20, 'store', '0016_variation_code', '2025-04-08 15:11:37.789725'),
+(21, 'store', '0017_auto_20240503_1109', '2025-04-08 15:11:38.095109'),
+(22, 'accounts', '0001_initial', '2025-04-08 15:11:38.171061'),
+(23, 'accounts', '0002_auto_20240424_2115', '2025-04-08 15:11:38.677808'),
+(24, 'accounts', '0003_alter_userprofile_profile_picture', '2025-04-08 15:11:38.705258'),
+(25, 'accounts', '0004_alter_userprofile_profile_picture', '2025-04-08 15:11:38.737303'),
+(26, 'accounts', '0005_auto_20240425_1301', '2025-04-08 15:11:39.608207'),
+(27, 'accounts', '0006_userprofile_city', '2025-04-08 15:11:39.723534'),
+(28, 'accounts', '0007_alter_userprofile_profile_picture', '2025-04-08 15:11:39.731962'),
+(29, 'accounts', '0008_auto_20240428_0552', '2025-04-08 15:11:39.909657'),
+(30, 'accounts', '0009_eventuser', '2025-04-08 15:11:40.340505'),
+(31, 'accounts', '0010_eventuser_frequency', '2025-04-08 15:11:40.472379'),
+(32, 'accounts', '0011_auto_20240501_1429', '2025-04-08 15:11:40.912884'),
+(33, 'accounts', '0012_auto_20240505_1245', '2025-04-08 15:11:41.475834'),
+(34, 'accounts', '0013_alter_userprofile_sex', '2025-04-08 15:11:41.604854'),
+(35, 'accounts', '0014_alter_userprofile_sex', '2025-04-08 15:11:41.614853'),
+(36, 'accounts', '0015_eventuser_rating', '2025-04-08 15:11:41.730204'),
+(37, 'accounts', '0016_account_is_login', '2025-04-08 15:11:41.846480'),
+(38, 'accounts', '0017_alter_account_last_login', '2025-04-08 15:11:41.855481'),
+(39, 'accounts', '0018_remove_account_is_login', '2025-04-08 15:11:41.949208'),
+(40, 'accounts', '0019_account_is_login', '2025-04-08 15:11:42.068843'),
+(41, 'accounts', '0020_alter_eventuser_event_type_alter_eventuser_product_and_more', '2025-04-08 15:11:42.449289'),
+(42, 'contenttypes', '0001_initial', '2025-04-08 15:11:42.534730'),
+(43, 'admin', '0001_initial', '2025-04-08 15:11:42.834629'),
+(44, 'admin', '0002_logentry_remove_auto_add', '2025-04-08 15:11:42.849734'),
+(45, 'admin', '0003_logentry_add_action_flag_choices', '2025-04-08 15:11:42.863970'),
+(46, 'contenttypes', '0002_remove_content_type_name', '2025-04-08 15:11:43.060184'),
+(47, 'auth', '0001_initial', '2025-04-08 15:11:43.645572'),
+(48, 'auth', '0002_alter_permission_name_max_length', '2025-04-08 15:11:43.780945'),
+(49, 'auth', '0003_alter_user_email_max_length', '2025-04-08 15:11:43.794828'),
+(50, 'auth', '0004_alter_user_username_opts', '2025-04-08 15:11:43.804827'),
+(51, 'auth', '0005_alter_user_last_login_null', '2025-04-08 15:11:43.815829'),
+(52, 'auth', '0006_require_contenttypes_0002', '2025-04-08 15:11:43.823739'),
+(53, 'auth', '0007_alter_validators_add_error_messages', '2025-04-08 15:11:43.840066'),
+(54, 'auth', '0008_alter_user_username_max_length', '2025-04-08 15:11:43.855069'),
+(55, 'auth', '0009_alter_user_last_name_max_length', '2025-04-08 15:11:43.869116'),
+(56, 'auth', '0010_alter_group_name_max_length', '2025-04-08 15:11:43.909562'),
+(57, 'auth', '0011_update_proxy_permissions', '2025-04-08 15:11:43.937276'),
+(58, 'auth', '0012_alter_user_first_name_max_length', '2025-04-08 15:11:43.949306'),
+(59, 'carts', '0001_initial', '2025-04-08 15:11:44.302833'),
+(60, 'carts', '0002_cartitem_variations', '2025-04-08 15:11:44.672183'),
+(61, 'carts', '0003_cartitem_user_alter_cartitem_cart', '2025-04-08 15:11:45.132350'),
+(62, 'carts', '0004_alter_cartitem_user', '2025-04-08 15:11:45.156228'),
+(63, 'image_embeddings', '0001_initial', '2025-04-08 15:11:45.171206'),
+(64, 'orders', '0001_initial', '2025-04-08 15:11:46.360752'),
+(65, 'orders', '0002_rename_orderproducts_orderproduct', '2025-04-08 15:11:46.454574'),
+(66, 'orders', '0003_alter_order_address_line_2', '2025-04-08 15:11:46.470999'),
+(67, 'orders', '0004_remove_orderproduct_color_remove_orderproduct_size', '2025-04-08 15:11:46.747675'),
+(68, 'orders', '0005_remove_orderproduct_variation_orderproduct_variation', '2025-04-08 15:11:47.230180'),
+(69, 'orders', '0006_rename_payment_order_payment', '2025-04-08 15:11:47.455568'),
+(70, 'orders', '0007_order_order_status', '2025-04-08 15:11:47.597180'),
+(71, 'orders', '0008_alter_order_order_status', '2025-04-08 15:11:47.612181'),
+(72, 'orders', '0009_auto_20220913_1638', '2025-04-08 15:11:47.767148'),
+(73, 'orders', '0010_auto_20240428_1643', '2025-04-08 15:11:49.421352'),
+(74, 'orders', '0011_review', '2025-04-08 15:11:49.614429'),
+(75, 'orders', '0012_alter_orderproduct_product', '2025-04-08 15:11:49.636447'),
+(76, 'orders', '0013_alter_order_order_status_alter_order_payment', '2025-04-08 15:11:49.679563'),
+(77, 'orders', '0014_alter_order_payment', '2025-04-08 15:11:49.957283'),
+(78, 'orders', '0015_alter_order_order_status', '2025-04-08 15:11:49.971292'),
+(79, 'orders', '0016_order_is_view', '2025-04-08 15:11:50.109124'),
+(80, 'sessions', '0001_initial', '2025-04-08 15:11:50.244098'),
+(81, 'store', '0018_folderevent', '2025-04-08 15:11:50.325862'),
+(82, 'store', '0019_product_image_url', '2025-04-08 15:11:50.464903'),
+(83, 'store', '0020_remove_product_image_url', '2025-04-08 15:11:50.597545'),
+(84, 'store', '0021_remove_productimage_image_url_productimage_image', '2025-04-08 15:11:50.855548'),
+(85, 'store', '0022_alter_productimage_image', '2025-04-08 15:11:50.875435'),
+(86, 'store', '0023_alter_productimage_image', '2025-04-08 15:11:50.900327');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `django_session`
+--
+
+CREATE TABLE `django_session` (
+  `session_key` varchar(40) NOT NULL,
+  `session_data` longtext NOT NULL,
+  `expire_date` datetime(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `django_session`
+--
+
+INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
+('7sjzshqf36fm61vbcmwjhqphj8j5jfvi', '.eJxVjMsOwiAURP-FtSGlPASX7v0Gwn0gVQNJaVfGf7dNutDNLOacmbeIaV1KXDvPcSJxEUqcfjtI-OS6A3qkem8SW13mCeSuyIN2eWvEr-vh_h2U1Mu2HgY2TqdsHY2ecmZm1EYDAJ49KAswOp1xC6_BW2fBgMJsQwjeE7D4fAECSjig:1uPcY4:ifAlRxforfkGWUqq9jAAr4mA1VuqYhQa2o8Z8yZYZFc', '2025-06-26 14:40:32.139231'),
+('co4ier4xot7yqyfnfx9ckf3vw95zqkhd', '.eJxVjDsOwjAQBe_iGlmJ17-lpOcM1npt4wBypDipEHeHSCmgfTPzXiLQttaw9byEKYmzAHH63SLxI7cdpDu12yx5busyRbkr8qBdXueUn5fD_Tuo1Ou35oKACjyOgIhsR4-ZHduo2ZRBcyHNWbNzNnliawxntAaUwQh68Eq8P9neN3A:1u2sGS:KO_e331iw6MV6ieVWhKLbsB9-mG9Z_JmegGRar0tePM', '2025-04-24 20:48:20.829336'),
+('odxtgzefvrfvqts72hof9doyr8xk8gmt', '.eJxVjMsOwiAURP-FtSGlPASX7v0Gwn0gVQNJaVfGf7dNutDNLOacmbeIaV1KXDvPcSJxEUqcfjtI-OS6A3qkem8SW13mCeSuyIN2eWvEr-vh_h2U1Mu2HgY2TqdsHY2ecmZm1EYDAJ49KAswOp1xC6_BW2fBgMJsQwjeE7D4fAECSjig:1uEltu:2d8lMSbOXWY9lrd5Wn4IAz3n6npqZ3SvgicpKXWtjSc', '2025-05-27 16:26:14.349426'),
+('u71apzbbelm7qvks17zld6hvgpflzf0e', '.eJxVjMsOwiAURP-FtSGlPASX7v0Gwn0gVQNJaVfGf7dNutDNLOacmbeIaV1KXDvPcSJxEUqcfjtI-OS6A3qkem8SW13mCeSuyIN2eWvEr-vh_h2U1Mu2HgY2TqdsHY2ecmZm1EYDAJ49KAswOp1xC6_BW2fBgMJsQwjeE7D4fAECSjig:1uI0s7:f7Yhhzz1xUvLfHX2Sc1gDUW1a3CjuMkZLox6i9PZdbE', '2025-06-05 15:01:47.340538'),
+('ykd5g3185429gdgdxuttwslb7j08q5kf', '.eJxVjDsOwyAQRO9CHSHzzZIyvc-AWFiCkwhLxlRR7h47cuNmijdv5sP6lNiNSXZhPvS1-N5o8X8mzgxDfFHdi_QM9THzONd1mZDvCj_axsc50ft-uKeDElrZ1sNA2qqQjU0SUs5EFJVWiBivgMIgSqty3AIUgrEGNYqYjXMOICGx7w-rNjsC:1u7rQf:vT12YkytvphUOS23mMjj-1LtRtcq7dQPoyIGZwrSg4M', '2025-05-08 14:55:29.783702');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `orders_order`
+--
+
+CREATE TABLE `orders_order` (
+  `id` bigint NOT NULL,
+  `order_number` varchar(20) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `city` varchar(100) NOT NULL,
+  `order_note` longtext NOT NULL,
+  `order_total` double NOT NULL,
+  `tax` double NOT NULL,
+  `status` varchar(50) NOT NULL,
+  `ip` varchar(20) NOT NULL,
+  `is_ordered` tinyint(1) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `payment_id` bigint DEFAULT NULL,
+  `user_id` bigint DEFAULT NULL,
+  `order_status` varchar(50) NOT NULL,
+  `payment_method` varchar(50) NOT NULL,
+  `district` varchar(100) NOT NULL,
+  `full_name` varchar(100) DEFAULT NULL,
+  `road` varchar(150) NOT NULL,
+  `total_items` int NOT NULL,
+  `ward` varchar(100) NOT NULL,
+  `is_view` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `orders_order`
+--
+
+INSERT INTO `orders_order` (`id`, `order_number`, `phone`, `email`, `city`, `order_note`, `order_total`, `tax`, `status`, `ip`, `is_ordered`, `created_at`, `updated_at`, `payment_id`, `user_id`, `order_status`, `payment_method`, `district`, `full_name`, `road`, `total_items`, `ward`, `is_view`) VALUES
+(1, '20250408162152', '0393348819', 'admin@gmail.com', 'R1898841', 'ngon bổ', 212.16, 4.16, 'new', '127.0.0.1', 0, '2025-04-08 16:21:52.869619', '2025-05-22 15:11:07.876667', NULL, 1, 'Return', 'VNPAY', 'R7091142', 'Hoàng Minh Dũng', '16b ngõ 5 hà trì 1 hà đông', 0, 'R80009935', 1),
+(2, '20250408162203', '0393348819', 'admin@gmail.com', 'R1898841', 'ngon bổ', 212.16, 4.16, 'new', '127.0.0.1', 0, '2025-04-08 16:22:03.378065', '2025-04-08 16:24:07.236128', NULL, 1, 'Cancelled', 'VNPAY', 'R7091142', 'Hoàng Minh Dũng', '16b ngõ 5 hà trì 1 hà đông', 0, 'R80009935', 1),
+(3, '20250408162248', '0393348819', 'admin@gmail.com', 'R1903516', 'ngon bổ', 212.16, 4.16, 'new', '127.0.0.1', 1, '2025-04-08 16:22:48.685121', '2025-04-08 16:23:28.476690', 1, 1, 'Accepted', 'VNPAY', 'R7115632', 'Hoàng Minh Dũng', '16b ngõ 5 hà trì 1 hà đông', 0, 'R80199395', 1),
+(4, '20250410153956', '0393348819', 'admin@gmail.com', 'R1903516', 'ngon bổ', 3055.92, 59.92, 'new', '127.0.0.1', 1, '2025-04-10 15:39:56.099187', '2025-04-10 15:40:40.024595', 2, 1, 'Accepted', 'VNPAY', 'R7115795', 'Hoàng Minh Dũng', '16b ngõ 5 hà trì 1 hà đông', 0, 'R80199027', 1),
+(5, '20250410154229', '0393348819', 'admin@gmail.com', 'R1902686', 'ngon bổ', 423.3, 8.3, 'new', '127.0.0.1', 1, '2025-04-10 15:42:29.019223', '2025-04-10 15:42:50.185283', 3, 1, 'Accepted', 'VNPAY', 'R7133375', 'Hoàng Minh Dũng', '16b ngõ 5 hà trì 1 hà đông', 0, 'R80000220', 1),
+(6, '20250410194656', 'xvkcjvkls;jfd', 'hoangdungls2309@gmail.com', 'R1973756', 'ngon bổ', 877.2, 17.2, 'new', '127.0.0.1', 0, '2025-04-10 19:46:56.128853', '2025-04-10 19:46:56.128853', NULL, 2, 'Accepted', 'VNPAY', 'R6846181', 'Hoàng Minh Dũng', 'a', 0, 'R6846135', 1),
+(7, '20250410203956', '0393348819', 'hoangdungls2309@gmail.com', 'R1906037', 'ngon bổ', 1506.54, 29.54, 'new', '127.0.0.1', 1, '2025-04-10 20:39:56.845644', '2025-04-21 23:19:11.321243', 4, 2, 'On shipping', 'VNPAY', 'R7154399', 'Hoàng Minh Dũng', '16b ngõ 5 hà trì 1 hà đông', 0, 'R80006886', 1),
+(8, '20250507161253', '0393348819', 'admin@gmail.com', 'R1904231', 'ngon bổ', 8205.9, 160.9, 'new', '127.0.0.1', 0, '2025-05-07 16:12:53.943625', '2025-05-07 16:12:59.606276', 5, 1, 'Cancelled', 'VNPAY', 'R7156246', 'Hoàng Minh Dũng', '16b ngõ 5 hà trì 1 hà đông', 0, 'R80006567', 1),
+(9, '20250522012009', '0393348819', 'admin@gmail.com', 'R1902686', 'ngon bổ', 1252.56, 24.56, 'new', '127.0.0.1', 1, '2025-05-22 01:20:09.492305', '2025-05-22 01:21:04.204608', 6, 1, 'Accepted', 'VNPAY', 'R7133375', 'Hoàng Minh Dũng', 'dsa', 0, 'R80000221', 1),
+(10, '20250522012222', '0393348819', 'admin@gmail.com', 'R1884042', 'ngon bổ', 763.98, 14.98, 'new', '127.0.0.1', 0, '2025-05-22 01:22:22.428694', '2025-05-22 01:22:22.428694', NULL, 1, 'Accepted', 'VNPAY', 'R7083711', 'Hoàng Minh Dũng', 'dsa', 0, 'R80006775', 1),
+(11, '20250522150338', '0393348819', 'admin@gmail.com', 'R1903516', 'hvhjvhjvhj', 763.98, 14.98, 'new', '127.0.0.1', 1, '2025-05-22 15:03:38.353349', '2025-05-22 15:04:24.593770', 7, 1, 'Accepted', 'VNPAY', 'R7115635', 'Hoàng Minh Dũng', '16b ngõ 5 hà trì 1 hà đông', 0, 'R80199085', 1),
+(12, '20250612143929', '0901234567', 'nguyenvana@gmail.com', 'R1904296', 'ngon bổ', 763.98, 14.98, 'new', '127.0.0.1', 1, '2025-06-12 14:39:29.077001', '2025-06-12 14:40:09.088726', 8, 5, 'Accepted', 'VNPAY', 'R7153187', 'Nguyen Van A', 'ngon', 0, 'R80003545', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `orders_orderproduct`
+--
+
+CREATE TABLE `orders_orderproduct` (
+  `id` bigint NOT NULL,
+  `quantity` int NOT NULL,
+  `product_price` double NOT NULL,
+  `ordered` tinyint(1) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `order_id` bigint NOT NULL,
+  `payment_id` bigint DEFAULT NULL,
+  `product_id` bigint NOT NULL,
+  `user_id` bigint NOT NULL,
+  `discount_amount` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `orders_orderproduct`
+--
+
+INSERT INTO `orders_orderproduct` (`id`, `quantity`, `product_price`, `ordered`, `created_at`, `updated_at`, `order_id`, `payment_id`, `product_id`, `user_id`, `discount_amount`) VALUES
+(1, 1, 208, 1, '2025-04-08 16:23:28.508621', '2025-04-08 16:23:28.547291', 3, 1, 52, 1, 0.00),
+(2, 1, 749, 1, '2025-04-10 15:40:40.042066', '2025-04-10 15:40:40.080840', 4, 2, 2, 1, 0.00),
+(3, 2, 749, 1, '2025-04-10 15:40:40.101838', '2025-04-10 15:40:40.131684', 4, 2, 2, 1, 0.00),
+(4, 1, 749, 1, '2025-04-10 15:40:40.155708', '2025-04-10 15:40:40.182679', 4, 2, 2, 1, 0.00),
+(5, 1, 415, 1, '2025-04-10 15:42:50.200699', '2025-04-10 15:42:50.231366', 5, 3, 62, 1, 0.00),
+(6, 1, 860, 1, '2025-04-10 20:40:28.310516', '2025-04-10 20:40:28.418147', 7, 4, 1, 2, 0.00),
+(7, 1, 617, 1, '2025-04-10 20:40:28.475305', '2025-04-10 20:40:28.548542', 7, 4, 7, 2, 0.00),
+(8, 5, 860, 0, '2025-05-07 16:12:59.626928', '2025-05-07 16:12:59.661971', 8, 5, 1, 1, 0.00),
+(9, 5, 749, 0, '2025-05-07 16:12:59.679539', '2025-05-07 16:12:59.710070', 8, 5, 2, 1, 0.00),
+(10, 1, 860, 1, '2025-05-22 01:21:04.221661', '2025-05-22 01:21:04.259673', 9, 6, 1, 1, 0.00),
+(11, 1, 368, 1, '2025-05-22 01:21:04.280670', '2025-05-22 01:21:04.316875', 9, 6, 41, 1, 0.00),
+(12, 1, 749, 1, '2025-05-22 15:04:24.615371', '2025-05-22 15:04:24.656879', 11, 7, 2, 1, 0.00),
+(13, 1, 749, 1, '2025-06-12 14:40:09.103910', '2025-06-12 14:40:09.138175', 12, 8, 2, 5, 0.00);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `orders_orderproduct_variation`
+--
+
+CREATE TABLE `orders_orderproduct_variation` (
+  `id` bigint NOT NULL,
+  `orderproduct_id` bigint NOT NULL,
+  `variation_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `orders_orderproduct_variation`
+--
+
+INSERT INTO `orders_orderproduct_variation` (`id`, `orderproduct_id`, `variation_id`) VALUES
+(1, 1, 514),
+(2, 1, 518),
+(4, 2, 12),
+(3, 2, 18),
+(6, 3, 11),
+(5, 3, 17),
+(8, 4, 11),
+(7, 4, 18),
+(10, 5, 612),
+(9, 5, 617),
+(11, 6, 2),
+(12, 6, 7),
+(14, 7, 62),
+(13, 7, 67),
+(15, 8, 2),
+(16, 8, 7),
+(18, 9, 11),
+(17, 9, 17),
+(19, 10, 2),
+(20, 10, 7),
+(22, 11, 404),
+(21, 11, 409),
+(24, 12, 12),
+(23, 12, 17),
+(26, 13, 14),
+(25, 13, 17);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `orders_payment`
+--
+
+CREATE TABLE `orders_payment` (
+  `id` bigint NOT NULL,
+  `payment_id` varchar(100) NOT NULL,
+  `payment_method` varchar(100) NOT NULL,
+  `amount_paid` double NOT NULL,
+  `status` varchar(100) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `user_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `orders_payment`
+--
+
+INSERT INTO `orders_payment` (`id`, `payment_id`, `payment_method`, `amount_paid`, `status`, `created_at`, `user_id`) VALUES
+(1, '14895551', 'VNPAY', 212.16, 'Completed', '2025-04-08 16:23:28.460290', 1),
+(2, '14899815', 'VNPAY', 3055.92, 'Completed', '2025-04-10 15:40:40.017599', 1),
+(3, '14899825', 'VNPAY', 423.3, 'Completed', '2025-04-10 15:42:50.178281', 1),
+(4, '14900558', 'VNPAY', 1506.54, 'Completed', '2025-04-10 20:40:28.217367', 2),
+(5, '0', 'VNPAY', 8205.9, 'Cancelled', '2025-05-07 16:12:59.596795', 1),
+(6, '14971967', 'VNPAY', 1252.56, 'Completed', '2025-05-22 01:21:04.196009', 1),
+(7, '14973028', 'VNPAY', 763.98, 'Completed', '2025-05-22 15:04:24.586767', 1),
+(8, '15014536', 'VNPAY', 763.98, 'Completed', '2025-06-12 14:40:09.081709', 5);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `orders_review`
+--
+
+CREATE TABLE `orders_review` (
+  `id` bigint NOT NULL,
+  `review_text` longtext NOT NULL,
+  `rating` int NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `order_product_id` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `store_folderevent`
+--
+
+CREATE TABLE `store_folderevent` (
+  `id` bigint NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `created_at` datetime(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `store_product`
+--
+
+CREATE TABLE `store_product` (
+  `id` bigint NOT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `slug` varchar(100) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `description` longtext NOT NULL,
+  `stock` int NOT NULL,
+  `is_available` tinyint(1) NOT NULL,
+  `created_date` datetime(6) NOT NULL,
+  `modified_date` datetime(6) NOT NULL,
+  `sub_category_id` bigint DEFAULT NULL,
+  `short_desp` varchar(150) NOT NULL,
+  `mrp_price` decimal(10,2) NOT NULL,
+  `brand_name` varchar(255) DEFAULT NULL,
+  `category_main_id` bigint DEFAULT NULL,
+  `season` varchar(50) DEFAULT NULL,
+  `year` int DEFAULT NULL,
+  `gender` varchar(30) DEFAULT NULL,
+  `rating` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `store_product`
+--
+
+INSERT INTO `store_product` (`id`, `product_name`, `slug`, `price`, `description`, `stock`, `is_available`, `created_date`, `modified_date`, `sub_category_id`, `short_desp`, `mrp_price`, `brand_name`, `category_main_id`, `season`, `year`, `gender`, `rating`) VALUES
+(1, 'Áo khoác thể thao Nike xanh', 'ao-thun', 860.00, 'Mô tả chi tiết cho Áo khoác 1', 51, 1, '2025-04-08 15:45:44.389262', '2025-05-22 01:21:04.269674', 3, 'Mô tả ngắn cho Áo khoác 1', 239.00, 'H&M', 1, 'Hạ', 2024, 'Nam', 3),
+(2, 'Áo khoác dáng slim fit có khóa kéo thoải mái cho nữ', 'o-khoc-dng-slim-fit-c-kha-ko-thoi-mi-cho-n', 749.00, 'Mô tả chi tiết cho Áo khoác 2', 8, 1, '2025-04-08 15:45:44.593902', '2025-06-12 14:40:09.149199', 3, 'Mô tả ngắn cho Áo khoác 2', 200.00, 'Uniqlo', 1, 'Đông', 2024, 'Unisex', 5),
+(3, 'Áo khoác denim nam dáng ôm', 'o-khoc-denim-nam-dng-m', 844.00, 'Mô tả chi tiết cho Áo khoác 3', 90, 1, '2025-04-08 15:45:44.750321', '2025-05-21 20:36:56.018329', 3, 'Mô tả ngắn cho Áo khoác 3', 611.00, 'H&M', 1, 'Hạ', 2020, 'Nam', 4),
+(5, 'Áo khoác denim nam dáng slim fit', 'o-khoc-denim-nam-dng-slim-fit', 292.00, 'Mô tả chi tiết cho Áo khoác 5', 52, 1, '2025-04-08 15:45:45.078685', '2025-05-21 20:38:15.983393', 3, 'Mô tả ngắn cho Áo khoác 5', 942.00, 'Zara', 1, 'Thu', 2021, 'Nam', 5),
+(6, 'Áo khoác dù nữ có khóa kéo', 'o-khoc-d-n-c-kha-ko', 861.00, 'Mô tả chi tiết cho Áo len 1', 42, 1, '2025-04-08 15:45:45.227655', '2025-05-21 20:38:59.547958', 3, 'Mô tả ngắn cho Áo len 1', 950.00, 'H&M', 1, 'Xuân', 2024, 'Unisex', 3),
+(7, 'Áo khoác jeans nữ dáng rộng có khóa kéo', 'o-khoc-jeans-n-dng-rng-c-kha-ko', 617.00, 'Mô tả chi tiết cho Áo len 2', 30, 1, '2025-04-08 15:45:45.401078', '2025-05-21 20:39:35.352131', 4, 'Mô tả ngắn cho Áo len 2', 551.00, 'Uniqlo', 1, 'Hạ', 2023, 'Unisex', 5),
+(8, 'Áo khoác nam da lộn dáng ôm', 'o-khoc-nam-da-ln-dng-m', 229.00, 'Mô tả chi tiết cho Áo len 3', 81, 1, '2025-04-08 15:45:45.560663', '2025-05-21 20:40:06.197508', 4, 'Mô tả ngắn cho Áo len 3', 587.00, 'Zara', 1, 'Hạ', 2021, 'Nam', 4),
+(9, 'Áo khoác nam dáng ôm chất liệu nylon', 'o-khoc-nam-dng-m-cht-liu-nylon', 440.00, 'Mô tả chi tiết cho Áo len 4', 44, 1, '2025-04-08 15:45:45.713298', '2025-05-21 20:40:39.837821', 4, 'Mô tả ngắn cho Áo len 4', 612.00, 'H&M', 1, 'Đông', 2024, 'Unisex', 3),
+(10, 'Áo khoác nam dáng slim fit màu vàng', 'o-khoc-nam-dng-slim-fit-mu-vng', 171.00, 'Mô tả chi tiết cho Áo len 5', 38, 1, '2025-04-08 15:45:45.865268', '2025-05-21 20:41:21.437129', 4, 'Mô tả ngắn cho Áo len 5', 759.00, 'Puma', 1, 'Đông', 2020, 'Nữ', 5),
+(11, 'Áo khoác nam đen trơn dáng ôm', 'o-khoc-nam-en-trn-dng-m', 230.00, 'Mô tả chi tiết cho Áo sơ mi 1', 33, 1, '2025-04-08 15:45:46.035043', '2025-05-21 20:41:57.653071', 2, 'Mô tả ngắn cho Áo sơ mi 1', 267.00, 'Uniqlo', 1, 'Thu', 2022, 'Unisex', 3),
+(12, 'Áo khoác phao nữ hồng nhạt', 'o-khoc-phao-n-hng-nht', 669.00, 'Mô tả chi tiết cho Áo sơ mi 2', 59, 1, '2025-04-08 15:45:46.200903', '2025-05-21 20:42:27.239723', 2, 'Mô tả ngắn cho Áo sơ mi 2', 681.00, 'Uniqlo', 1, 'Xuân', 2020, 'Nam', 5),
+(14, 'Áo sweater nam dệt kim cổ tròn tay dài Signature', 'o-sweater-nam-dt-kim-c-trn-tay-di-signature', 269.00, 'Mô tả chi tiết cho Áo sơ mi 4', 48, 1, '2025-04-08 15:45:46.495244', '2025-05-21 21:37:37.165155', 3, 'Mô tả ngắn cho Áo sơ mi 4', 100.00, 'Uniqlo', 1, 'Hạ', 2024, 'Unisex', 5),
+(15, 'Áo sweater nam dệt kim cổ tròn tay dài Jacquarded', 'o-sweater-nam-dt-kim-c-trn-tay-di-jacquarded', 234.00, 'Mô tả chi tiết cho Áo sơ mi 5', 59, 1, '2025-04-08 15:45:46.646383', '2025-05-21 21:38:15.450045', 2, 'Mô tả ngắn cho Áo sơ mi 5', 867.00, 'H&M', 1, 'Hạ', 2020, 'Nam', 5),
+(16, 'H&M Áo jumper hoạ tiết thêu', 'hm-o-jumper-ho-tit-thu', 845.00, 'Mô tả chi tiết cho Áo thun 1', 74, 1, '2025-04-08 15:45:46.800162', '2025-05-21 21:38:49.295787', 1, 'Mô tả ngắn cho Áo thun 1', 175.00, 'Nike', 1, 'Đông', 2022, 'Unisex', 4),
+(17, 'Áo jumper có hoạ tiết lỗ', 'o-jumper-c-ho-tit-l', 489.00, 'Mô tả chi tiết cho Áo thun 2', 42, 1, '2025-04-08 15:45:46.951847', '2025-05-21 21:39:20.012559', 1, 'Mô tả ngắn cho Áo thun 2', 563.00, 'H&M', 1, 'Đông', 2024, 'Unisex', 3),
+(18, 'Áo sweater cổ tròn tay dài Nylon', 'o-sweater-c-trn-tay-di-nylon', 760.00, 'Mô tả chi tiết cho Áo thun 3', 77, 1, '2025-04-08 15:45:47.101069', '2025-05-21 21:39:52.479637', 1, 'Mô tả ngắn cho Áo thun 3', 166.00, 'Uniqlo', 1, 'Hạ', 2022, 'Nữ', 3),
+(19, 'Áo khoác cardigan unisex Megagram Button', 'o-khoc-cardigan-unisex-megagram-button', 323.00, 'Mô tả chi tiết cho Áo thun 4', 83, 1, '2025-04-08 15:45:47.249618', '2025-05-21 21:40:38.789879', 1, 'Mô tả ngắn cho Áo thun 4', 274.00, 'Adidas', 1, 'Xuân', 2024, 'Unisex', 4),
+(20, 'Áo sweater unisex cổ tròn tay dài Gradation Monogram', 'o-sweater-unisex-c-trn-tay-di-gradation-monogram', 254.00, 'Mô tả chi tiết cho Áo thun 5', 37, 1, '2025-04-08 15:45:47.391019', '2025-05-21 21:41:09.029150', 1, 'Mô tả ngắn cho Áo thun 5', 244.00, 'H&M', 1, 'Xuân', 2021, 'Unisex', 3),
+(21, 'Áo sweater nữ cổ bẻ tay dài Varsity Sportive', 'o-sweater-n-c-b-tay-di-varsity-sportive', 552.00, 'Mô tả chi tiết cho Quần jean 1', 51, 1, '2025-04-08 15:45:47.556832', '2025-05-21 21:42:42.859471', 1, 'Mô tả ngắn cho Quần jean 1', 393.00, 'Nike', 1, 'Thu', 2022, 'Nữ', 4),
+(22, 'Quần dài nam xanh navy phong cách', 'qun-di-nam-xanh-navy-phong-cch', 413.00, 'Mô tả chi tiết cho Quần jean 2', 0, 1, '2025-04-08 15:45:47.710851', '2025-05-21 21:42:21.018365', 5, 'Mô tả ngắn cho Quần jean 2', 677.00, 'Puma', 2, 'Thu', 2023, 'Nam', 3),
+(23, 'Quần jean dáng ôm cho bé', 'qun-jean-dng-m-cho-b', 252.00, 'Mô tả chi tiết cho Quần jean 3', 93, 1, '2025-04-08 15:45:47.860324', '2025-05-21 21:43:25.367724', 5, 'Mô tả ngắn cho Quần jean 3', 246.00, 'Puma', 2, 'Xuân', 2023, 'Nữ', 3),
+(24, 'Quần jogger họa tiết cho bé', 'qun-jogger-ha-tit-cho-b', 463.00, 'Mô tả chi tiết cho Quần jean 4', 86, 1, '2025-04-08 15:45:48.004354', '2025-05-21 21:44:16.480225', 5, 'Mô tả ngắn cho Quần jean 4', 858.00, 'Uniqlo', 2, 'Xuân', 2024, 'Nam', 4),
+(25, 'Quần jogger nam phong cách thể thao', 'qun-jogger-nam-phong-cch-th-thao', 195.00, 'Mô tả chi tiết cho Quần jean 5', 63, 1, '2025-04-08 15:45:48.155774', '2025-05-21 21:44:49.221484', 5, 'Mô tả ngắn cho Quần jean 5', 950.00, 'Uniqlo', 2, 'Xuân', 2024, 'Unisex', 3),
+(26, 'Quần Palazzo nữ kèm đai eo', 'qun-palazzo-n-km-ai-eo', 102.00, 'Mô tả chi tiết cho Quần kaki 1', 27, 1, '2025-04-08 15:45:48.323681', '2025-05-21 21:45:24.477740', 6, 'Mô tả ngắn cho Quần kaki 1', 292.00, 'Puma', 2, 'Đông', 2024, 'Nữ', 3),
+(27, 'Quần Palazzo nữ màu xanh đậm', 'qun-palazzo-n-mu-xanh-m', 112.00, 'Mô tả chi tiết cho Quần kaki 2', 24, 1, '2025-04-08 15:45:48.491231', '2025-05-21 21:45:54.431777', 6, 'Mô tả ngắn cho Quần kaki 2', 998.00, 'Uniqlo', 2, 'Hạ', 2022, 'Nam', 4),
+(28, 'Quần suông xanh nhạt nữ', 'qun-sung-xanh-nht-n', 556.00, 'Mô tả chi tiết cho Quần kaki 3', 57, 1, '2025-04-08 15:45:48.642768', '2025-05-21 21:46:27.157618', 6, 'Mô tả ngắn cho Quần kaki 3', 854.00, 'Nike', 2, 'Hạ', 2022, 'Nam', 3),
+(29, 'Quần âu dáng suông nam', 'qun-u-dng-sung-nam', 310.00, 'Mô tả chi tiết cho Quần kaki 4', 15, 1, '2025-04-08 15:45:48.799919', '2025-05-21 21:47:09.143467', 6, 'Mô tả ngắn cho Quần kaki 4', 702.00, 'Puma', 2, 'Đông', 2021, 'Nam', 4),
+(30, 'Quần tây nam dáng ôm', 'qun-ty-nam-dng-m', 306.00, 'Mô tả chi tiết cho Quần kaki 5', 5, 1, '2025-04-08 15:45:48.951134', '2025-05-21 21:47:35.696253', 6, 'Mô tả ngắn cho Quần kaki 5', 351.00, 'Puma', 2, 'Thu', 2022, 'Nữ', 4),
+(31, 'Quần dài trẻ em họa tiết chấm bi', 'qun-di-tr-em-ha-tit-chm-bi', 125.00, 'Mô tả chi tiết cho Quần short 1', 71, 1, '2025-04-08 15:45:49.097963', '2025-05-21 21:48:06.771118', 8, 'Mô tả ngắn cho Quần short 1', 821.00, 'Zara', 2, 'Đông', 2023, 'Unisex', 4),
+(32, 'Túi cầm tay nam chữ nhật Allen Leather', 'ti-cm-tay-nam-', 355.00, 'Mô tả chi tiết cho Quần short 2', 24, 1, '2025-04-08 15:45:49.242329', '2025-05-22 00:03:34.252771', 14, 'Mô tả ngắn cho Quần short 2', 470.00, 'Nike', 4, 'Thu', 2023, 'Unisex', 4),
+(33, 'Túi xách nữ phom chữ nhật Willow', 'ti-xch-n-phom-ch-nht-willow', 844.00, 'Mô tả chi tiết cho Quần short 3', 31, 1, '2025-04-08 15:45:49.383927', '2025-05-22 00:04:08.229478', 8, 'Mô tả ngắn cho Quần short 3', 807.00, 'Nike', 2, 'Xuân', 2023, 'Unisex', 4),
+(34, 'Túi xách unisex phom chữ nhật', 'ti-xch-unisex-phom-ch-nht', 852.00, 'Mô tả chi tiết cho Quần short 4', 0, 1, '2025-04-08 15:45:49.539232', '2025-05-22 00:05:16.002481', 15, 'Mô tả ngắn cho Quần short 4', 485.00, 'Nike', 4, 'Hạ', 2021, 'Unisex', 3),
+(35, 'Túi xách nữ hình thang Sense', 'ti-xch-n-hnh-thang-sense', 57.00, 'Mô tả chi tiết cho Quần short 5', 39, 1, '2025-04-08 15:45:49.693734', '2025-05-22 00:06:22.865627', 14, 'Mô tả ngắn cho Quần short 5', 640.00, 'Zara', 4, 'Hạ', 2023, 'Nữ', 4),
+(36, 'GAP TÚI XÁCH NAM', 'gap-ti-xch-nam', 891.00, 'Mô tả chi tiết cho Quần tây 1', 86, 1, '2025-04-08 15:45:49.869832', '2025-05-22 00:07:18.778868', 15, 'Mô tả ngắn cho Quần tây 1', 242.00, 'Nike', 4, 'Hạ', 2022, 'Unisex', 4),
+(37, 'NAM TÚI ĐAN ĐEO CHÉO', 'nam-ti-an-eo-cho', 450.00, 'Mô tả chi tiết cho Quần tây 2', 83, 1, '2025-04-08 15:45:50.014070', '2025-05-22 00:07:50.751948', 15, 'Mô tả ngắn cho Quần tây 2', 446.00, 'Puma', 4, 'Đông', 2020, 'Unisex', 3),
+(38, 'TÚI THỂ THAO ĐEO CHÉO', 'ti-th-thao-eo-cho', 596.00, 'Mô tả chi tiết cho Quần tây 3', 5, 1, '2025-04-08 15:45:50.184693', '2025-05-22 00:08:33.721761', 15, 'Mô tả ngắn cho Quần tây 3', 704.00, 'Puma', 4, 'Hạ', 2020, 'Unisex', 3),
+(39, 'Dây Nịt Nam Reversible Pebble Leather', 'dy-nt-nam-reversible-r', 370.00, 'Mô tả chi tiết cho Quần tây 4', 49, 1, '2025-04-08 15:45:50.404056', '2025-05-22 00:09:24.979930', 13, 'Mô tả ngắn cho Quần tây 4', 297.00, 'Uniqlo', 4, 'Xuân', 2024, 'Unisex', 3),
+(40, 'áo Dài việt nam', 'o-di-vit-nam', 704.00, 'Mô tả chi tiết cho áo dài', 85, 1, '2025-04-08 15:45:50.617431', '2025-05-22 00:10:49.211688', 4, 'Mô tả ngắn cho Quần tây 5', 957.00, 'Adidas', 1, 'Xuân', 2021, 'Nữ', 4),
+(41, 'DÉP DA CÓ QUAI ĐÔI(ZARA-NAM)', 'dp-da-c-quai-izara-nam', 368.00, 'Mô tả chi tiết cho Dép 1', 67, 1, '2025-04-08 15:45:50.781755', '2025-05-22 01:21:04.330908', 12, 'Mô tả ngắn cho Dép 1', 198.00, 'Nike', 3, 'Thu', 2024, 'Nam', 4),
+(42, 'DÉP DA ĐẾ BỆT QUAI TRANG TRÍ CHI TIẾT NỔI', 'dp-da-bt-quai-trang-tr-chi-tit-ni', 446.00, 'Mô tả chi tiết cho Dép 2', 11, 1, '2025-04-08 15:45:50.924742', '2025-05-21 21:49:27.272302', 12, 'Mô tả ngắn cho Dép 2', 712.00, 'H&M', 3, 'Xuân', 2020, 'Unisex', 3),
+(43, 'DÉP DA LỘN ĐẾ BẰNG NHIỀU QUAI', 'dp-da-ln-bng-nhiu-quai', 64.00, 'Mô tả chi tiết cho Dép 3', 37, 1, '2025-04-08 15:45:51.066288', '2025-05-21 21:50:00.205100', 12, 'Mô tả ngắn cho Dép 3', 437.00, 'H&M', 3, 'Đông', 2021, 'Nữ', 5),
+(44, 'DÉP DA NHIỀU QUAI', 'dp-da-nhiu-quai', 93.00, 'Mô tả chi tiết cho Dép 4', 65, 1, '2025-04-08 15:45:51.213899', '2025-05-21 21:50:31.896711', 12, 'Mô tả ngắn cho Dép 4', 350.00, 'Zara', 3, 'Xuân', 2024, 'Nam', 3),
+(45, 'DÉP ĐẾ BẰNG PHỐI CHI TIẾT KIM LOẠI', 'dp-bng-phi-chi-tit-kim-loi', 78.00, 'Mô tả chi tiết cho Dép 5', 97, 1, '2025-04-08 15:45:51.363842', '2025-05-21 21:51:04.669809', 12, 'Mô tả ngắn cho Dép 5', 367.00, 'Adidas', 3, 'Thu', 2023, 'Nam', 5),
+(46, 'DÉP ĐẾ BẰNG QUAI CHÉO', 'dp-bng-quai-cho', 91.00, 'Mô tả chi tiết cho Giày tây 1', 43, 1, '2025-04-08 15:45:51.519253', '2025-05-21 21:51:37.434319', 10, 'Mô tả ngắn cho Giày tây 1', 682.00, 'Nike', 3, 'Xuân', 2021, 'Nữ', 3),
+(47, 'Giày Mule Superstar ADIDAS', 'giy-mule-superstar-adidas', 591.00, 'Mô tả chi tiết cho Giày tây 2', 18, 1, '2025-04-08 15:45:51.671168', '2025-05-21 21:52:10.484494', 10, 'Mô tả ngắn cho Giày tây 2', 945.00, 'H&M', 3, 'Đông', 2024, 'Nữ', 3),
+(48, 'XĂNG ĐAN BUỘC DÂY', 'xng-an-buc-dy', 234.00, 'Mô tả chi tiết cho Giày tây 3', 47, 1, '2025-04-08 15:45:51.823522', '2025-05-21 21:52:43.042178', 10, 'Mô tả ngắn cho Giày tây 3', 831.00, 'Puma', 3, 'Hạ', 2020, 'Unisex', 5),
+(49, 'XĂNG ĐAN ĐẾ BỆT QUAI TRANG TRÍ CHI TIẾT KIM LOẠI', 'xng-an-bt-quai-trang-tr-chi-tit-kim-loi', 203.00, 'Mô tả chi tiết cho Giày tây 4', 44, 1, '2025-04-08 15:45:51.982617', '2025-05-21 21:53:16.930841', 10, 'Mô tả ngắn cho Giày tây 4', 208.00, 'Nike', 3, 'Xuân', 2020, 'Nữ', 5),
+(50, 'XĂNG ĐAN KHÓA CÀI DẠNG THẮT LƯNG', 'xng-an-kha-ci-dng-tht-lng', 513.00, 'Mô tả chi tiết cho Giày tây 5', 46, 1, '2025-04-08 15:45:52.140747', '2025-05-21 21:53:47.767638', 10, 'Mô tả ngắn cho Giày tây 5', 108.00, 'Zara', 3, 'Xuân', 2024, 'Nam', 4),
+(51, 'Giày sandals nữ đế bệt Street Shanghai', 'giy-sandals-n-bt-street-shanghai', 264.00, 'Mô tả chi tiết cho Giày thể thao 1', 4, 1, '2025-04-08 15:45:52.287084', '2025-05-21 21:54:25.045080', 9, 'Mô tả ngắn cho Giày thể thao 1', 807.00, 'Adidas', 3, 'Đông', 2021, 'Nữ', 5),
+(52, 'Giày sandals nữ đế bệt quai ngang Icon', 'giy-sandals-n-bt-quai-ngang-icon', 208.00, 'Mô tả chi tiết cho Giày thể thao 2', 73, 1, '2025-04-08 15:45:52.447325', '2025-05-21 21:54:53.030406', 9, 'Mô tả ngắn cho Giày thể thao 2', 264.00, 'Zara', 3, 'Thu', 2021, 'Nam', 5),
+(53, 'Giày boots nam mũi tròn Suede Chelsea', 'giy-boots-nam-mi-trn-suede-chelsea', 675.00, 'Mô tả chi tiết cho Giày thể thao 3', 15, 1, '2025-04-08 15:45:52.593957', '2025-05-21 21:55:22.252391', 9, 'Mô tả ngắn cho Giày thể thao 3', 919.00, 'Uniqlo', 3, 'Thu', 2023, 'Nữ', 5),
+(54, 'Giày tây nam mũi tròn Rubber Sole Leather', 'giy-ty-nam-mi-trn-rubber-sole-leather', 459.00, 'Mô tả chi tiết cho Giày thể thao 4', 43, 1, '2025-04-08 15:45:52.754301', '2025-05-21 21:55:55.204509', 9, 'Mô tả ngắn cho Giày thể thao 4', 976.00, 'H&M', 3, 'Thu', 2022, 'Unisex', 3),
+(55, 'Giày oxford nam mũi nhọn Altitude Lightweight Leather', 'giy-oxford-nam-mi-nhn-altitude-lightweight-leather', 237.00, 'Mô tả chi tiết cho Giày thể thao 5', 77, 1, '2025-04-08 15:45:52.927695', '2025-05-21 21:56:25.377335', 9, 'Mô tả ngắn cho Giày thể thao 5', 402.00, 'H&M', 3, 'Xuân', 2021, 'Unisex', 3),
+(56, 'Giày tây nam mũi nhọn Altitude Lightweight', 'giy-ty-nam-mi-nhn-altitude-lightweight', 313.00, 'Mô tả chi tiết cho Sandal 1', 96, 1, '2025-04-08 15:45:53.102443', '2025-05-21 21:56:52.273872', 11, 'Mô tả ngắn cho Sandal 1', 882.00, 'Zara', 3, 'Đông', 2024, 'Nam', 4),
+(57, 'Giày tây nam mũi nhọn da sang trọng', 'giy-ty-nam-mi-nhn-da-sang-trng', 577.00, 'Mô tả chi tiết cho Sandal 2', 61, 1, '2025-04-08 15:45:53.290871', '2025-05-21 21:57:18.516545', 11, 'Mô tả ngắn cho Sandal 2', 747.00, 'H&M', 3, 'Thu', 2023, 'Unisex', 4),
+(58, 'Giày chạy bộ nữ Max Cushioning Endeavour', 'giy-chy-b-n-max-cushioning-endeavour', 413.00, 'Mô tả chi tiết cho Sandal 3', 55, 1, '2025-04-08 15:45:53.455836', '2025-05-21 21:57:50.108931', 11, 'Mô tả ngắn cho Sandal 3', 227.00, 'H&M', 3, 'Thu', 2021, 'Nam', 4),
+(59, 'Giày chạy bộ nữ SKX Street Shadow', 'giy-chy-b-n-skx-street-shadow', 571.00, 'Mô tả chi tiết cho Sandal 4', 15, 1, '2025-04-08 15:45:53.758353', '2025-05-21 21:58:19.365753', 11, 'Mô tả ngắn cho Sandal 4', 303.00, 'H&M', 3, 'Hạ', 2024, 'Unisex', 4),
+(60, 'Giày chạy bộ unisex phối logo', 'giy-chy-b-unisex-phi-logo', 585.00, 'Mô tả chi tiết cho Sandal 5', 12, 1, '2025-04-08 15:45:53.927692', '2025-05-21 21:58:49.990856', 11, 'Mô tả ngắn cho Sandal 5', 174.00, 'Uniqlo', 3, 'Hạ', 2022, 'Nam', 5),
+(61, 'Mũ lưỡi trai thể thao chống nước', '-m-li-trai-th-thao-chng-nc', 430.00, 'Mô tả chi tiết cho Mũ nón 1', 74, 1, '2025-04-08 15:45:54.098383', '2025-05-21 21:59:46.648118', 16, 'Mô tả ngắn cho Mũ nón 1', 171.00, 'Puma', 4, 'Xuân', 2022, 'Nữ', 4),
+(62, 'Nón bucket unisex Gopcore Lightweight Nylon Safari', 'nn-bucket-unisex-gopcore-lightweight-nylon-safari', 415.00, 'Mô tả chi tiết cho Mũ nón 2', 20, 1, '2025-04-08 15:45:54.290650', '2025-05-21 23:51:27.073908', 16, 'Mô tả ngắn cho Mũ nón 2', 477.00, 'Adidas', 4, 'Đông', 2024, 'Nữ', 5),
+(63, 'Nón bucket unisex Gopcore Lightweight Nylon Safari', 'nn-bucket-unisex-gopco', 790.00, 'Mô tả chi tiết cho Mũ nón 3', 51, 1, '2025-04-08 15:45:56.277962', '2025-05-21 23:52:59.161598', 16, 'Mô tả ngắn cho Mũ nón 3', 716.00, 'Uniqlo', 4, 'Xuân', 2021, 'Unisex', 5),
+(64, 'Nón bóng chày unisex cá tính', 'nn-bng-chy-unisex-c-tnh', 757.00, 'Mô tả chi tiết cho Mũ nón 4', 48, 1, '2025-04-08 15:45:56.452103', '2025-05-21 23:52:38.025652', 16, 'Mô tả ngắn cho Mũ nón 4', 485.00, 'H&M', 4, 'Đông', 2022, 'Nữ', 5),
+(65, 'Jordan Apex', 'jordan-apex', 613.00, 'Mô tả chi tiết cho Mũ nón 5', 24, 1, '2025-04-08 15:45:56.598365', '2025-05-21 23:53:33.026583', 16, 'Mô tả ngắn cho Mũ nón 5', 669.00, 'Zara', 4, 'Đông', 2022, 'Unisex', 3),
+(66, 'Nón beret unisex thời trang', 'nn-beret-unisex-thi-trang', 677.00, 'Mô tả chi tiết cho Thắt lưng 1', 97, 1, '2025-04-08 15:45:56.751346', '2025-05-21 23:54:11.013745', 13, 'Mô tả ngắn cho Thắt lưng 1', 109.00, 'Adidas', 4, 'Hạ', 2020, 'Nữ', 3),
+(67, 'Nón bóng chày unisex', 'nn-bng-chy-unisex', 561.00, 'Mô tả chi tiết cho Thắt lưng 2', 73, 1, '2025-04-08 15:45:56.984525', '2025-05-21 23:54:42.489402', 13, 'Mô tả ngắn cho Thắt lưng 2', 238.00, 'Uniqlo', 4, 'Hạ', 2022, 'Nam', 4),
+(68, 'Nón bucket unisex hiện đại', 'nn-bucket-unisex-hin-i', 455.00, 'Mô tả chi tiết cho Thắt lưng 3', 79, 1, '2025-04-08 15:45:57.179040', '2025-05-21 23:55:14.467389', 13, 'Mô tả ngắn cho Thắt lưng 3', 838.00, 'Uniqlo', 4, 'Thu', 2022, 'Nữ', 3),
+(69, 'MŨ LƯỠI TRAI THÊU CHỮ', 'm-li-trai-thu-ch', 465.00, 'Mô tả chi tiết cho Thắt lưng 4', 44, 1, '2025-04-08 15:45:57.375956', '2025-05-21 23:55:55.861426', 13, 'Mô tả ngắn cho Thắt lưng 4', 989.00, 'Uniqlo', 4, 'Thu', 2020, 'Unisex', 3),
+(70, 'Thắt lưng bản lớn phối khoá gài', 'tht-lng-bn-ln-phi-kho-gi', 161.00, 'Mô tả chi tiết cho Thắt lưng 5', 4, 1, '2025-04-08 15:45:57.529562', '2025-05-21 23:56:36.446946', 13, 'Mô tả ngắn cho Thắt lưng 5', 163.00, 'Zara', 4, 'Xuân', 2020, 'Nữ', 3),
+(71, 'Thắt lưng nữ bản vừa phối logo', 'tht-lng-n-bn-va-phi-logo', 896.00, 'Mô tả chi tiết cho Túi xách 1', 59, 1, '2025-04-08 15:45:57.690156', '2025-05-21 23:57:11.404126', 15, 'Mô tả ngắn cho Túi xách 1', 917.00, 'Adidas', 4, 'Xuân', 2020, 'Nam', 3),
+(72, 'Thắt lưng nữ bản vừa Icon', 'tht-lng-n-bn-va-icon', 816.00, 'Mô tả chi tiết cho Túi xách 2', 31, 1, '2025-04-08 15:45:57.853547', '2025-05-21 23:57:41.024242', 15, 'Mô tả ngắn cho Túi xách 2', 985.00, 'Zara', 4, 'Xuân', 2024, 'Nữ', 4),
+(73, 'ACCESSORIES Thắt lưng', 'accessories-tht-lng-', 585.00, 'Mô tả chi tiết cho Túi xách 3', 86, 1, '2025-04-08 15:45:58.060926', '2025-05-21 23:58:23.029233', 15, 'Mô tả ngắn cho Túi xách 3', 837.00, 'H&M', 4, 'Hạ', 2022, 'Nam', 3),
+(74, 'Thắt lưng nữ bản vừa phối mặt kim loại', '-tht-lng-n-bn-va-phi-mt-kim-loi', 367.00, 'Mô tả chi tiết cho Túi xách 4', 91, 1, '2025-04-08 15:45:58.232880', '2025-05-21 23:58:56.872098', 15, 'Mô tả ngắn cho Túi xách 4', 393.00, 'Puma', 4, 'Xuân', 2020, 'Unisex', 4),
+(75, 'LEVI\'S-NAM thắt lưng', 'levis-nam-tht-lng', 713.00, 'Mô tả chi tiết cho Túi xách 5', 69, 1, '2025-04-08 15:45:58.392744', '2025-05-21 23:59:29.180756', 15, 'Mô tả ngắn cho Túi xách 5', 281.00, 'Uniqlo', 4, 'Đông', 2024, 'Unisex', 3),
+(76, 'Ví ngắn nữ phom chữ nhật', 'v-ngn-n-phom-ch-nht', 358.00, 'Mô tả chi tiết cho Ví 1', 37, 1, '2025-04-08 15:45:58.571058', '2025-05-22 00:00:01.094383', 14, 'Mô tả ngắn cho Ví 1', 971.00, 'Zara', 4, 'Thu', 2022, 'Nam', 3),
+(77, 'Ví nữ dáng dài chữ nhật phối dây đeo', 'v-n-dng-di-ch-nht-phi-dy-eo', 607.00, 'Mô tả chi tiết cho Ví 2', 18, 1, '2025-04-08 15:45:58.812232', '2025-05-22 00:00:34.618844', 14, 'Mô tả ngắn cho Ví 2', 250.00, 'Nike', 4, 'Thu', 2024, 'Nam', 3),
+(78, 'Ví nữ dáng dài phối zip Leather', 'v-n-dng-di-phi-zip-leather', 854.00, 'Mô tả chi tiết cho Ví 3', 41, 1, '2025-04-08 15:45:59.018917', '2025-05-22 00:01:08.608664', 14, 'Mô tả ngắn cho Ví 3', 271.00, 'Nike', 4, 'Đông', 2020, 'Nữ', 4),
+(79, 'Ví đựng passport nam', 'v-ng-passport-nam', 168.00, 'Mô tả chi tiết cho Ví 4', 35, 1, '2025-04-08 15:45:59.176495', '2025-05-22 00:01:39.781884', 14, 'Mô tả ngắn cho Ví 4', 239.00, 'Puma', 4, 'Hạ', 2022, 'Nam', 5),
+(80, 'Ví nam dáng dài chữ nhật', 'v-nam-dng-di-ch-nht', 374.00, 'Mô tả chi tiết cho Ví 5', 67, 1, '2025-04-08 15:45:59.341850', '2025-05-22 00:02:13.862729', 14, 'Mô tả ngắn cho Ví 5', 132.00, 'H&M', 4, 'Xuân', 2024, 'Nam', 3),
+(81, 'Ví nam dáng ngắn Leather', 'v-nam-dng-ngn-leather', 123.00, '123123', 123, 1, '2025-04-08 16:45:35.460188', '2025-05-22 00:02:49.505929', 15, 'Sản phẩm thời trang với chi tiết ấn tượng. Thiết kế tinh tế và cao cấp. Phù hợp cho nhiều dịp khác nhau.', 1.00, 'H&M', 4, '2', 121, 'nam', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `store_productimage`
+--
+
+CREATE TABLE `store_productimage` (
+  `id` bigint NOT NULL,
+  `image_type` varchar(50) NOT NULL,
+  `product_id` bigint NOT NULL,
+  `image` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `store_productimage`
+--
+
+INSERT INTO `store_productimage` (`id`, `image_type`, `product_id`, `image`) VALUES
+(1, 'default', 1, 'media/Product/product_img/images1_ce34kd'),
+(2, 'default', 2, 'media/Product/product_img/09805601681-e1_bbhzy4'),
+(3, 'front', 2, 'media/Product/product_img/ao-khoac-2_front_tgvl2l'),
+(4, 'back', 2, 'media/Product/product_img/ao-khoac-2_back_vnrxuj'),
+(5, 'default', 3, 'media/Product/product_img/ao-khoac-bui_lfnyt7'),
+(6, 'front', 3, 'media/Product/product_img/ao-khoac-3_front_fydivu'),
+(7, 'back', 3, 'media/Product/product_img/11111_ix6q9h'),
+(11, 'default', 5, 'media/Product/product_img/723340134_1-860x860_eafb4b173f6c45378142ceddcb8f56be_master_zznft3'),
+(12, 'front', 5, 'media/Product/product_img/ao-khoac-5_front_rvnbmb'),
+(13, 'back', 5, 'media/Product/product_img/ao-khoac-5_back_tfyjne'),
+(14, 'default', 6, 'media/Product/product_img/01255601620-a1_afuc7m'),
+(15, 'front', 6, 'media/Product/product_img/ao-len-1_front_fh5qx7'),
+(16, 'back', 6, 'media/Product/product_img/ao-len-1_back_a928y7'),
+(17, 'default', 7, 'media/Product/product_img/04806608400-e1_oefqns'),
+(18, 'front', 7, 'media/Product/product_img/ao-len-2_front_v54u88'),
+(19, 'back', 7, 'media/Product/product_img/ao-len-2_back_gnoqwp'),
+(20, 'default', 8, 'media/Product/product_img/dfef4e1fdbccd267dd0ec1736eea0b45359d1272_leyloa'),
+(21, 'front', 8, 'media/Product/product_img/ao-len-3_front_zhi28h'),
+(22, 'back', 8, 'media/Product/product_img/ao-len-3_back_y4kpbm'),
+(23, 'default', 9, 'media/Product/product_img/Mens-Mountain-Light-Triclimate-GORETEX-Jacket_2_dvsiap'),
+(24, 'front', 9, 'media/Product/product_img/ao-len-4_front_bp5m4x'),
+(25, 'back', 9, 'media/Product/product_img/ao-len-4_back_fuwzoh'),
+(26, 'default', 10, 'media/Product/product_img/s-l1600_cbi9dz'),
+(27, 'front', 10, 'media/Product/product_img/ao-len-5_front_jhmwtf'),
+(28, 'back', 10, 'media/Product/product_img/ao-len-5_back_mhzswe'),
+(29, 'default', 11, 'media/Product/product_img/FB7483-010-1_jucv32'),
+(30, 'front', 11, 'media/Product/product_img/ao-so-mi-1_front_abokwi'),
+(31, 'back', 11, 'media/Product/product_img/ao-so-mi-1_back_zmsjby'),
+(32, 'default', 12, 'media/Product/product_img/goods_12_460914_3x4_l3uh9j'),
+(33, 'front', 12, 'media/Product/product_img/ao-so-mi-2_front_pahxx6'),
+(34, 'back', 12, 'media/Product/product_img/ao-so-mi-2_back_jgzsep'),
+(38, 'default', 14, 'media/Product/product_img/otm_ct065_5_32012710322d40c6ab94ec1878e86ec9_small_hmivsv'),
+(39, 'front', 14, 'media/Product/product_img/ao-so-mi-4_front_nyany2'),
+(40, 'back', 14, 'media/Product/product_img/ao-so-mi-4_back_ksslqf'),
+(41, 'default', 15, 'media/Product/product_img/961_s74ha1495_1_3f848b673bc04d44bf4a8b4b0f062831_small_rrct7c'),
+(42, 'front', 15, 'media/Product/product_img/ao-so-mi-5_front_uecbo2'),
+(43, 'back', 15, 'media/Product/product_img/ao-so-mi-5_back_ts96yc'),
+(44, 'default', 16, 'media/Product/product_img/2d604c89e94ad130d24e178643edd74af75d7172_xhlez1'),
+(45, 'front', 16, 'media/Product/product_img/ao-thun-1_front_jmi7ac'),
+(46, 'back', 16, 'media/Product/product_img/ao-thun-1_back_uimpqi'),
+(47, 'default', 17, 'media/Product/product_img/5befc8d36e485e6e602eb20e8835702e924966ae_siv4x4'),
+(48, 'front', 17, 'media/Product/product_img/ao-thun-2_front_wcgill'),
+(49, 'back', 17, 'media/Product/product_img/ao-thun-2_back_n1nfpu'),
+(50, 'default', 18, 'media/Product/product_img/3_6361125102_5_41e6ea6901ff4fe6b9d401790d772f17_small_t4amxi'),
+(51, 'front', 18, 'media/Product/product_img/ao-thun-3_front_kph69f'),
+(52, 'back', 18, 'media/Product/product_img/ao-thun-3_back_oxsmrr'),
+(53, 'default', 19, 'media/Product/product_img/50ivs_3akcg0151_2_189835f8a7e4477e9dfe26c04cf0212f_small_izh8wg'),
+(54, 'front', 19, 'media/Product/product_img/ao-thun-4_front_hlu9oh'),
+(55, 'back', 19, 'media/Product/product_img/ao-thun-4_back_xua3lu'),
+(56, 'default', 20, 'media/Product/product_img/50nyl_3akpm0144_1_3268d4e3dd4f4a3ca9fe15342cc1f6c2_small_seai46'),
+(57, 'front', 20, 'media/Product/product_img/ao-thun-5_front_vlx913'),
+(58, 'back', 20, 'media/Product/product_img/ao-thun-5_back_thfkhw'),
+(59, 'default', 21, 'media/Product/product_img/50crd_3fkpv0344_1_fdec4bb53aff40d59acb2db29b67e102_small_jlqma4'),
+(60, 'front', 21, 'media/Product/product_img/quan-jean-1_front_ejrmos'),
+(61, 'back', 21, 'media/Product/product_img/quan-jean-1_back_syudzh'),
+(62, 'default', 22, 'media/Product/product_img/hinh-anh-quan-dai-nam-adidas-ha6205-navy-1-1_jaienw'),
+(63, 'front', 22, 'media/Product/product_img/quan-jean-2_front_cs0h87'),
+(64, 'back', 22, 'media/Product/product_img/quan-jean-2_back_w7vnvw'),
+(65, 'default', 23, 'media/Product/product_img/hinh-anh-quan-dai-nam-adidas-ha6205-navy-4-1_nhzazu'),
+(66, 'front', 23, 'media/Product/product_img/quan-jean-3_front_hte0fo'),
+(67, 'back', 23, 'media/Product/product_img/quan-jean-3_back_hvxtmu'),
+(68, 'default', 24, 'media/Product/product_img/download_brgmh4'),
+(69, 'front', 24, 'media/Product/product_img/quan-jean-4_front_kbycux'),
+(70, 'back', 24, 'media/Product/product_img/quan-jean-4_back_lun7gt'),
+(71, 'default', 25, 'media/Product/product_img/download_am5fuj'),
+(72, 'front', 25, 'media/Product/product_img/quan-jean-5_front_ebj5e2'),
+(73, 'back', 25, 'media/Product/product_img/quan-jean-5_back_ijwhfg'),
+(74, 'default', 26, 'media/Product/product_img/05427419251-e1_chjip3'),
+(75, 'front', 26, 'media/Product/product_img/quan-kaki-1_front_uke390'),
+(76, 'back', 26, 'media/Product/product_img/quan-kaki-1_back_n5jjzq'),
+(77, 'default', 27, 'media/Product/product_img/2_6136024202_2_52f665284d2a4562ac725543eaa78e4a_small_cpzpus'),
+(78, 'front', 27, 'media/Product/product_img/quan-kaki-2_front_co7bmy'),
+(79, 'back', 27, 'media/Product/product_img/quan-kaki-2_back_gsesfs'),
+(80, 'default', 28, 'media/Product/product_img/download_xtuuom'),
+(81, 'front', 28, 'media/Product/product_img/quan-kaki-3_front_e7zo7e'),
+(82, 'back', 28, 'media/Product/product_img/quan-kaki-3_back_hfufza'),
+(83, 'default', 29, 'media/Product/product_img/tải_xuống_1_utwwhn'),
+(84, 'front', 29, 'media/Product/product_img/quan-kaki-4_front_of9xnr'),
+(85, 'back', 29, 'media/Product/product_img/quan-kaki-4_back_eu3rgv'),
+(86, 'default', 30, 'media/Product/product_img/873767f559bffaa3e49cfb63c9b610a2_am7xmr'),
+(87, 'front', 30, 'media/Product/product_img/quan-kaki-5_front_hepja1'),
+(88, 'back', 30, 'media/Product/product_img/quan-kaki-5_back_w5t0wi'),
+(89, 'default', 31, 'media/Product/product_img/1670131153caf4d719fccd5059a63dc61fb9263318_thumbnail_720x_mqerik'),
+(90, 'front', 31, 'media/Product/product_img/quan-short-1_front_spjcrc'),
+(91, 'back', 31, 'media/Product/product_img/quan-short-1_back_wcvrzz'),
+(92, 'default', 32, 'media/Product/product_img/10_pm2-46320062-1_2_a1cd1291464240db902024a590472b91_small_wsuxzy'),
+(93, 'front', 32, 'media/Product/product_img/quan-short-2_front_zov5lg'),
+(94, 'back', 32, 'media/Product/product_img/quan-short-2_back_p7m3d5'),
+(95, 'default', 33, 'media/Product/product_img/lhxun_c8562_3_86b2dc38f7674cddb67613fa2244de26_small_j1bdnf'),
+(96, 'front', 33, 'media/Product/product_img/quan-short-3_front_jzhbqm'),
+(97, 'back', 33, 'media/Product/product_img/quan-short-3_back_rpcxzi'),
+(98, 'default', 34, 'media/Product/product_img/50crd_3abws013n_2_fe91c0fc58714e83875e901e75f55bd8_master_euwenl'),
+(99, 'front', 34, 'media/Product/product_img/quan-short-4_front_roeaqc'),
+(100, 'back', 34, 'media/Product/product_img/quan-short-4_back_pohzlm'),
+(101, 'default', 35, 'media/Product/product_img/01_090361_2_533e4c0af333407b8abef06aa7b5804d_small_meq8jv'),
+(102, 'front', 35, 'media/Product/product_img/quan-short-5_front_hz6upe'),
+(103, 'back', 35, 'media/Product/product_img/quan-short-5_back_dv1e4x'),
+(104, 'default', 36, 'media/Product/product_img/713300-00-1_arx6ohaxmi1og5kn_p8blxm'),
+(105, 'front', 36, 'media/Product/product_img/quan-tay-1_front_qcqh8u'),
+(106, 'back', 36, 'media/Product/product_img/quan-tay-1_back_b4ilke'),
+(107, 'default', 37, 'media/Product/product_img/3d580bc26bd1bf9ecb093fd6109eae4930e29cd8_wb7kxc'),
+(108, 'front', 37, 'media/Product/product_img/quan-tay-2_front_u6mrar'),
+(109, 'back', 37, 'media/Product/product_img/quan-tay-2_back_svxzsk'),
+(110, 'default', 38, 'media/Product/product_img/e6ad77bab934df176396e92ef3ef386a54ea3b26_pbhtji'),
+(111, 'front', 38, 'media/Product/product_img/quan-tay-3_front_uvbjkl'),
+(112, 'back', 38, 'media/Product/product_img/quan-tay-3_back_mafciq'),
+(113, 'default', 39, 'media/Product/product_img/lifestyle_405800534002_qdrvs9glhs1azmq4_mcofzj'),
+(114, 'front', 39, 'media/Product/product_img/quan-tay-4_front_dvjinh'),
+(115, 'back', 39, 'media/Product/product_img/quan-tay-4_back_yasriu'),
+(116, 'default', 40, 'media/Product/product_img/11111_sgqdgg'),
+(117, 'front', 40, 'media/Product/product_img/quan-tay-5_front_wilzdf'),
+(118, 'back', 40, 'media/Product/product_img/quan-tay-5_back_vuhnuw'),
+(119, 'default', 41, 'media/Product/product_img/12703520131-e2_wmi1ot'),
+(120, 'front', 41, 'media/Product/product_img/dep-1_front_lllyhr'),
+(121, 'back', 41, 'media/Product/product_img/dep-1_back_yryrne'),
+(122, 'default', 42, 'media/Product/product_img/12612510116-e2_glczqg'),
+(123, 'front', 42, 'media/Product/product_img/dep-2_front_iksdho'),
+(124, 'back', 42, 'media/Product/product_img/dep-2_back_jxenkr'),
+(125, 'default', 43, 'media/Product/product_img/12601511107-e2_cjhedf'),
+(126, 'front', 43, 'media/Product/product_img/dep-3_front_p2frb5'),
+(127, 'back', 43, 'media/Product/product_img/dep-3_back_w5irmn'),
+(128, 'default', 44, 'media/Product/product_img/12752520800-e2_op1oty'),
+(129, 'front', 44, 'media/Product/product_img/dep-4_front_oswoly'),
+(130, 'back', 44, 'media/Product/product_img/dep-4_back_mybtv7'),
+(131, 'default', 45, 'media/Product/product_img/11613510800-e2_tnilm8'),
+(132, 'front', 45, 'media/Product/product_img/dep-5_front_pvnkck'),
+(133, 'back', 45, 'media/Product/product_img/dep-5_back_dvbvhp'),
+(134, 'default', 46, 'media/Product/product_img/12702521700-e2_qqd1gk'),
+(135, 'front', 46, 'media/Product/product_img/giay-tay-1_front_dtllwy'),
+(136, 'back', 46, 'media/Product/product_img/giay-tay-1_back_tbp7lz'),
+(137, 'default', 47, 'media/Product/product_img/Giay_Mule_Superstar_trang_IF6184_00_plp_standard_vshgoc'),
+(138, 'front', 47, 'media/Product/product_img/giay-tay-2_front_fknorm'),
+(139, 'back', 47, 'media/Product/product_img/giay-tay-2_back_un5wzi'),
+(140, 'default', 48, 'media/Product/product_img/12750520102-e2_vamrus'),
+(141, 'front', 48, 'media/Product/product_img/giay-tay-3_front_ugkjs9'),
+(142, 'back', 48, 'media/Product/product_img/giay-tay-3_back_hq3qjh'),
+(143, 'default', 49, 'media/Product/product_img/11641510105-e2_oeortt'),
+(144, 'front', 49, 'media/Product/product_img/giay-tay-4_front_stpjhg'),
+(145, 'back', 49, 'media/Product/product_img/giay-tay-4_back_nhsde7'),
+(146, 'default', 50, 'media/Product/product_img/11608510800-e2_kghyxi'),
+(147, 'front', 50, 'media/Product/product_img/giay-tay-5_front_wsghfg'),
+(148, 'back', 50, 'media/Product/product_img/giay-tay-5_back_kjvmcd'),
+(149, 'default', 51, 'media/Product/product_img/0869_4148458_4_207f560cba304444890c92fec1bab6d9_small_klwmvg'),
+(150, 'front', 51, 'media/Product/product_img/giay-the-thao-1_front_etroad'),
+(151, 'back', 51, 'media/Product/product_img/giay-the-thao-1_back_aopeej'),
+(152, 'default', 52, 'media/Product/product_img/01_pw1-66480110_2_b4e33a6e79f740c189d36c3877e9eaba_small_fe1uiu'),
+(153, 'front', 52, 'media/Product/product_img/giay-the-thao-2_front_jnfauv'),
+(154, 'back', 52, 'media/Product/product_img/giay-the-thao-2_back_o9xe0e'),
+(155, 'default', 53, 'media/Product/product_img/blk_shw0245_2_5efacd008df3406ca8fe4a6f1a7f50d4_master_c5ilod'),
+(156, 'front', 53, 'media/Product/product_img/giay-the-thao-3_front_uydib6'),
+(157, 'back', 53, 'media/Product/product_img/giay-the-thao-3_back_g53dpb'),
+(158, 'default', 54, 'media/Product/product_img/dcl_shb0270_2_112ece72e72141c592a2587f7050b0ec_small_uuveyw'),
+(159, 'front', 54, 'media/Product/product_img/giay-the-thao-4_front_ajviuv'),
+(160, 'back', 54, 'media/Product/product_img/giay-the-thao-4_back_qu3gdo'),
+(161, 'default', 55, 'media/Product/product_img/10_pm1-46600143_4_c884d5feec7b4dad8f192e37cd506a80_small_za5bkq'),
+(162, 'front', 55, 'media/Product/product_img/giay-the-thao-5_front_viaec1'),
+(163, 'back', 55, 'media/Product/product_img/giay-the-thao-5_back_rqtb4f'),
+(164, 'default', 56, 'media/Product/product_img/02_pm1-46380048_2_d3522c84970a4a88aeb400cda65c4240_small_mzhp7z'),
+(165, 'front', 56, 'media/Product/product_img/sandal-1_front_oeoby5'),
+(166, 'back', 56, 'media/Product/product_img/sandal-1_back_kdlkou'),
+(167, 'default', 57, 'media/Product/product_img/29_pm1-46600144_4_677f668f02314384a6101dade8eebc46_small_zy7xkt'),
+(168, 'front', 57, 'media/Product/product_img/sandal-2_front_gdr8ub'),
+(169, 'back', 57, 'media/Product/product_img/sandal-2_back_y40wwi'),
+(170, 'default', 58, 'media/Product/product_img/bkw_129473_2_ed05c99c7b4045f993f70a0613e13736_small_tzvmyf'),
+(171, 'front', 58, 'media/Product/product_img/sandal-3_front_xor7fu'),
+(172, 'back', 58, 'media/Product/product_img/sandal-3_back_bcw35l'),
+(173, 'default', 59, 'media/Product/product_img/pnk_177356_2_ddea2340592849fba48b79bb1f85c710_small_puxgm0'),
+(174, 'front', 59, 'media/Product/product_img/sandal-4_front_tab9cv'),
+(175, 'back', 59, 'media/Product/product_img/sandal-4_back_gptcjw'),
+(176, 'default', 60, 'media/Product/product_img/00w_u997rgc_2_ab89061e8f214446a1089d6c415e8652_small_jx7qbj'),
+(177, 'front', 60, 'media/Product/product_img/sandal-5_front_vkpv26'),
+(178, 'back', 60, 'media/Product/product_img/sandal-5_back_kggvey'),
+(179, 'default', 61, 'media/Product/product_img/24f4f3470e5ee7d3329227edd9d83ed7b7672d29_al6v7t'),
+(180, 'front', 61, 'media/Product/product_img/mu-non-1_front_qrugfs'),
+(181, 'back', 61, 'media/Product/product_img/mu-non-1_back_i93bde'),
+(182, 'default', 62, 'media/Product/product_img/50bks_3ahtb025n_4_1d8566dc5ae341e8bba5cbae4923f839_small_ti0noz'),
+(183, 'front', 62, 'media/Product/product_img/mu-non-2_front_bkq0oq'),
+(184, 'back', 62, 'media/Product/product_img/mu-non-2_back_qrdsqo'),
+(185, 'default', 63, 'media/Product/product_img/50crs_3ahtb025n_1_4d1d6b084f96411fa2eac6f5929f2533_small_qpp4oy'),
+(186, 'front', 63, 'media/Product/product_img/mu-non-3_front_r3jpcy'),
+(187, 'back', 63, 'media/Product/product_img/mu-non-3_back_c867lq'),
+(188, 'default', 64, 'media/Product/product_img/005_lah51004b_1_1401b40d0eb94132866c04073c76f990_small_xqxsj2'),
+(189, 'front', 64, 'media/Product/product_img/mu-non-4_front_mwpx1j'),
+(190, 'back', 64, 'media/Product/product_img/mu-non-4_back_yzgnup'),
+(191, 'default', 65, 'media/Product/product_img/1_xrnz6i'),
+(192, 'front', 65, 'media/Product/product_img/mu-non-5_front_ufkzim'),
+(193, 'back', 65, 'media/Product/product_img/mu-non-5_back_gril2n'),
+(194, 'default', 66, 'media/Product/product_img/01_024381_1_688078b3da2f4f1387c70eecc9239136_small_fd0jmb'),
+(195, 'front', 66, 'media/Product/product_img/that-lung-1_front_psdzab'),
+(196, 'back', 66, 'media/Product/product_img/that-lung-1_back_kswcte'),
+(197, 'default', 67, 'media/Product/product_img/02_025791_1_bf76a43edb164dc68db0c61431de5cdd_small_iyfseb'),
+(198, 'front', 67, 'media/Product/product_img/that-lung-2_front_zuinbx'),
+(199, 'back', 67, 'media/Product/product_img/that-lung-2_back_net6hb'),
+(200, 'default', 68, 'media/Product/product_img/02_025476_1_5ca15eb400b94f91aa2c5042cad7f819_small_glh6yt'),
+(201, 'front', 68, 'media/Product/product_img/that-lung-3_front_wlkcol'),
+(202, 'back', 68, 'media/Product/product_img/that-lung-3_back_cbsrti'),
+(203, 'default', 69, 'media/Product/product_img/09065435400-e1_qlz5zz'),
+(204, 'front', 69, 'media/Product/product_img/that-lung-4_front_sm6irp'),
+(205, 'back', 69, 'media/Product/product_img/that-lung-4_back_uubhgu'),
+(206, 'default', 70, 'media/Product/product_img/1_6501014702_1_1f2ce29c9e1e4694929091059213f8c3_small_i5o1h7'),
+(207, 'front', 70, 'media/Product/product_img/that-lung-5_front_pixvvs'),
+(208, 'back', 70, 'media/Product/product_img/that-lung-5_back_opurvk'),
+(209, 'default', 71, 'media/Product/product_img/2_6506024702_3_6f0ce5e6ddd04d089a0ea6dbe626ebc3_small_e1wmj5'),
+(210, 'front', 71, 'media/Product/product_img/tui-xach-1_front_pefoui'),
+(211, 'back', 71, 'media/Product/product_img/tui-xach-1_back_xykxyo'),
+(212, 'default', 72, 'media/Product/product_img/01_pw3-15940001_3_a1f7747a08e547a585d694fd02d9cd47_small_uzvsbu'),
+(213, 'front', 72, 'media/Product/product_img/tui-xach-2_front_iqfrmf'),
+(214, 'back', 72, 'media/Product/product_img/tui-xach-2_back_spw9cp'),
+(215, 'default', 73, 'media/Product/product_img/hc0799001_fl-st-f1_sk6hc0'),
+(216, 'front', 73, 'media/Product/product_img/tui-xach-3_front_gawttx'),
+(217, 'back', 73, 'media/Product/product_img/tui-xach-3_back_vmmmci'),
+(218, 'default', 74, 'media/Product/product_img/2124_bew0429_3_cf0878d7ca8447708abe037cbe2da729_small_mvnobd'),
+(219, 'front', 74, 'media/Product/product_img/tui-xach-4_front_rjkn8x'),
+(220, 'back', 74, 'media/Product/product_img/tui-xach-4_back_wwypba'),
+(221, 'default', 75, 'media/Product/product_img/24_h2_000id-0000_eas_ps_ld_fv_1_eobwfz'),
+(222, 'front', 75, 'media/Product/product_img/tui-xach-5_front_k22qrw'),
+(223, 'back', 75, 'media/Product/product_img/tui-xach-5_back_ibvudo'),
+(224, 'default', 76, 'media/Product/product_img/2124_pow0059_2_2f2d7e8026634671918001e826a790a0_small_kuyijo'),
+(225, 'front', 76, 'media/Product/product_img/vi-1_front_z9osef'),
+(226, 'back', 76, 'media/Product/product_img/vi-1_back_a6iwzw'),
+(227, 'default', 77, 'media/Product/product_img/01_pw4-45940018_2_6bb8e07cc0124e98aa0ba1af9f727a66_small_xxcavb'),
+(228, 'front', 77, 'media/Product/product_img/vi-2_front_qor5wf'),
+(229, 'back', 77, 'media/Product/product_img/vi-2_back_kt2fc1'),
+(230, 'default', 78, 'media/Product/product_img/14_pw4-16500038_2_f457b199d5714202bdee9e0f9f24fbbd_small_xjhebj'),
+(231, 'front', 78, 'media/Product/product_img/vi-3_front_qkjqeu'),
+(232, 'back', 78, 'media/Product/product_img/vi-3_back_pizy93'),
+(233, 'default', 79, 'media/Product/product_img/sad_38080_2_383f01e027314da5bb7c34cf6af08dc6_small_rycvbo'),
+(234, 'front', 79, 'media/Product/product_img/vi-4_front_zj43dn'),
+(235, 'back', 79, 'media/Product/product_img/vi-4_back_ittnua'),
+(236, 'default', 80, 'media/Product/product_img/mi5_5015_3_7ca78800c71348d5a63a12790e8176e4_small_lbtisn'),
+(237, 'front', 80, 'media/Product/product_img/vi-5_front_o4bygp'),
+(238, 'back', 80, 'media/Product/product_img/vi-5_back_g7cwf3'),
+(241, 'default', 81, 'media/Product/product_img/2124_wam0063_3_a8eee1a190ad4d45969d8e498361bd97_small_fepgm4'),
+(242, 'back', 81, 'media/Product/product_img/anh5_ghlvw3'),
+(243, 'left', 81, 'media/Product/product_img/abc_xfoeor'),
+(244, 'back', 1, 'media/Product/product_img/85767468b_166_d_2151_ryormg'),
+(245, 'front', 1, 'media/Product/product_img/images1_w48095');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `store_variation`
+--
+
+CREATE TABLE `store_variation` (
+  `id` bigint NOT NULL,
+  `Variation_category` varchar(100) NOT NULL,
+  `Variation_value` varchar(100) NOT NULL,
+  `is_active` tinyint(1) NOT NULL,
+  `created_date` datetime(6) DEFAULT NULL,
+  `Product_id` bigint NOT NULL,
+  `code` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `store_variation`
+--
+
+INSERT INTO `store_variation` (`id`, `Variation_category`, `Variation_value`, `is_active`, `created_date`, `Product_id`, `code`) VALUES
+(1, 'Color', 'Đen', 1, '2025-04-08 15:45:44.416460', 1, NULL),
+(2, 'Color', 'Trắng', 1, '2025-04-08 15:45:44.439424', 1, NULL),
+(3, 'Color', 'Xanh', 1, '2025-04-08 15:45:44.470979', 1, NULL),
+(4, 'Color', 'Đỏ', 1, '2025-04-08 15:45:44.498278', 1, NULL),
+(5, 'Color', 'Vàng', 1, '2025-04-08 15:45:44.512579', 1, NULL),
+(6, 'Size', 'S', 1, '2025-04-08 15:45:44.527519', 1, NULL),
+(7, 'Size', 'M', 1, '2025-04-08 15:45:44.541080', 1, NULL),
+(8, 'Size', 'L', 1, '2025-04-08 15:45:44.555002', 1, NULL),
+(9, 'Size', 'XL', 1, '2025-04-08 15:45:44.569410', 1, NULL),
+(10, 'Size', 'XXL', 1, '2025-04-08 15:45:44.580862', 1, NULL),
+(11, 'Color', 'Đen', 1, '2025-04-08 15:45:44.613484', 2, NULL),
+(12, 'Color', 'Trắng', 1, '2025-04-08 15:45:44.627370', 2, NULL),
+(13, 'Color', 'Xanh', 1, '2025-04-08 15:45:44.639736', 2, NULL),
+(14, 'Color', 'Đỏ', 1, '2025-04-08 15:45:44.653323', 2, NULL),
+(15, 'Color', 'Vàng', 1, '2025-04-08 15:45:44.668890', 2, NULL),
+(16, 'Size', 'S', 1, '2025-04-08 15:45:44.680519', 2, NULL),
+(17, 'Size', 'M', 1, '2025-04-08 15:45:44.693385', 2, NULL),
+(18, 'Size', 'L', 1, '2025-04-08 15:45:44.708656', 2, NULL),
+(19, 'Size', 'XL', 1, '2025-04-08 15:45:44.721325', 2, NULL),
+(20, 'Size', 'XXL', 1, '2025-04-08 15:45:44.736323', 2, NULL),
+(21, 'Color', 'Đen', 1, '2025-04-08 15:45:44.762321', 3, NULL),
+(22, 'Color', 'Trắng', 1, '2025-04-08 15:45:44.779350', 3, NULL),
+(23, 'Color', 'Xanh', 1, '2025-04-08 15:45:44.795350', 3, NULL),
+(24, 'Color', 'Đỏ', 1, '2025-04-08 15:45:44.810352', 3, NULL),
+(25, 'Color', 'Vàng', 1, '2025-04-08 15:45:44.822938', 3, NULL),
+(26, 'Size', 'S', 1, '2025-04-08 15:45:44.836580', 3, NULL),
+(27, 'Size', 'M', 1, '2025-04-08 15:45:44.850567', 3, NULL),
+(28, 'Size', 'L', 1, '2025-04-08 15:45:44.863566', 3, NULL),
+(29, 'Size', 'XL', 1, '2025-04-08 15:45:44.877683', 3, NULL),
+(30, 'Size', 'XXL', 1, '2025-04-08 15:45:44.894621', 3, NULL),
+(41, 'Color', 'Đen', 1, '2025-04-08 15:45:45.091692', 5, NULL),
+(42, 'Color', 'Trắng', 1, '2025-04-08 15:45:45.106418', 5, NULL),
+(43, 'Color', 'Xanh', 1, '2025-04-08 15:45:45.120416', 5, NULL),
+(44, 'Color', 'Đỏ', 1, '2025-04-08 15:45:45.137366', 5, NULL),
+(45, 'Color', 'Vàng', 1, '2025-04-08 15:45:45.151300', 5, NULL),
+(46, 'Size', 'S', 1, '2025-04-08 15:45:45.164300', 5, NULL),
+(47, 'Size', 'M', 1, '2025-04-08 15:45:45.177755', 5, NULL),
+(48, 'Size', 'L', 1, '2025-04-08 15:45:45.189779', 5, NULL),
+(49, 'Size', 'XL', 1, '2025-04-08 15:45:45.202641', 5, NULL),
+(50, 'Size', 'XXL', 1, '2025-04-08 15:45:45.214409', 5, NULL),
+(51, 'Color', 'Đen', 1, '2025-04-08 15:45:45.241425', 6, NULL),
+(52, 'Color', 'Trắng', 1, '2025-04-08 15:45:45.258606', 6, NULL),
+(53, 'Color', 'Xanh', 1, '2025-04-08 15:45:45.276607', 6, NULL),
+(54, 'Color', 'Đỏ', 1, '2025-04-08 15:45:45.295491', 6, NULL),
+(55, 'Color', 'Vàng', 1, '2025-04-08 15:45:45.311530', 6, NULL),
+(56, 'Size', 'S', 1, '2025-04-08 15:45:45.327179', 6, NULL),
+(57, 'Size', 'M', 1, '2025-04-08 15:45:45.342615', 6, NULL),
+(58, 'Size', 'L', 1, '2025-04-08 15:45:45.358547', 6, NULL),
+(59, 'Size', 'XL', 1, '2025-04-08 15:45:45.371328', 6, NULL),
+(60, 'Size', 'XXL', 1, '2025-04-08 15:45:45.385820', 6, NULL),
+(61, 'Color', 'Đen', 1, '2025-04-08 15:45:45.415779', 7, NULL),
+(62, 'Color', 'Trắng', 1, '2025-04-08 15:45:45.441465', 7, NULL),
+(63, 'Color', 'Xanh', 1, '2025-04-08 15:45:45.460197', 7, NULL),
+(64, 'Color', 'Đỏ', 1, '2025-04-08 15:45:45.474785', 7, NULL),
+(65, 'Color', 'Vàng', 1, '2025-04-08 15:45:45.487391', 7, NULL),
+(66, 'Size', 'S', 1, '2025-04-08 15:45:45.498149', 7, NULL),
+(67, 'Size', 'M', 1, '2025-04-08 15:45:45.509470', 7, NULL),
+(68, 'Size', 'L', 1, '2025-04-08 15:45:45.521196', 7, NULL),
+(69, 'Size', 'XL', 1, '2025-04-08 15:45:45.534406', 7, NULL),
+(70, 'Size', 'XXL', 1, '2025-04-08 15:45:45.548497', 7, NULL),
+(71, 'Color', 'Đen', 1, '2025-04-08 15:45:45.575405', 8, NULL),
+(72, 'Color', 'Trắng', 1, '2025-04-08 15:45:45.589397', 8, NULL),
+(73, 'Color', 'Xanh', 1, '2025-04-08 15:45:45.603000', 8, NULL),
+(74, 'Color', 'Đỏ', 1, '2025-04-08 15:45:45.617996', 8, NULL),
+(75, 'Color', 'Vàng', 1, '2025-04-08 15:45:45.632995', 8, NULL),
+(76, 'Size', 'S', 1, '2025-04-08 15:45:45.647347', 8, NULL),
+(77, 'Size', 'M', 1, '2025-04-08 15:45:45.660352', 8, NULL),
+(78, 'Size', 'L', 1, '2025-04-08 15:45:45.671299', 8, NULL),
+(79, 'Size', 'XL', 1, '2025-04-08 15:45:45.687168', 8, NULL),
+(80, 'Size', 'XXL', 1, '2025-04-08 15:45:45.700366', 8, NULL),
+(81, 'Color', 'Đen', 1, '2025-04-08 15:45:45.726295', 9, NULL),
+(82, 'Color', 'Trắng', 1, '2025-04-08 15:45:45.740774', 9, NULL),
+(83, 'Color', 'Xanh', 1, '2025-04-08 15:45:45.755776', 9, NULL),
+(84, 'Color', 'Đỏ', 1, '2025-04-08 15:45:45.770097', 9, NULL),
+(85, 'Color', 'Vàng', 1, '2025-04-08 15:45:45.781714', 9, NULL),
+(86, 'Size', 'S', 1, '2025-04-08 15:45:45.796629', 9, NULL),
+(87, 'Size', 'M', 1, '2025-04-08 15:45:45.811635', 9, NULL),
+(88, 'Size', 'L', 1, '2025-04-08 15:45:45.825629', 9, NULL),
+(89, 'Size', 'XL', 1, '2025-04-08 15:45:45.839264', 9, NULL),
+(90, 'Size', 'XXL', 1, '2025-04-08 15:45:45.852271', 9, NULL),
+(91, 'Color', 'Đen', 1, '2025-04-08 15:45:45.879268', 10, NULL),
+(92, 'Color', 'Trắng', 1, '2025-04-08 15:45:45.894272', 10, NULL),
+(93, 'Color', 'Xanh', 1, '2025-04-08 15:45:45.914190', 10, NULL),
+(94, 'Color', 'Đỏ', 1, '2025-04-08 15:45:45.930194', 10, NULL),
+(95, 'Color', 'Vàng', 1, '2025-04-08 15:45:45.944824', 10, NULL),
+(96, 'Size', 'S', 1, '2025-04-08 15:45:45.957825', 10, NULL),
+(97, 'Size', 'M', 1, '2025-04-08 15:45:45.969843', 10, NULL),
+(98, 'Size', 'L', 1, '2025-04-08 15:45:45.982176', 10, NULL),
+(99, 'Size', 'XL', 1, '2025-04-08 15:45:45.998492', 10, NULL),
+(100, 'Size', 'XXL', 1, '2025-04-08 15:45:46.014942', 10, NULL),
+(101, 'Color', 'Đen', 1, '2025-04-08 15:45:46.053325', 11, NULL),
+(102, 'Color', 'Trắng', 1, '2025-04-08 15:45:46.071053', 11, NULL),
+(103, 'Color', 'Xanh', 1, '2025-04-08 15:45:46.088243', 11, NULL),
+(104, 'Color', 'Đỏ', 1, '2025-04-08 15:45:46.103530', 11, NULL),
+(105, 'Color', 'Vàng', 1, '2025-04-08 15:45:46.117977', 11, NULL),
+(106, 'Size', 'S', 1, '2025-04-08 15:45:46.131331', 11, NULL),
+(107, 'Size', 'M', 1, '2025-04-08 15:45:46.145985', 11, NULL),
+(108, 'Size', 'L', 1, '2025-04-08 15:45:46.159506', 11, NULL),
+(109, 'Size', 'XL', 1, '2025-04-08 15:45:46.172401', 11, NULL),
+(110, 'Size', 'XXL', 1, '2025-04-08 15:45:46.187287', 11, NULL),
+(111, 'Color', 'Đen', 1, '2025-04-08 15:45:46.214688', 12, NULL),
+(112, 'Color', 'Trắng', 1, '2025-04-08 15:45:46.227690', 12, NULL),
+(113, 'Color', 'Xanh', 1, '2025-04-08 15:45:46.244787', 12, NULL),
+(114, 'Color', 'Đỏ', 1, '2025-04-08 15:45:46.256369', 12, NULL),
+(115, 'Color', 'Vàng', 1, '2025-04-08 15:45:46.268745', 12, NULL),
+(116, 'Size', 'S', 1, '2025-04-08 15:45:46.279745', 12, NULL),
+(117, 'Size', 'M', 1, '2025-04-08 15:45:46.292230', 12, NULL),
+(118, 'Size', 'L', 1, '2025-04-08 15:45:46.305037', 12, NULL),
+(119, 'Size', 'XL', 1, '2025-04-08 15:45:46.317613', 12, NULL),
+(120, 'Size', 'XXL', 1, '2025-04-08 15:45:46.328436', 12, NULL),
+(131, 'Color', 'Đen', 1, '2025-04-08 15:45:46.509245', 14, NULL),
+(132, 'Color', 'Trắng', 1, '2025-04-08 15:45:46.520498', 14, NULL),
+(133, 'Color', 'Xanh', 1, '2025-04-08 15:45:46.536045', 14, NULL),
+(134, 'Color', 'Đỏ', 1, '2025-04-08 15:45:46.550925', 14, NULL),
+(135, 'Color', 'Vàng', 1, '2025-04-08 15:45:46.563610', 14, NULL),
+(136, 'Size', 'S', 1, '2025-04-08 15:45:46.578016', 14, NULL),
+(137, 'Size', 'M', 1, '2025-04-08 15:45:46.589721', 14, NULL),
+(138, 'Size', 'L', 1, '2025-04-08 15:45:46.601730', 14, NULL),
+(139, 'Size', 'XL', 1, '2025-04-08 15:45:46.614495', 14, NULL),
+(140, 'Size', 'XXL', 1, '2025-04-08 15:45:46.629498', 14, NULL),
+(141, 'Color', 'Đen', 1, '2025-04-08 15:45:46.657944', 15, NULL),
+(142, 'Color', 'Trắng', 1, '2025-04-08 15:45:46.670009', 15, NULL),
+(143, 'Color', 'Xanh', 1, '2025-04-08 15:45:46.685526', 15, NULL),
+(144, 'Color', 'Đỏ', 1, '2025-04-08 15:45:46.699526', 15, NULL),
+(145, 'Color', 'Vàng', 1, '2025-04-08 15:45:46.712527', 15, NULL),
+(146, 'Size', 'S', 1, '2025-04-08 15:45:46.727130', 15, NULL),
+(147, 'Size', 'M', 1, '2025-04-08 15:45:46.741126', 15, NULL),
+(148, 'Size', 'L', 1, '2025-04-08 15:45:46.755742', 15, NULL),
+(149, 'Size', 'XL', 1, '2025-04-08 15:45:46.770741', 15, NULL),
+(150, 'Size', 'XXL', 1, '2025-04-08 15:45:46.785162', 15, NULL),
+(151, 'Color', 'Đen', 1, '2025-04-08 15:45:46.817307', 16, NULL),
+(152, 'Color', 'Trắng', 1, '2025-04-08 15:45:46.831311', 16, NULL),
+(153, 'Color', 'Xanh', 1, '2025-04-08 15:45:46.848309', 16, NULL),
+(154, 'Color', 'Đỏ', 1, '2025-04-08 15:45:46.861886', 16, NULL),
+(155, 'Color', 'Vàng', 1, '2025-04-08 15:45:46.873886', 16, NULL),
+(156, 'Size', 'S', 1, '2025-04-08 15:45:46.887198', 16, NULL),
+(157, 'Size', 'M', 1, '2025-04-08 15:45:46.900657', 16, NULL),
+(158, 'Size', 'L', 1, '2025-04-08 15:45:46.913660', 16, NULL),
+(159, 'Size', 'XL', 1, '2025-04-08 15:45:46.928251', 16, NULL),
+(160, 'Size', 'XXL', 1, '2025-04-08 15:45:46.939254', 16, NULL),
+(161, 'Color', 'Đen', 1, '2025-04-08 15:45:46.965417', 17, NULL),
+(162, 'Color', 'Trắng', 1, '2025-04-08 15:45:46.978509', 17, NULL),
+(163, 'Color', 'Xanh', 1, '2025-04-08 15:45:46.994749', 17, NULL),
+(164, 'Color', 'Đỏ', 1, '2025-04-08 15:45:47.010036', 17, NULL),
+(165, 'Color', 'Vàng', 1, '2025-04-08 15:45:47.024042', 17, NULL),
+(166, 'Size', 'S', 1, '2025-04-08 15:45:47.038042', 17, NULL),
+(167, 'Size', 'M', 1, '2025-04-08 15:45:47.055930', 17, NULL),
+(168, 'Size', 'L', 1, '2025-04-08 15:45:47.067680', 17, NULL),
+(169, 'Size', 'XL', 1, '2025-04-08 15:45:47.077681', 17, NULL),
+(170, 'Size', 'XXL', 1, '2025-04-08 15:45:47.089065', 17, NULL),
+(171, 'Color', 'Đen', 1, '2025-04-08 15:45:47.117319', 18, NULL),
+(172, 'Color', 'Trắng', 1, '2025-04-08 15:45:47.131114', 18, NULL),
+(173, 'Color', 'Xanh', 1, '2025-04-08 15:45:47.144599', 18, NULL),
+(174, 'Color', 'Đỏ', 1, '2025-04-08 15:45:47.159652', 18, NULL),
+(175, 'Color', 'Vàng', 1, '2025-04-08 15:45:47.170654', 18, NULL),
+(176, 'Size', 'S', 1, '2025-04-08 15:45:47.185306', 18, NULL),
+(177, 'Size', 'M', 1, '2025-04-08 15:45:47.198561', 18, NULL),
+(178, 'Size', 'L', 1, '2025-04-08 15:45:47.212565', 18, NULL),
+(179, 'Size', 'XL', 1, '2025-04-08 15:45:47.227135', 18, NULL),
+(180, 'Size', 'XXL', 1, '2025-04-08 15:45:47.237135', 18, NULL),
+(181, 'Color', 'Đen', 1, '2025-04-08 15:45:47.261244', 19, NULL),
+(182, 'Color', 'Trắng', 1, '2025-04-08 15:45:47.271726', 19, NULL),
+(183, 'Color', 'Xanh', 1, '2025-04-08 15:45:47.285739', 19, NULL),
+(184, 'Color', 'Đỏ', 1, '2025-04-08 15:45:47.300213', 19, NULL),
+(185, 'Color', 'Vàng', 1, '2025-04-08 15:45:47.313817', 19, NULL),
+(186, 'Size', 'S', 1, '2025-04-08 15:45:47.329524', 19, NULL),
+(187, 'Size', 'M', 1, '2025-04-08 15:45:47.341338', 19, NULL),
+(188, 'Size', 'L', 1, '2025-04-08 15:45:47.353918', 19, NULL),
+(189, 'Size', 'XL', 1, '2025-04-08 15:45:47.367357', 19, NULL),
+(190, 'Size', 'XXL', 1, '2025-04-08 15:45:47.379495', 19, NULL),
+(191, 'Color', 'Đen', 1, '2025-04-08 15:45:47.404749', 20, NULL),
+(192, 'Color', 'Trắng', 1, '2025-04-08 15:45:47.418750', 20, NULL),
+(193, 'Color', 'Xanh', 1, '2025-04-08 15:45:47.435023', 20, NULL),
+(194, 'Color', 'Đỏ', 1, '2025-04-08 15:45:47.451037', 20, NULL),
+(195, 'Color', 'Vàng', 1, '2025-04-08 15:45:47.466636', 20, NULL),
+(196, 'Size', 'S', 1, '2025-04-08 15:45:47.483182', 20, NULL),
+(197, 'Size', 'M', 1, '2025-04-08 15:45:47.497550', 20, NULL),
+(198, 'Size', 'L', 1, '2025-04-08 15:45:47.511221', 20, NULL),
+(199, 'Size', 'XL', 1, '2025-04-08 15:45:47.524601', 20, NULL),
+(200, 'Size', 'XXL', 1, '2025-04-08 15:45:47.539734', 20, NULL),
+(201, 'Color', 'Đen', 1, '2025-04-08 15:45:47.573244', 21, NULL),
+(202, 'Color', 'Trắng', 1, '2025-04-08 15:45:47.588090', 21, NULL),
+(203, 'Color', 'Xanh', 1, '2025-04-08 15:45:47.602954', 21, NULL),
+(204, 'Color', 'Đỏ', 1, '2025-04-08 15:45:47.620109', 21, NULL),
+(205, 'Color', 'Vàng', 1, '2025-04-08 15:45:47.632127', 21, NULL),
+(206, 'Size', 'S', 1, '2025-04-08 15:45:47.645787', 21, NULL),
+(207, 'Size', 'M', 1, '2025-04-08 15:45:47.660633', 21, NULL),
+(208, 'Size', 'L', 1, '2025-04-08 15:45:47.674688', 21, NULL),
+(209, 'Size', 'XL', 1, '2025-04-08 15:45:47.688724', 21, NULL),
+(210, 'Size', 'XXL', 1, '2025-04-08 15:45:47.699855', 21, NULL),
+(211, 'Color', 'Đen', 1, '2025-04-08 15:45:47.725385', 22, NULL),
+(212, 'Color', 'Trắng', 1, '2025-04-08 15:45:47.741992', 22, NULL),
+(213, 'Color', 'Xanh', 1, '2025-04-08 15:45:47.759254', 22, NULL),
+(214, 'Color', 'Đỏ', 1, '2025-04-08 15:45:47.770817', 22, NULL),
+(215, 'Color', 'Vàng', 1, '2025-04-08 15:45:47.782819', 22, NULL),
+(216, 'Size', 'S', 1, '2025-04-08 15:45:47.796280', 22, NULL),
+(217, 'Size', 'M', 1, '2025-04-08 15:45:47.810454', 22, NULL),
+(218, 'Size', 'L', 1, '2025-04-08 15:45:47.820896', 22, NULL),
+(219, 'Size', 'XL', 1, '2025-04-08 15:45:47.834895', 22, NULL),
+(220, 'Size', 'XXL', 1, '2025-04-08 15:45:47.848373', 22, NULL),
+(221, 'Color', 'Đen', 1, '2025-04-08 15:45:47.872150', 23, NULL),
+(222, 'Color', 'Trắng', 1, '2025-04-08 15:45:47.885392', 23, NULL),
+(223, 'Color', 'Xanh', 1, '2025-04-08 15:45:47.900660', 23, NULL),
+(224, 'Color', 'Đỏ', 1, '2025-04-08 15:45:47.915035', 23, NULL),
+(225, 'Color', 'Vàng', 1, '2025-04-08 15:45:47.929038', 23, NULL),
+(226, 'Size', 'S', 1, '2025-04-08 15:45:47.942362', 23, NULL),
+(227, 'Size', 'M', 1, '2025-04-08 15:45:47.956318', 23, NULL),
+(228, 'Size', 'L', 1, '2025-04-08 15:45:47.969668', 23, NULL),
+(229, 'Size', 'XL', 1, '2025-04-08 15:45:47.980771', 23, NULL),
+(230, 'Size', 'XXL', 1, '2025-04-08 15:45:47.991320', 23, NULL),
+(231, 'Color', 'Đen', 1, '2025-04-08 15:45:48.018746', 24, NULL),
+(232, 'Color', 'Trắng', 1, '2025-04-08 15:45:48.031415', 24, NULL),
+(233, 'Color', 'Xanh', 1, '2025-04-08 15:45:48.046417', 24, NULL),
+(234, 'Color', 'Đỏ', 1, '2025-04-08 15:45:48.063196', 24, NULL),
+(235, 'Color', 'Vàng', 1, '2025-04-08 15:45:48.078177', 24, NULL),
+(236, 'Size', 'S', 1, '2025-04-08 15:45:48.089178', 24, NULL),
+(237, 'Size', 'M', 1, '2025-04-08 15:45:48.104837', 24, NULL),
+(238, 'Size', 'L', 1, '2025-04-08 15:45:48.118838', 24, NULL),
+(239, 'Size', 'XL', 1, '2025-04-08 15:45:48.130218', 24, NULL),
+(240, 'Size', 'XXL', 1, '2025-04-08 15:45:48.142794', 24, NULL),
+(241, 'Color', 'Đen', 1, '2025-04-08 15:45:48.171351', 25, NULL),
+(242, 'Color', 'Trắng', 1, '2025-04-08 15:45:48.186688', 25, NULL),
+(243, 'Color', 'Xanh', 1, '2025-04-08 15:45:48.203689', 25, NULL),
+(244, 'Color', 'Đỏ', 1, '2025-04-08 15:45:48.217931', 25, NULL),
+(245, 'Color', 'Vàng', 1, '2025-04-08 15:45:48.232376', 25, NULL),
+(246, 'Size', 'S', 1, '2025-04-08 15:45:48.247084', 25, NULL),
+(247, 'Size', 'M', 1, '2025-04-08 15:45:48.261133', 25, NULL),
+(248, 'Size', 'L', 1, '2025-04-08 15:45:48.275634', 25, NULL),
+(249, 'Size', 'XL', 1, '2025-04-08 15:45:48.292779', 25, NULL),
+(250, 'Size', 'XXL', 1, '2025-04-08 15:45:48.308296', 25, NULL),
+(251, 'Color', 'Đen', 1, '2025-04-08 15:45:48.340046', 26, NULL),
+(252, 'Color', 'Trắng', 1, '2025-04-08 15:45:48.354323', 26, NULL),
+(253, 'Color', 'Xanh', 1, '2025-04-08 15:45:48.370538', 26, NULL),
+(254, 'Color', 'Đỏ', 1, '2025-04-08 15:45:48.388102', 26, NULL),
+(255, 'Color', 'Vàng', 1, '2025-04-08 15:45:48.401024', 26, NULL),
+(256, 'Size', 'S', 1, '2025-04-08 15:45:48.414825', 26, NULL),
+(257, 'Size', 'M', 1, '2025-04-08 15:45:48.433124', 26, NULL),
+(258, 'Size', 'L', 1, '2025-04-08 15:45:48.451664', 26, NULL),
+(259, 'Size', 'XL', 1, '2025-04-08 15:45:48.469387', 26, NULL),
+(260, 'Size', 'XXL', 1, '2025-04-08 15:45:48.479546', 26, NULL),
+(261, 'Color', 'Đen', 1, '2025-04-08 15:45:48.507750', 27, NULL),
+(262, 'Color', 'Trắng', 1, '2025-04-08 15:45:48.522749', 27, NULL),
+(263, 'Color', 'Xanh', 1, '2025-04-08 15:45:48.536943', 27, NULL),
+(264, 'Color', 'Đỏ', 1, '2025-04-08 15:45:48.551178', 27, NULL),
+(265, 'Color', 'Vàng', 1, '2025-04-08 15:45:48.565360', 27, NULL),
+(266, 'Size', 'S', 1, '2025-04-08 15:45:48.579108', 27, NULL),
+(267, 'Size', 'M', 1, '2025-04-08 15:45:48.591110', 27, NULL),
+(268, 'Size', 'L', 1, '2025-04-08 15:45:48.604683', 27, NULL),
+(269, 'Size', 'XL', 1, '2025-04-08 15:45:48.618282', 27, NULL),
+(270, 'Size', 'XXL', 1, '2025-04-08 15:45:48.630772', 27, NULL),
+(271, 'Color', 'Đen', 1, '2025-04-08 15:45:48.657749', 28, NULL),
+(272, 'Color', 'Trắng', 1, '2025-04-08 15:45:48.675762', 28, NULL),
+(273, 'Color', 'Xanh', 1, '2025-04-08 15:45:48.691139', 28, NULL),
+(274, 'Color', 'Đỏ', 1, '2025-04-08 15:45:48.703186', 28, NULL),
+(275, 'Color', 'Vàng', 1, '2025-04-08 15:45:48.717199', 28, NULL),
+(276, 'Size', 'S', 1, '2025-04-08 15:45:48.730026', 28, NULL),
+(277, 'Size', 'M', 1, '2025-04-08 15:45:48.743702', 28, NULL),
+(278, 'Size', 'L', 1, '2025-04-08 15:45:48.756106', 28, NULL),
+(279, 'Size', 'XL', 1, '2025-04-08 15:45:48.770106', 28, NULL),
+(280, 'Size', 'XXL', 1, '2025-04-08 15:45:48.783971', 28, NULL),
+(281, 'Color', 'Đen', 1, '2025-04-08 15:45:48.812211', 29, NULL),
+(282, 'Color', 'Trắng', 1, '2025-04-08 15:45:48.836334', 29, NULL),
+(283, 'Color', 'Xanh', 1, '2025-04-08 15:45:48.849991', 29, NULL),
+(284, 'Color', 'Đỏ', 1, '2025-04-08 15:45:48.861992', 29, NULL),
+(285, 'Color', 'Vàng', 1, '2025-04-08 15:45:48.874763', 29, NULL),
+(286, 'Size', 'S', 1, '2025-04-08 15:45:48.888183', 29, NULL),
+(287, 'Size', 'M', 1, '2025-04-08 15:45:48.900183', 29, NULL),
+(288, 'Size', 'L', 1, '2025-04-08 15:45:48.912647', 29, NULL),
+(289, 'Size', 'XL', 1, '2025-04-08 15:45:48.925909', 29, NULL),
+(290, 'Size', 'XXL', 1, '2025-04-08 15:45:48.939286', 29, NULL),
+(291, 'Color', 'Đen', 1, '2025-04-08 15:45:48.964808', 30, NULL),
+(292, 'Color', 'Trắng', 1, '2025-04-08 15:45:48.979097', 30, NULL),
+(293, 'Color', 'Xanh', 1, '2025-04-08 15:45:48.992318', 30, NULL),
+(294, 'Color', 'Đỏ', 1, '2025-04-08 15:45:49.010364', 30, NULL),
+(295, 'Color', 'Vàng', 1, '2025-04-08 15:45:49.021810', 30, NULL),
+(296, 'Size', 'S', 1, '2025-04-08 15:45:49.036222', 30, NULL),
+(297, 'Size', 'M', 1, '2025-04-08 15:45:49.049784', 30, NULL),
+(298, 'Size', 'L', 1, '2025-04-08 15:45:49.060241', 30, NULL),
+(299, 'Size', 'XL', 1, '2025-04-08 15:45:49.071472', 30, NULL),
+(300, 'Size', 'XXL', 1, '2025-04-08 15:45:49.084312', 30, NULL),
+(301, 'Color', 'Đen', 1, '2025-04-08 15:45:49.111685', 31, NULL),
+(302, 'Color', 'Trắng', 1, '2025-04-08 15:45:49.125347', 31, NULL),
+(303, 'Color', 'Xanh', 1, '2025-04-08 15:45:49.142155', 31, NULL),
+(304, 'Color', 'Đỏ', 1, '2025-04-08 15:45:49.156167', 31, NULL),
+(305, 'Color', 'Vàng', 1, '2025-04-08 15:45:49.169528', 31, NULL),
+(306, 'Size', 'S', 1, '2025-04-08 15:45:49.181109', 31, NULL),
+(307, 'Size', 'M', 1, '2025-04-08 15:45:49.193191', 31, NULL),
+(308, 'Size', 'L', 1, '2025-04-08 15:45:49.207521', 31, NULL),
+(309, 'Size', 'XL', 1, '2025-04-08 15:45:49.219517', 31, NULL),
+(310, 'Size', 'XXL', 1, '2025-04-08 15:45:49.230332', 31, NULL),
+(311, 'Color', 'Đen', 1, '2025-04-08 15:45:49.254955', 32, NULL),
+(312, 'Color', 'Trắng', 1, '2025-04-08 15:45:49.269249', 32, NULL),
+(313, 'Color', 'Xanh', 1, '2025-04-08 15:45:49.282411', 32, NULL),
+(314, 'Color', 'Đỏ', 1, '2025-04-08 15:45:49.296358', 32, NULL),
+(315, 'Color', 'Vàng', 1, '2025-04-08 15:45:49.310029', 32, NULL),
+(316, 'Size', 'S', 1, '2025-04-08 15:45:49.321029', 32, NULL),
+(317, 'Size', 'M', 1, '2025-04-08 15:45:49.334998', 32, NULL),
+(318, 'Size', 'L', 1, '2025-04-08 15:45:49.347924', 32, NULL),
+(319, 'Size', 'XL', 1, '2025-04-08 15:45:49.358929', 32, NULL),
+(320, 'Size', 'XXL', 1, '2025-04-08 15:45:49.370873', 32, NULL),
+(321, 'Color', 'Đen', 1, '2025-04-08 15:45:49.397925', 33, NULL),
+(322, 'Color', 'Trắng', 1, '2025-04-08 15:45:49.410650', 33, NULL),
+(323, 'Color', 'Xanh', 1, '2025-04-08 15:45:49.428754', 33, NULL),
+(324, 'Color', 'Đỏ', 1, '2025-04-08 15:45:49.444015', 33, NULL),
+(325, 'Color', 'Vàng', 1, '2025-04-08 15:45:49.462362', 33, NULL),
+(326, 'Size', 'S', 1, '2025-04-08 15:45:49.477508', 33, NULL),
+(327, 'Size', 'M', 1, '2025-04-08 15:45:49.490323', 33, NULL),
+(328, 'Size', 'L', 1, '2025-04-08 15:45:49.500325', 33, NULL),
+(329, 'Size', 'XL', 1, '2025-04-08 15:45:49.513583', 33, NULL),
+(330, 'Size', 'XXL', 1, '2025-04-08 15:45:49.527229', 33, NULL),
+(331, 'Color', 'Đen', 1, '2025-04-08 15:45:49.553747', 34, NULL),
+(332, 'Color', 'Trắng', 1, '2025-04-08 15:45:49.566362', 34, NULL),
+(333, 'Color', 'Xanh', 1, '2025-04-08 15:45:49.581248', 34, NULL),
+(334, 'Color', 'Đỏ', 1, '2025-04-08 15:45:49.594908', 34, NULL),
+(335, 'Color', 'Vàng', 1, '2025-04-08 15:45:49.607771', 34, NULL),
+(336, 'Size', 'S', 1, '2025-04-08 15:45:49.620770', 34, NULL),
+(337, 'Size', 'M', 1, '2025-04-08 15:45:49.633995', 34, NULL),
+(338, 'Size', 'L', 1, '2025-04-08 15:45:49.646557', 34, NULL),
+(339, 'Size', 'XL', 1, '2025-04-08 15:45:49.662559', 34, NULL),
+(340, 'Size', 'XXL', 1, '2025-04-08 15:45:49.675555', 34, NULL),
+(341, 'Color', 'Đen', 1, '2025-04-08 15:45:49.710862', 35, NULL),
+(342, 'Color', 'Trắng', 1, '2025-04-08 15:45:49.728392', 35, NULL),
+(343, 'Color', 'Xanh', 1, '2025-04-08 15:45:49.745144', 35, NULL),
+(344, 'Color', 'Đỏ', 1, '2025-04-08 15:45:49.761000', 35, NULL),
+(345, 'Color', 'Vàng', 1, '2025-04-08 15:45:49.776378', 35, NULL),
+(346, 'Size', 'S', 1, '2025-04-08 15:45:49.797360', 35, NULL),
+(347, 'Size', 'M', 1, '2025-04-08 15:45:49.815439', 35, NULL),
+(348, 'Size', 'L', 1, '2025-04-08 15:45:49.830200', 35, NULL),
+(349, 'Size', 'XL', 1, '2025-04-08 15:45:49.842113', 35, NULL),
+(350, 'Size', 'XXL', 1, '2025-04-08 15:45:49.856245', 35, NULL),
+(351, 'Color', 'Đen', 1, '2025-04-08 15:45:49.881439', 36, NULL),
+(352, 'Color', 'Trắng', 1, '2025-04-08 15:45:49.897443', 36, NULL),
+(353, 'Color', 'Xanh', 1, '2025-04-08 15:45:49.913095', 36, NULL),
+(354, 'Color', 'Đỏ', 1, '2025-04-08 15:45:49.928744', 36, NULL),
+(355, 'Color', 'Vàng', 1, '2025-04-08 15:45:49.939749', 36, NULL),
+(356, 'Size', 'S', 1, '2025-04-08 15:45:49.950865', 36, NULL),
+(357, 'Size', 'M', 1, '2025-04-08 15:45:49.963871', 36, NULL),
+(358, 'Size', 'L', 1, '2025-04-08 15:45:49.976560', 36, NULL),
+(359, 'Size', 'XL', 1, '2025-04-08 15:45:49.989487', 36, NULL),
+(360, 'Size', 'XXL', 1, '2025-04-08 15:45:50.001589', 36, NULL),
+(361, 'Color', 'Đen', 1, '2025-04-08 15:45:50.028910', 37, NULL),
+(362, 'Color', 'Trắng', 1, '2025-04-08 15:45:50.040097', 37, NULL),
+(363, 'Color', 'Xanh', 1, '2025-04-08 15:45:50.055022', 37, NULL),
+(364, 'Color', 'Đỏ', 1, '2025-04-08 15:45:50.071021', 37, NULL),
+(365, 'Color', 'Vàng', 1, '2025-04-08 15:45:50.084105', 37, NULL),
+(366, 'Size', 'S', 1, '2025-04-08 15:45:50.100173', 37, NULL),
+(367, 'Size', 'M', 1, '2025-04-08 15:45:50.117996', 37, NULL),
+(368, 'Size', 'L', 1, '2025-04-08 15:45:50.134995', 37, NULL),
+(369, 'Size', 'XL', 1, '2025-04-08 15:45:50.153235', 37, NULL),
+(370, 'Size', 'XXL', 1, '2025-04-08 15:45:50.169532', 37, NULL),
+(371, 'Color', 'Đen', 1, '2025-04-08 15:45:50.202368', 38, NULL),
+(372, 'Color', 'Trắng', 1, '2025-04-08 15:45:50.221483', 38, NULL),
+(373, 'Color', 'Xanh', 1, '2025-04-08 15:45:50.240357', 38, NULL),
+(374, 'Color', 'Đỏ', 1, '2025-04-08 15:45:50.258560', 38, NULL),
+(375, 'Color', 'Vàng', 1, '2025-04-08 15:45:50.277984', 38, NULL),
+(376, 'Size', 'S', 1, '2025-04-08 15:45:50.305536', 38, NULL),
+(377, 'Size', 'M', 1, '2025-04-08 15:45:50.332480', 38, NULL),
+(378, 'Size', 'L', 1, '2025-04-08 15:45:50.355315', 38, NULL),
+(379, 'Size', 'XL', 1, '2025-04-08 15:45:50.373936', 38, NULL),
+(380, 'Size', 'XXL', 1, '2025-04-08 15:45:50.389254', 38, NULL),
+(381, 'Color', 'Đen', 1, '2025-04-08 15:45:50.422027', 39, NULL),
+(382, 'Color', 'Trắng', 1, '2025-04-08 15:45:50.452576', 39, NULL),
+(383, 'Color', 'Xanh', 1, '2025-04-08 15:45:50.476766', 39, NULL),
+(384, 'Color', 'Đỏ', 1, '2025-04-08 15:45:50.493980', 39, NULL),
+(385, 'Color', 'Vàng', 1, '2025-04-08 15:45:50.511068', 39, NULL),
+(386, 'Size', 'S', 1, '2025-04-08 15:45:50.529622', 39, NULL),
+(387, 'Size', 'M', 1, '2025-04-08 15:45:50.547428', 39, NULL),
+(388, 'Size', 'L', 1, '2025-04-08 15:45:50.566095', 39, NULL),
+(389, 'Size', 'XL', 1, '2025-04-08 15:45:50.583276', 39, NULL),
+(390, 'Size', 'XXL', 1, '2025-04-08 15:45:50.600270', 39, NULL),
+(391, 'Color', 'Đen', 1, '2025-04-08 15:45:50.633237', 40, NULL),
+(392, 'Color', 'Trắng', 1, '2025-04-08 15:45:50.651316', 40, NULL),
+(393, 'Color', 'Xanh', 1, '2025-04-08 15:45:50.666688', 40, NULL),
+(394, 'Color', 'Đỏ', 1, '2025-04-08 15:45:50.682185', 40, NULL),
+(395, 'Color', 'Vàng', 1, '2025-04-08 15:45:50.696295', 40, NULL),
+(396, 'Size', 'S', 1, '2025-04-08 15:45:50.712094', 40, NULL),
+(397, 'Size', 'M', 1, '2025-04-08 15:45:50.726852', 40, NULL),
+(398, 'Size', 'L', 1, '2025-04-08 15:45:50.740331', 40, NULL),
+(399, 'Size', 'XL', 1, '2025-04-08 15:45:50.753875', 40, NULL),
+(400, 'Size', 'XXL', 1, '2025-04-08 15:45:50.765212', 40, NULL),
+(401, 'Color', 'Đen', 1, '2025-04-08 15:45:50.795660', 41, NULL),
+(402, 'Color', 'Trắng', 1, '2025-04-08 15:45:50.809076', 41, NULL),
+(403, 'Color', 'Xanh', 1, '2025-04-08 15:45:50.823408', 41, NULL),
+(404, 'Color', 'Đỏ', 1, '2025-04-08 15:45:50.838170', 41, NULL),
+(405, 'Color', 'Vàng', 1, '2025-04-08 15:45:50.850169', 41, NULL),
+(406, 'Size', 'S', 1, '2025-04-08 15:45:50.863719', 41, NULL),
+(407, 'Size', 'M', 1, '2025-04-08 15:45:50.876631', 41, NULL),
+(408, 'Size', 'L', 1, '2025-04-08 15:45:50.888246', 41, NULL),
+(409, 'Size', 'XL', 1, '2025-04-08 15:45:50.899854', 41, NULL),
+(410, 'Size', 'XXL', 1, '2025-04-08 15:45:50.911550', 41, NULL),
+(411, 'Color', 'Đen', 1, '2025-04-08 15:45:50.937603', 42, NULL),
+(412, 'Color', 'Trắng', 1, '2025-04-08 15:45:50.949601', 42, NULL),
+(413, 'Color', 'Xanh', 1, '2025-04-08 15:45:50.964601', 42, NULL),
+(414, 'Color', 'Đỏ', 1, '2025-04-08 15:45:50.978792', 42, NULL),
+(415, 'Color', 'Vàng', 1, '2025-04-08 15:45:50.990924', 42, NULL),
+(416, 'Size', 'S', 1, '2025-04-08 15:45:51.005226', 42, NULL),
+(417, 'Size', 'M', 1, '2025-04-08 15:45:51.018654', 42, NULL),
+(418, 'Size', 'L', 1, '2025-04-08 15:45:51.030285', 42, NULL),
+(419, 'Size', 'XL', 1, '2025-04-08 15:45:51.041565', 42, NULL),
+(420, 'Size', 'XXL', 1, '2025-04-08 15:45:51.055163', 42, NULL),
+(421, 'Color', 'Đen', 1, '2025-04-08 15:45:51.078293', 43, NULL),
+(422, 'Color', 'Trắng', 1, '2025-04-08 15:45:51.099012', 43, NULL),
+(423, 'Color', 'Xanh', 1, '2025-04-08 15:45:51.114810', 43, NULL),
+(424, 'Color', 'Đỏ', 1, '2025-04-08 15:45:51.128382', 43, NULL),
+(425, 'Color', 'Vàng', 1, '2025-04-08 15:45:51.140255', 43, NULL),
+(426, 'Size', 'S', 1, '2025-04-08 15:45:51.152253', 43, NULL),
+(427, 'Size', 'M', 1, '2025-04-08 15:45:51.164847', 43, NULL),
+(428, 'Size', 'L', 1, '2025-04-08 15:45:51.178362', 43, NULL),
+(429, 'Size', 'XL', 1, '2025-04-08 15:45:51.189100', 43, NULL),
+(430, 'Size', 'XXL', 1, '2025-04-08 15:45:51.200661', 43, NULL),
+(431, 'Color', 'Đen', 1, '2025-04-08 15:45:51.228485', 44, NULL),
+(432, 'Color', 'Trắng', 1, '2025-04-08 15:45:51.243814', 44, NULL),
+(433, 'Color', 'Xanh', 1, '2025-04-08 15:45:51.260813', 44, NULL),
+(434, 'Color', 'Đỏ', 1, '2025-04-08 15:45:51.273817', 44, NULL),
+(435, 'Color', 'Vàng', 1, '2025-04-08 15:45:51.287285', 44, NULL),
+(436, 'Size', 'S', 1, '2025-04-08 15:45:51.298693', 44, NULL),
+(437, 'Size', 'M', 1, '2025-04-08 15:45:51.312185', 44, NULL),
+(438, 'Size', 'L', 1, '2025-04-08 15:45:51.326961', 44, NULL),
+(439, 'Size', 'XL', 1, '2025-04-08 15:45:51.339172', 44, NULL),
+(440, 'Size', 'XXL', 1, '2025-04-08 15:45:51.351418', 44, NULL),
+(441, 'Color', 'Đen', 1, '2025-04-08 15:45:51.378046', 45, NULL),
+(442, 'Color', 'Trắng', 1, '2025-04-08 15:45:51.391045', 45, NULL),
+(443, 'Color', 'Xanh', 1, '2025-04-08 15:45:51.403613', 45, NULL),
+(444, 'Color', 'Đỏ', 1, '2025-04-08 15:45:51.420140', 45, NULL),
+(445, 'Color', 'Vàng', 1, '2025-04-08 15:45:51.435999', 45, NULL),
+(446, 'Size', 'S', 1, '2025-04-08 15:45:51.457812', 45, NULL),
+(447, 'Size', 'M', 1, '2025-04-08 15:45:51.469387', 45, NULL),
+(448, 'Size', 'L', 1, '2025-04-08 15:45:51.480894', 45, NULL),
+(449, 'Size', 'XL', 1, '2025-04-08 15:45:51.494510', 45, NULL),
+(450, 'Size', 'XXL', 1, '2025-04-08 15:45:51.507620', 45, NULL),
+(451, 'Color', 'Đen', 1, '2025-04-08 15:45:51.532079', 46, NULL),
+(452, 'Color', 'Trắng', 1, '2025-04-08 15:45:51.546498', 46, NULL),
+(453, 'Color', 'Xanh', 1, '2025-04-08 15:45:51.562117', 46, NULL),
+(454, 'Color', 'Đỏ', 1, '2025-04-08 15:45:51.577510', 46, NULL),
+(455, 'Color', 'Vàng', 1, '2025-04-08 15:45:51.592629', 46, NULL),
+(456, 'Size', 'S', 1, '2025-04-08 15:45:51.606342', 46, NULL),
+(457, 'Size', 'M', 1, '2025-04-08 15:45:51.618863', 46, NULL),
+(458, 'Size', 'L', 1, '2025-04-08 15:45:51.632278', 46, NULL),
+(459, 'Size', 'XL', 1, '2025-04-08 15:45:51.646090', 46, NULL),
+(460, 'Size', 'XXL', 1, '2025-04-08 15:45:51.658977', 46, NULL),
+(461, 'Color', 'Đen', 1, '2025-04-08 15:45:51.684786', 47, NULL),
+(462, 'Color', 'Trắng', 1, '2025-04-08 15:45:51.697810', 47, NULL),
+(463, 'Color', 'Xanh', 1, '2025-04-08 15:45:51.713846', 47, NULL),
+(464, 'Color', 'Đỏ', 1, '2025-04-08 15:45:51.728447', 47, NULL),
+(465, 'Color', 'Vàng', 1, '2025-04-08 15:45:51.744085', 47, NULL),
+(466, 'Size', 'S', 1, '2025-04-08 15:45:51.758692', 47, NULL),
+(467, 'Size', 'M', 1, '2025-04-08 15:45:51.770952', 47, NULL),
+(468, 'Size', 'L', 1, '2025-04-08 15:45:51.782715', 47, NULL),
+(469, 'Size', 'XL', 1, '2025-04-08 15:45:51.795959', 47, NULL),
+(470, 'Size', 'XXL', 1, '2025-04-08 15:45:51.809997', 47, NULL),
+(471, 'Color', 'Đen', 1, '2025-04-08 15:45:51.836521', 48, NULL),
+(472, 'Color', 'Trắng', 1, '2025-04-08 15:45:51.851017', 48, NULL),
+(473, 'Color', 'Xanh', 1, '2025-04-08 15:45:51.867735', 48, NULL),
+(474, 'Color', 'Đỏ', 1, '2025-04-08 15:45:51.880735', 48, NULL),
+(475, 'Color', 'Vàng', 1, '2025-04-08 15:45:51.896732', 48, NULL),
+(476, 'Size', 'S', 1, '2025-04-08 15:45:51.911756', 48, NULL),
+(477, 'Size', 'M', 1, '2025-04-08 15:45:51.926251', 48, NULL),
+(478, 'Size', 'L', 1, '2025-04-08 15:45:51.940282', 48, NULL),
+(479, 'Size', 'XL', 1, '2025-04-08 15:45:51.952572', 48, NULL),
+(480, 'Size', 'XXL', 1, '2025-04-08 15:45:51.968155', 48, NULL),
+(481, 'Color', 'Đen', 1, '2025-04-08 15:45:51.998046', 49, NULL),
+(482, 'Color', 'Trắng', 1, '2025-04-08 15:45:52.011092', 49, NULL),
+(483, 'Color', 'Xanh', 1, '2025-04-08 15:45:52.030685', 49, NULL),
+(484, 'Color', 'Đỏ', 1, '2025-04-08 15:45:52.047356', 49, NULL),
+(485, 'Color', 'Vàng', 1, '2025-04-08 15:45:52.060140', 49, NULL),
+(486, 'Size', 'S', 1, '2025-04-08 15:45:52.070907', 49, NULL),
+(487, 'Size', 'M', 1, '2025-04-08 15:45:52.084553', 49, NULL),
+(488, 'Size', 'L', 1, '2025-04-08 15:45:52.099554', 49, NULL),
+(489, 'Size', 'XL', 1, '2025-04-08 15:45:52.112957', 49, NULL),
+(490, 'Size', 'XXL', 1, '2025-04-08 15:45:52.125989', 49, NULL),
+(491, 'Color', 'Đen', 1, '2025-04-08 15:45:52.155424', 50, NULL),
+(492, 'Color', 'Trắng', 1, '2025-04-08 15:45:52.168634', 50, NULL),
+(493, 'Color', 'Xanh', 1, '2025-04-08 15:45:52.184804', 50, NULL),
+(494, 'Color', 'Đỏ', 1, '2025-04-08 15:45:52.199714', 50, NULL),
+(495, 'Color', 'Vàng', 1, '2025-04-08 15:45:52.211445', 50, NULL),
+(496, 'Size', 'S', 1, '2025-04-08 15:45:52.224802', 50, NULL),
+(497, 'Size', 'M', 1, '2025-04-08 15:45:52.238101', 50, NULL),
+(498, 'Size', 'L', 1, '2025-04-08 15:45:52.250098', 50, NULL),
+(499, 'Size', 'XL', 1, '2025-04-08 15:45:52.262135', 50, NULL),
+(500, 'Size', 'XXL', 1, '2025-04-08 15:45:52.274137', 50, NULL),
+(501, 'Color', 'Đen', 1, '2025-04-08 15:45:52.300749', 51, NULL),
+(502, 'Color', 'Trắng', 1, '2025-04-08 15:45:52.314379', 51, NULL),
+(503, 'Color', 'Xanh', 1, '2025-04-08 15:45:52.334977', 51, NULL),
+(504, 'Color', 'Đỏ', 1, '2025-04-08 15:45:52.351348', 51, NULL),
+(505, 'Color', 'Vàng', 1, '2025-04-08 15:45:52.365091', 51, NULL),
+(506, 'Size', 'S', 1, '2025-04-08 15:45:52.378595', 51, NULL),
+(507, 'Size', 'M', 1, '2025-04-08 15:45:52.393597', 51, NULL),
+(508, 'Size', 'L', 1, '2025-04-08 15:45:52.404984', 51, NULL),
+(509, 'Size', 'XL', 1, '2025-04-08 15:45:52.416645', 51, NULL),
+(510, 'Size', 'XXL', 1, '2025-04-08 15:45:52.432883', 51, NULL),
+(511, 'Color', 'Đen', 1, '2025-04-08 15:45:52.460322', 52, NULL),
+(512, 'Color', 'Trắng', 1, '2025-04-08 15:45:52.474783', 52, NULL),
+(513, 'Color', 'Xanh', 1, '2025-04-08 15:45:52.489392', 52, NULL),
+(514, 'Color', 'Đỏ', 1, '2025-04-08 15:45:52.505167', 52, NULL),
+(515, 'Color', 'Vàng', 1, '2025-04-08 15:45:52.519321', 52, NULL),
+(516, 'Size', 'S', 1, '2025-04-08 15:45:52.530317', 52, NULL),
+(517, 'Size', 'M', 1, '2025-04-08 15:45:52.541925', 52, NULL),
+(518, 'Size', 'L', 1, '2025-04-08 15:45:52.554418', 52, NULL),
+(519, 'Size', 'XL', 1, '2025-04-08 15:45:52.568407', 52, NULL),
+(520, 'Size', 'XXL', 1, '2025-04-08 15:45:52.579942', 52, NULL),
+(521, 'Color', 'Đen', 1, '2025-04-08 15:45:52.608089', 53, NULL),
+(522, 'Color', 'Trắng', 1, '2025-04-08 15:45:52.620782', 53, NULL),
+(523, 'Color', 'Xanh', 1, '2025-04-08 15:45:52.636287', 53, NULL),
+(524, 'Color', 'Đỏ', 1, '2025-04-08 15:45:52.649475', 53, NULL),
+(525, 'Color', 'Vàng', 1, '2025-04-08 15:45:52.662487', 53, NULL),
+(526, 'Size', 'S', 1, '2025-04-08 15:45:52.678484', 53, NULL),
+(527, 'Size', 'M', 1, '2025-04-08 15:45:52.693482', 53, NULL),
+(528, 'Size', 'L', 1, '2025-04-08 15:45:52.709486', 53, NULL),
+(529, 'Size', 'XL', 1, '2025-04-08 15:45:52.725255', 53, NULL),
+(530, 'Size', 'XXL', 1, '2025-04-08 15:45:52.739778', 53, NULL),
+(531, 'Color', 'Đen', 1, '2025-04-08 15:45:52.772130', 54, NULL),
+(532, 'Color', 'Trắng', 1, '2025-04-08 15:45:52.787218', 54, NULL),
+(533, 'Color', 'Xanh', 1, '2025-04-08 15:45:52.804926', 54, NULL),
+(534, 'Color', 'Đỏ', 1, '2025-04-08 15:45:52.821466', 54, NULL),
+(535, 'Color', 'Vàng', 1, '2025-04-08 15:45:52.837457', 54, NULL),
+(536, 'Size', 'S', 1, '2025-04-08 15:45:52.854345', 54, NULL),
+(537, 'Size', 'M', 1, '2025-04-08 15:45:52.869504', 54, NULL),
+(538, 'Size', 'L', 1, '2025-04-08 15:45:52.881550', 54, NULL),
+(539, 'Size', 'XL', 1, '2025-04-08 15:45:52.897677', 54, NULL),
+(540, 'Size', 'XXL', 1, '2025-04-08 15:45:52.912716', 54, NULL),
+(541, 'Color', 'Đen', 1, '2025-04-08 15:45:52.941912', 55, NULL),
+(542, 'Color', 'Trắng', 1, '2025-04-08 15:45:52.958215', 55, NULL),
+(543, 'Color', 'Xanh', 1, '2025-04-08 15:45:52.973887', 55, NULL),
+(544, 'Color', 'Đỏ', 1, '2025-04-08 15:45:52.997898', 55, NULL),
+(545, 'Color', 'Vàng', 1, '2025-04-08 15:45:53.017172', 55, NULL),
+(546, 'Size', 'S', 1, '2025-04-08 15:45:53.032015', 55, NULL),
+(547, 'Size', 'M', 1, '2025-04-08 15:45:53.046619', 55, NULL),
+(548, 'Size', 'L', 1, '2025-04-08 15:45:53.060806', 55, NULL),
+(549, 'Size', 'XL', 1, '2025-04-08 15:45:53.075422', 55, NULL),
+(550, 'Size', 'XXL', 1, '2025-04-08 15:45:53.089419', 55, NULL),
+(551, 'Color', 'Đen', 1, '2025-04-08 15:45:53.123751', 56, NULL),
+(552, 'Color', 'Trắng', 1, '2025-04-08 15:45:53.147400', 56, NULL),
+(553, 'Color', 'Xanh', 1, '2025-04-08 15:45:53.171039', 56, NULL),
+(554, 'Color', 'Đỏ', 1, '2025-04-08 15:45:53.188012', 56, NULL),
+(555, 'Color', 'Vàng', 1, '2025-04-08 15:45:53.202019', 56, NULL),
+(556, 'Size', 'S', 1, '2025-04-08 15:45:53.216040', 56, NULL),
+(557, 'Size', 'M', 1, '2025-04-08 15:45:53.230023', 56, NULL),
+(558, 'Size', 'L', 1, '2025-04-08 15:45:53.241248', 56, NULL),
+(559, 'Size', 'XL', 1, '2025-04-08 15:45:53.253787', 56, NULL),
+(560, 'Size', 'XXL', 1, '2025-04-08 15:45:53.272761', 56, NULL),
+(561, 'Color', 'Đen', 1, '2025-04-08 15:45:53.306765', 57, NULL),
+(562, 'Color', 'Trắng', 1, '2025-04-08 15:45:53.322846', 57, NULL),
+(563, 'Color', 'Xanh', 1, '2025-04-08 15:45:53.338682', 57, NULL),
+(564, 'Color', 'Đỏ', 1, '2025-04-08 15:45:53.351206', 57, NULL),
+(565, 'Color', 'Vàng', 1, '2025-04-08 15:45:53.364980', 57, NULL),
+(566, 'Size', 'S', 1, '2025-04-08 15:45:53.379116', 57, NULL),
+(567, 'Size', 'M', 1, '2025-04-08 15:45:53.390778', 57, NULL),
+(568, 'Size', 'L', 1, '2025-04-08 15:45:53.404739', 57, NULL),
+(569, 'Size', 'XL', 1, '2025-04-08 15:45:53.420618', 57, NULL),
+(570, 'Size', 'XXL', 1, '2025-04-08 15:45:53.441779', 57, NULL),
+(571, 'Color', 'Đen', 1, '2025-04-08 15:45:53.469090', 58, NULL),
+(572, 'Color', 'Trắng', 1, '2025-04-08 15:45:53.481090', 58, NULL),
+(573, 'Color', 'Xanh', 1, '2025-04-08 15:45:53.496672', 58, NULL),
+(574, 'Color', 'Đỏ', 1, '2025-04-08 15:45:53.513495', 58, NULL),
+(575, 'Color', 'Vàng', 1, '2025-04-08 15:45:53.527444', 58, NULL),
+(576, 'Size', 'S', 1, '2025-04-08 15:45:53.538449', 58, NULL),
+(577, 'Size', 'M', 1, '2025-04-08 15:45:53.585751', 58, NULL),
+(578, 'Size', 'L', 1, '2025-04-08 15:45:53.689368', 58, NULL),
+(579, 'Size', 'XL', 1, '2025-04-08 15:45:53.717619', 58, NULL),
+(580, 'Size', 'XXL', 1, '2025-04-08 15:45:53.741354', 58, NULL),
+(581, 'Color', 'Đen', 1, '2025-04-08 15:45:53.775349', 59, NULL),
+(582, 'Color', 'Trắng', 1, '2025-04-08 15:45:53.793466', 59, NULL),
+(583, 'Color', 'Xanh', 1, '2025-04-08 15:45:53.812413', 59, NULL),
+(584, 'Color', 'Đỏ', 1, '2025-04-08 15:45:53.829371', 59, NULL),
+(585, 'Color', 'Vàng', 1, '2025-04-08 15:45:53.841374', 59, NULL),
+(586, 'Size', 'S', 1, '2025-04-08 15:45:53.854378', 59, NULL),
+(587, 'Size', 'M', 1, '2025-04-08 15:45:53.868013', 59, NULL),
+(588, 'Size', 'L', 1, '2025-04-08 15:45:53.881100', 59, NULL),
+(589, 'Size', 'XL', 1, '2025-04-08 15:45:53.895099', 59, NULL),
+(590, 'Size', 'XXL', 1, '2025-04-08 15:45:53.910474', 59, NULL),
+(591, 'Color', 'Đen', 1, '2025-04-08 15:45:53.943126', 60, NULL),
+(592, 'Color', 'Trắng', 1, '2025-04-08 15:45:53.959236', 60, NULL),
+(593, 'Color', 'Xanh', 1, '2025-04-08 15:45:53.977250', 60, NULL),
+(594, 'Color', 'Đỏ', 1, '2025-04-08 15:45:53.994545', 60, NULL),
+(595, 'Color', 'Vàng', 1, '2025-04-08 15:45:54.009199', 60, NULL),
+(596, 'Size', 'S', 1, '2025-04-08 15:45:54.022203', 60, NULL),
+(597, 'Size', 'M', 1, '2025-04-08 15:45:54.036020', 60, NULL),
+(598, 'Size', 'L', 1, '2025-04-08 15:45:54.050020', 60, NULL),
+(599, 'Size', 'XL', 1, '2025-04-08 15:45:54.063613', 60, NULL),
+(600, 'Size', 'XXL', 1, '2025-04-08 15:45:54.078623', 60, NULL),
+(601, 'Color', 'Đen', 1, '2025-04-08 15:45:54.117025', 61, NULL),
+(602, 'Color', 'Trắng', 1, '2025-04-08 15:45:54.141977', 61, NULL),
+(603, 'Color', 'Xanh', 1, '2025-04-08 15:45:54.161119', 61, NULL),
+(604, 'Color', 'Đỏ', 1, '2025-04-08 15:45:54.177986', 61, NULL),
+(605, 'Color', 'Vàng', 1, '2025-04-08 15:45:54.195295', 61, NULL),
+(606, 'Size', 'S', 1, '2025-04-08 15:45:54.210173', 61, NULL),
+(607, 'Size', 'M', 1, '2025-04-08 15:45:54.226867', 61, NULL),
+(608, 'Size', 'L', 1, '2025-04-08 15:45:54.243387', 61, NULL),
+(609, 'Size', 'XL', 1, '2025-04-08 15:45:54.260424', 61, NULL),
+(610, 'Size', 'XXL', 1, '2025-04-08 15:45:54.275076', 61, NULL),
+(611, 'Color', 'Đen', 1, '2025-04-08 15:45:54.305273', 62, NULL),
+(612, 'Color', 'Trắng', 1, '2025-04-08 15:45:54.322275', 62, NULL),
+(613, 'Color', 'Xanh', 1, '2025-04-08 15:45:54.339274', 62, NULL),
+(614, 'Color', 'Đỏ', 1, '2025-04-08 15:45:54.356275', 62, NULL),
+(615, 'Color', 'Vàng', 1, '2025-04-08 15:45:54.371457', 62, NULL),
+(616, 'Size', 'S', 1, '2025-04-08 15:45:56.198571', 62, NULL),
+(617, 'Size', 'M', 1, '2025-04-08 15:45:56.218049', 62, NULL),
+(618, 'Size', 'L', 1, '2025-04-08 15:45:56.235304', 62, NULL),
+(619, 'Size', 'XL', 1, '2025-04-08 15:45:56.249301', 62, NULL),
+(620, 'Size', 'XXL', 1, '2025-04-08 15:45:56.261963', 62, NULL),
+(621, 'Color', 'Đen', 1, '2025-04-08 15:45:56.293160', 63, NULL),
+(622, 'Color', 'Trắng', 1, '2025-04-08 15:45:56.313155', 63, NULL),
+(623, 'Color', 'Xanh', 1, '2025-04-08 15:45:56.329994', 63, NULL),
+(624, 'Color', 'Đỏ', 1, '2025-04-08 15:45:56.346021', 63, NULL),
+(625, 'Color', 'Vàng', 1, '2025-04-08 15:45:56.361921', 63, NULL),
+(626, 'Size', 'S', 1, '2025-04-08 15:45:56.376596', 63, NULL),
+(627, 'Size', 'M', 1, '2025-04-08 15:45:56.391365', 63, NULL),
+(628, 'Size', 'L', 1, '2025-04-08 15:45:56.408370', 63, NULL),
+(629, 'Size', 'XL', 1, '2025-04-08 15:45:56.420949', 63, NULL),
+(630, 'Size', 'XXL', 1, '2025-04-08 15:45:56.438415', 63, NULL),
+(631, 'Color', 'Đen', 1, '2025-04-08 15:45:56.467442', 64, NULL),
+(632, 'Color', 'Trắng', 1, '2025-04-08 15:45:56.479770', 64, NULL),
+(633, 'Color', 'Xanh', 1, '2025-04-08 15:45:56.496421', 64, NULL),
+(634, 'Color', 'Đỏ', 1, '2025-04-08 15:45:56.511234', 64, NULL),
+(635, 'Color', 'Vàng', 1, '2025-04-08 15:45:56.524825', 64, NULL),
+(636, 'Size', 'S', 1, '2025-04-08 15:45:56.538282', 64, NULL),
+(637, 'Size', 'M', 1, '2025-04-08 15:45:56.550280', 64, NULL),
+(638, 'Size', 'L', 1, '2025-04-08 15:45:56.562225', 64, NULL),
+(639, 'Size', 'XL', 1, '2025-04-08 15:45:56.574226', 64, NULL),
+(640, 'Size', 'XXL', 1, '2025-04-08 15:45:56.587362', 64, NULL),
+(641, 'Color', 'Đen', 1, '2025-04-08 15:45:56.610941', 65, NULL),
+(642, 'Color', 'Trắng', 1, '2025-04-08 15:45:56.625232', 65, NULL),
+(643, 'Color', 'Xanh', 1, '2025-04-08 15:45:56.641236', 65, NULL),
+(644, 'Color', 'Đỏ', 1, '2025-04-08 15:45:56.655419', 65, NULL),
+(645, 'Color', 'Vàng', 1, '2025-04-08 15:45:56.667424', 65, NULL),
+(646, 'Size', 'S', 1, '2025-04-08 15:45:56.680036', 65, NULL),
+(647, 'Size', 'M', 1, '2025-04-08 15:45:56.691543', 65, NULL),
+(648, 'Size', 'L', 1, '2025-04-08 15:45:56.705144', 65, NULL),
+(649, 'Size', 'XL', 1, '2025-04-08 15:45:56.719376', 65, NULL),
+(650, 'Size', 'XXL', 1, '2025-04-08 15:45:56.732165', 65, NULL),
+(651, 'Color', 'Đen', 1, '2025-04-08 15:45:56.764859', 66, NULL),
+(652, 'Color', 'Trắng', 1, '2025-04-08 15:45:56.778365', 66, NULL),
+(653, 'Color', 'Xanh', 1, '2025-04-08 15:45:56.793385', 66, NULL),
+(654, 'Color', 'Đỏ', 1, '2025-04-08 15:45:56.807463', 66, NULL),
+(655, 'Color', 'Vàng', 1, '2025-04-08 15:45:56.820076', 66, NULL),
+(656, 'Size', 'S', 1, '2025-04-08 15:45:56.831073', 66, NULL),
+(657, 'Size', 'M', 1, '2025-04-08 15:45:56.845058', 66, NULL),
+(658, 'Size', 'L', 1, '2025-04-08 15:45:56.861122', 66, NULL),
+(659, 'Size', 'XL', 1, '2025-04-08 15:45:56.874604', 66, NULL),
+(660, 'Size', 'XXL', 1, '2025-04-08 15:45:56.889647', 66, NULL),
+(661, 'Color', 'Đen', 1, '2025-04-08 15:45:57.020277', 67, NULL),
+(662, 'Color', 'Trắng', 1, '2025-04-08 15:45:57.037273', 67, NULL),
+(663, 'Color', 'Xanh', 1, '2025-04-08 15:45:57.055088', 67, NULL),
+(664, 'Color', 'Đỏ', 1, '2025-04-08 15:45:57.070795', 67, NULL),
+(665, 'Color', 'Vàng', 1, '2025-04-08 15:45:57.091138', 67, NULL),
+(666, 'Size', 'S', 1, '2025-04-08 15:45:57.107661', 67, NULL),
+(667, 'Size', 'M', 1, '2025-04-08 15:45:57.121657', 67, NULL),
+(668, 'Size', 'L', 1, '2025-04-08 15:45:57.135667', 67, NULL),
+(669, 'Size', 'XL', 1, '2025-04-08 15:45:57.147657', 67, NULL),
+(670, 'Size', 'XXL', 1, '2025-04-08 15:45:57.162344', 67, NULL),
+(671, 'Color', 'Đen', 1, '2025-04-08 15:45:57.200359', 68, NULL),
+(672, 'Color', 'Trắng', 1, '2025-04-08 15:45:57.218541', 68, NULL),
+(673, 'Color', 'Xanh', 1, '2025-04-08 15:45:57.245936', 68, NULL),
+(674, 'Color', 'Đỏ', 1, '2025-04-08 15:45:57.266495', 68, NULL),
+(675, 'Color', 'Vàng', 1, '2025-04-08 15:45:57.284106', 68, NULL),
+(676, 'Size', 'S', 1, '2025-04-08 15:45:57.300018', 68, NULL),
+(677, 'Size', 'M', 1, '2025-04-08 15:45:57.316765', 68, NULL),
+(678, 'Size', 'L', 1, '2025-04-08 15:45:57.331596', 68, NULL),
+(679, 'Size', 'XL', 1, '2025-04-08 15:45:57.346117', 68, NULL),
+(680, 'Size', 'XXL', 1, '2025-04-08 15:45:57.359849', 68, NULL),
+(681, 'Color', 'Đen', 1, '2025-04-08 15:45:57.391826', 69, NULL),
+(682, 'Color', 'Trắng', 1, '2025-04-08 15:45:57.406123', 69, NULL),
+(683, 'Color', 'Xanh', 1, '2025-04-08 15:45:57.422108', 69, NULL),
+(684, 'Color', 'Đỏ', 1, '2025-04-08 15:45:57.438106', 69, NULL),
+(685, 'Color', 'Vàng', 1, '2025-04-08 15:45:57.451126', 69, NULL),
+(686, 'Size', 'S', 1, '2025-04-08 15:45:57.464860', 69, NULL),
+(687, 'Size', 'M', 1, '2025-04-08 15:45:57.478857', 69, NULL),
+(688, 'Size', 'L', 1, '2025-04-08 15:45:57.491466', 69, NULL),
+(689, 'Size', 'XL', 1, '2025-04-08 15:45:57.504032', 69, NULL),
+(690, 'Size', 'XXL', 1, '2025-04-08 15:45:57.517562', 69, NULL),
+(691, 'Color', 'Đen', 1, '2025-04-08 15:45:57.542561', 70, NULL),
+(692, 'Color', 'Trắng', 1, '2025-04-08 15:45:57.557270', 70, NULL),
+(693, 'Color', 'Xanh', 1, '2025-04-08 15:45:57.571786', 70, NULL),
+(694, 'Color', 'Đỏ', 1, '2025-04-08 15:45:57.588781', 70, NULL),
+(695, 'Color', 'Vàng', 1, '2025-04-08 15:45:57.600784', 70, NULL),
+(696, 'Size', 'S', 1, '2025-04-08 15:45:57.614784', 70, NULL),
+(697, 'Size', 'M', 1, '2025-04-08 15:45:57.631300', 70, NULL),
+(698, 'Size', 'L', 1, '2025-04-08 15:45:57.645583', 70, NULL),
+(699, 'Size', 'XL', 1, '2025-04-08 15:45:57.662580', 70, NULL),
+(700, 'Size', 'XXL', 1, '2025-04-08 15:45:57.676159', 70, NULL),
+(701, 'Color', 'Đen', 1, '2025-04-08 15:45:57.704160', 71, NULL),
+(702, 'Color', 'Trắng', 1, '2025-04-08 15:45:57.722155', 71, NULL),
+(703, 'Color', 'Xanh', 1, '2025-04-08 15:45:57.743354', 71, NULL),
+(704, 'Color', 'Đỏ', 1, '2025-04-08 15:45:57.758168', 71, NULL),
+(705, 'Color', 'Vàng', 1, '2025-04-08 15:45:57.770732', 71, NULL),
+(706, 'Size', 'S', 1, '2025-04-08 15:45:57.784734', 71, NULL),
+(707, 'Size', 'M', 1, '2025-04-08 15:45:57.797731', 71, NULL),
+(708, 'Size', 'L', 1, '2025-04-08 15:45:57.811729', 71, NULL),
+(709, 'Size', 'XL', 1, '2025-04-08 15:45:57.825729', 71, NULL),
+(710, 'Size', 'XXL', 1, '2025-04-08 15:45:57.839729', 71, NULL),
+(711, 'Color', 'Đen', 1, '2025-04-08 15:45:57.869547', 72, NULL),
+(712, 'Color', 'Trắng', 1, '2025-04-08 15:45:57.884145', 72, NULL),
+(713, 'Color', 'Xanh', 1, '2025-04-08 15:45:57.901153', 72, NULL),
+(714, 'Color', 'Đỏ', 1, '2025-04-08 15:45:57.917559', 72, NULL),
+(715, 'Color', 'Vàng', 1, '2025-04-08 15:45:57.932564', 72, NULL),
+(716, 'Size', 'S', 1, '2025-04-08 15:45:57.951580', 72, NULL),
+(717, 'Size', 'M', 1, '2025-04-08 15:45:57.968681', 72, NULL),
+(718, 'Size', 'L', 1, '2025-04-08 15:45:57.991184', 72, NULL),
+(719, 'Size', 'XL', 1, '2025-04-08 15:45:58.021995', 72, NULL),
+(720, 'Size', 'XXL', 1, '2025-04-08 15:45:58.043781', 72, NULL),
+(721, 'Color', 'Đen', 1, '2025-04-08 15:45:58.075556', 73, NULL),
+(722, 'Color', 'Trắng', 1, '2025-04-08 15:45:58.089854', 73, NULL),
+(723, 'Color', 'Xanh', 1, '2025-04-08 15:45:58.105848', 73, NULL),
+(724, 'Color', 'Đỏ', 1, '2025-04-08 15:45:58.123857', 73, NULL),
+(725, 'Color', 'Vàng', 1, '2025-04-08 15:45:58.140905', 73, NULL),
+(726, 'Size', 'S', 1, '2025-04-08 15:45:58.157427', 73, NULL),
+(727, 'Size', 'M', 1, '2025-04-08 15:45:58.172190', 73, NULL),
+(728, 'Size', 'L', 1, '2025-04-08 15:45:58.187191', 73, NULL),
+(729, 'Size', 'XL', 1, '2025-04-08 15:45:58.202188', 73, NULL),
+(730, 'Size', 'XXL', 1, '2025-04-08 15:45:58.217186', 73, NULL),
+(731, 'Color', 'Đen', 1, '2025-04-08 15:45:58.249879', 74, NULL),
+(732, 'Color', 'Trắng', 1, '2025-04-08 15:45:58.264884', 74, NULL),
+(733, 'Color', 'Xanh', 1, '2025-04-08 15:45:58.283635', 74, NULL),
+(734, 'Color', 'Đỏ', 1, '2025-04-08 15:45:58.298631', 74, NULL),
+(735, 'Color', 'Vàng', 1, '2025-04-08 15:45:58.311630', 74, NULL),
+(736, 'Size', 'S', 1, '2025-04-08 15:45:58.325630', 74, NULL),
+(737, 'Size', 'M', 1, '2025-04-08 15:45:58.338628', 74, NULL),
+(738, 'Size', 'L', 1, '2025-04-08 15:45:58.351972', 74, NULL),
+(739, 'Size', 'XL', 1, '2025-04-08 15:45:58.364977', 74, NULL),
+(740, 'Size', 'XXL', 1, '2025-04-08 15:45:58.378703', 74, NULL),
+(741, 'Color', 'Đen', 1, '2025-04-08 15:45:58.407846', 75, NULL),
+(742, 'Color', 'Trắng', 1, '2025-04-08 15:45:58.419846', 75, NULL),
+(743, 'Color', 'Xanh', 1, '2025-04-08 15:45:58.434755', 75, NULL),
+(744, 'Color', 'Đỏ', 1, '2025-04-08 15:45:58.449755', 75, NULL),
+(745, 'Color', 'Vàng', 1, '2025-04-08 15:45:58.465752', 75, NULL),
+(746, 'Size', 'S', 1, '2025-04-08 15:45:58.479147', 75, NULL),
+(747, 'Size', 'M', 1, '2025-04-08 15:45:58.493981', 75, NULL),
+(748, 'Size', 'L', 1, '2025-04-08 15:45:58.508511', 75, NULL),
+(749, 'Size', 'XL', 1, '2025-04-08 15:45:58.523703', 75, NULL),
+(750, 'Size', 'XXL', 1, '2025-04-08 15:45:58.548457', 75, NULL),
+(751, 'Color', 'Đen', 1, '2025-04-08 15:45:58.592131', 76, NULL),
+(752, 'Color', 'Trắng', 1, '2025-04-08 15:45:58.612926', 76, NULL),
+(753, 'Color', 'Xanh', 1, '2025-04-08 15:45:58.636073', 76, NULL),
+(754, 'Color', 'Đỏ', 1, '2025-04-08 15:45:58.658169', 76, NULL),
+(755, 'Color', 'Vàng', 1, '2025-04-08 15:45:58.680415', 76, NULL),
+(756, 'Size', 'S', 1, '2025-04-08 15:45:58.700670', 76, NULL),
+(757, 'Size', 'M', 1, '2025-04-08 15:45:58.735208', 76, NULL),
+(758, 'Size', 'L', 1, '2025-04-08 15:45:58.755581', 76, NULL),
+(759, 'Size', 'XL', 1, '2025-04-08 15:45:58.775542', 76, NULL),
+(760, 'Size', 'XXL', 1, '2025-04-08 15:45:58.794140', 76, NULL),
+(761, 'Color', 'Đen', 1, '2025-04-08 15:45:58.831804', 77, NULL),
+(762, 'Color', 'Trắng', 1, '2025-04-08 15:45:58.851926', 77, NULL),
+(763, 'Color', 'Xanh', 1, '2025-04-08 15:45:58.872430', 77, NULL),
+(764, 'Color', 'Đỏ', 1, '2025-04-08 15:45:58.889365', 77, NULL),
+(765, 'Color', 'Vàng', 1, '2025-04-08 15:45:58.908693', 77, NULL),
+(766, 'Size', 'S', 1, '2025-04-08 15:45:58.923756', 77, NULL),
+(767, 'Size', 'M', 1, '2025-04-08 15:45:58.940038', 77, NULL),
+(768, 'Size', 'L', 1, '2025-04-08 15:45:58.953034', 77, NULL),
+(769, 'Size', 'XL', 1, '2025-04-08 15:45:58.970035', 77, NULL),
+(770, 'Size', 'XXL', 1, '2025-04-08 15:45:58.988173', 77, NULL),
+(771, 'Color', 'Đen', 1, '2025-04-08 15:45:59.034423', 78, NULL),
+(772, 'Color', 'Trắng', 1, '2025-04-08 15:45:59.052133', 78, NULL),
+(773, 'Color', 'Xanh', 1, '2025-04-08 15:45:59.068133', 78, NULL),
+(774, 'Color', 'Đỏ', 1, '2025-04-08 15:45:59.082128', 78, NULL),
+(775, 'Color', 'Vàng', 1, '2025-04-08 15:45:59.094777', 78, NULL),
+(776, 'Size', 'S', 1, '2025-04-08 15:45:59.109777', 78, NULL),
+(777, 'Size', 'M', 1, '2025-04-08 15:45:59.121852', 78, NULL),
+(778, 'Size', 'L', 1, '2025-04-08 15:45:59.134773', 78, NULL),
+(779, 'Size', 'XL', 1, '2025-04-08 15:45:59.149449', 78, NULL),
+(780, 'Size', 'XXL', 1, '2025-04-08 15:45:59.161489', 78, NULL),
+(781, 'Color', 'Đen', 1, '2025-04-08 15:45:59.191083', 79, NULL),
+(782, 'Color', 'Trắng', 1, '2025-04-08 15:45:59.210410', 79, NULL),
+(783, 'Color', 'Xanh', 1, '2025-04-08 15:45:59.226408', 79, NULL),
+(784, 'Color', 'Đỏ', 1, '2025-04-08 15:45:59.244409', 79, NULL),
+(785, 'Color', 'Vàng', 1, '2025-04-08 15:45:59.260485', 79, NULL),
+(786, 'Size', 'S', 1, '2025-04-08 15:45:59.274064', 79, NULL),
+(787, 'Size', 'M', 1, '2025-04-08 15:45:59.288061', 79, NULL),
+(788, 'Size', 'L', 1, '2025-04-08 15:45:59.299672', 79, NULL),
+(789, 'Size', 'XL', 1, '2025-04-08 15:45:59.311670', 79, NULL),
+(790, 'Size', 'XXL', 1, '2025-04-08 15:45:59.325689', 79, NULL),
+(791, 'Color', 'Đen', 1, '2025-04-08 15:45:59.359100', 80, NULL),
+(792, 'Color', 'Trắng', 1, '2025-04-08 15:45:59.371422', 80, NULL),
+(793, 'Color', 'Xanh', 1, '2025-04-08 15:45:59.388089', 80, NULL),
+(794, 'Color', 'Đỏ', 1, '2025-04-08 15:45:59.403954', 80, NULL),
+(795, 'Color', 'Vàng', 1, '2025-04-08 15:45:59.421271', 80, NULL),
+(796, 'Size', 'S', 1, '2025-04-08 15:45:59.438008', 80, NULL),
+(797, 'Size', 'M', 1, '2025-04-08 15:45:59.452344', 80, NULL),
+(798, 'Size', 'L', 1, '2025-04-08 15:45:59.469682', 80, NULL),
+(799, 'Size', 'XL', 1, '2025-04-08 15:45:59.484784', 80, NULL),
+(800, 'Size', 'XXL', 1, '2025-04-08 15:45:59.502814', 80, NULL);
+
+--
+-- Chỉ mục cho các bảng đã đổ
+--
+
+--
+-- Chỉ mục cho bảng `accounts_account`
+--
+ALTER TABLE `accounts_account`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Chỉ mục cho bảng `accounts_eventuser`
+--
+ALTER TABLE `accounts_eventuser`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `accounts_eventuser_user_id_0cdbd1a7_fk_accounts_account_id` (`user_id`),
+  ADD KEY `accounts_eventuser_product_id_45b63c0a_fk_store_product_id` (`product_id`);
+
+--
+-- Chỉ mục cho bảng `accounts_userprofile`
+--
+ALTER TABLE `accounts_userprofile`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id` (`user_id`);
+
+--
+-- Chỉ mục cho bảng `auth_group`
+--
+ALTER TABLE `auth_group`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Chỉ mục cho bảng `auth_group_permissions`
+--
+ALTER TABLE `auth_group_permissions`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `auth_group_permissions_group_id_permission_id_0cd325b0_uniq` (`group_id`,`permission_id`),
+  ADD KEY `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` (`permission_id`);
+
+--
+-- Chỉ mục cho bảng `auth_permission`
+--
+ALTER TABLE `auth_permission`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`);
+
+--
+-- Chỉ mục cho bảng `carts_cart`
+--
+ALTER TABLE `carts_cart`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Chỉ mục cho bảng `carts_cartitem`
+--
+ALTER TABLE `carts_cartitem`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `carts_cartitem_product_id_acd010e4_fk_store_product_id` (`product_id`),
+  ADD KEY `carts_cartitem_user_id_4d21e0d9_fk_accounts_account_id` (`user_id`),
+  ADD KEY `carts_cartitem_cart_id_9cb0a756_fk_carts_cart_id` (`cart_id`);
+
+--
+-- Chỉ mục cho bảng `carts_cartitem_variations`
+--
+ALTER TABLE `carts_cartitem_variations`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `carts_cartitem_variations_cartitem_id_variation_id_5f8efaf5_uniq` (`cartitem_id`,`variation_id`),
+  ADD KEY `carts_cartitem_varia_variation_id_ef9f9ee3_fk_store_var` (`variation_id`);
+
+--
+-- Chỉ mục cho bảng `category_categorymain`
+--
+ALTER TABLE `category_categorymain`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `slug` (`slug`),
+  ADD KEY `category_categorymai_parent_category_id_900924fe_fk_category_` (`parent_category_id`);
+
+--
+-- Chỉ mục cho bảng `category_subcategory`
+--
+ALTER TABLE `category_subcategory`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `sub_category_name` (`sub_category_name`),
+  ADD UNIQUE KEY `slug` (`slug`),
+  ADD KEY `category_subcategory_category_id_f8728062_fk_category_` (`category_id`);
+
+--
+-- Chỉ mục cho bảng `django_admin_log`
+--
+ALTER TABLE `django_admin_log`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `django_admin_log_content_type_id_c4bce8eb_fk_django_co` (`content_type_id`),
+  ADD KEY `django_admin_log_user_id_c564eba6_fk_accounts_account_id` (`user_id`);
+
+--
+-- Chỉ mục cho bảng `django_content_type`
+--
+ALTER TABLE `django_content_type`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`);
+
+--
+-- Chỉ mục cho bảng `django_migrations`
+--
+ALTER TABLE `django_migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Chỉ mục cho bảng `django_session`
+--
+ALTER TABLE `django_session`
+  ADD PRIMARY KEY (`session_key`),
+  ADD KEY `django_session_expire_date_a5c62663` (`expire_date`);
+
+--
+-- Chỉ mục cho bảng `orders_order`
+--
+ALTER TABLE `orders_order`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `orders_order_payment_id_46928ccc_uniq` (`payment_id`),
+  ADD KEY `orders_order_user_id_e9b59eb1_fk_accounts_account_id` (`user_id`);
+
+--
+-- Chỉ mục cho bảng `orders_orderproduct`
+--
+ALTER TABLE `orders_orderproduct`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `orders_orderproducts_order_id_b2226dca_fk_orders_order_id` (`order_id`),
+  ADD KEY `orders_orderproducts_payment_id_ab3c973c_fk_orders_payment_id` (`payment_id`),
+  ADD KEY `orders_orderproducts_product_id_0e2f6e40_fk_store_product_id` (`product_id`),
+  ADD KEY `orders_orderproducts_user_id_b83f51e1_fk_accounts_account_id` (`user_id`);
+
+--
+-- Chỉ mục cho bảng `orders_orderproduct_variation`
+--
+ALTER TABLE `orders_orderproduct_variation`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `orders_orderproduct_vari_orderproduct_id_variatio_26dc6fa7_uniq` (`orderproduct_id`,`variation_id`),
+  ADD KEY `orders_orderproduct__variation_id_70d7944b_fk_store_var` (`variation_id`);
+
+--
+-- Chỉ mục cho bảng `orders_payment`
+--
+ALTER TABLE `orders_payment`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `orders_payment_user_id_cfa9f321_fk_accounts_account_id` (`user_id`);
+
+--
+-- Chỉ mục cho bảng `orders_review`
+--
+ALTER TABLE `orders_review`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `orders_review_order_product_id_ebcd5d31_fk_orders_or` (`order_product_id`);
+
+--
+-- Chỉ mục cho bảng `store_folderevent`
+--
+ALTER TABLE `store_folderevent`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Chỉ mục cho bảng `store_product`
+--
+ALTER TABLE `store_product`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `slug` (`slug`),
+  ADD KEY `store_product_category_main_id_79161f97_fk_category_` (`category_main_id`),
+  ADD KEY `store_product_sub_category_id_0afd4673_fk_category_` (`sub_category_id`);
+
+--
+-- Chỉ mục cho bảng `store_productimage`
+--
+ALTER TABLE `store_productimage`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `store_productimage_product_id_image_type_a44d851d_uniq` (`product_id`,`image_type`);
+
+--
+-- Chỉ mục cho bảng `store_variation`
+--
+ALTER TABLE `store_variation`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `store_variation_Product_id_f77e3134_fk_store_product_id` (`Product_id`);
+
+--
+-- AUTO_INCREMENT cho các bảng đã đổ
+--
+
+--
+-- AUTO_INCREMENT cho bảng `accounts_account`
+--
+ALTER TABLE `accounts_account`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- AUTO_INCREMENT cho bảng `accounts_eventuser`
+--
+ALTER TABLE `accounts_eventuser`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+
+--
+-- AUTO_INCREMENT cho bảng `accounts_userprofile`
+--
+ALTER TABLE `accounts_userprofile`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT cho bảng `auth_group`
+--
+ALTER TABLE `auth_group`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `auth_group_permissions`
+--
+ALTER TABLE `auth_group_permissions`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `auth_permission`
+--
+ALTER TABLE `auth_permission`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+
+--
+-- AUTO_INCREMENT cho bảng `carts_cart`
+--
+ALTER TABLE `carts_cart`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `carts_cartitem`
+--
+ALTER TABLE `carts_cartitem`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT cho bảng `carts_cartitem_variations`
+--
+ALTER TABLE `carts_cartitem_variations`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- AUTO_INCREMENT cho bảng `category_categorymain`
+--
+ALTER TABLE `category_categorymain`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT cho bảng `category_subcategory`
+--
+ALTER TABLE `category_subcategory`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT cho bảng `django_admin_log`
+--
+ALTER TABLE `django_admin_log`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `django_content_type`
+--
+ALTER TABLE `django_content_type`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- AUTO_INCREMENT cho bảng `django_migrations`
+--
+ALTER TABLE `django_migrations`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+
+--
+-- AUTO_INCREMENT cho bảng `orders_order`
+--
+ALTER TABLE `orders_order`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT cho bảng `orders_orderproduct`
+--
+ALTER TABLE `orders_orderproduct`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT cho bảng `orders_orderproduct_variation`
+--
+ALTER TABLE `orders_orderproduct_variation`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- AUTO_INCREMENT cho bảng `orders_payment`
+--
+ALTER TABLE `orders_payment`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT cho bảng `orders_review`
+--
+ALTER TABLE `orders_review`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `store_folderevent`
+--
+ALTER TABLE `store_folderevent`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `store_product`
+--
+ALTER TABLE `store_product`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
+
+--
+-- AUTO_INCREMENT cho bảng `store_productimage`
+--
+ALTER TABLE `store_productimage`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=246;
+
+--
+-- AUTO_INCREMENT cho bảng `store_variation`
+--
+ALTER TABLE `store_variation`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=801;
+
+--
+-- Ràng buộc đối với các bảng kết xuất
+--
+
+--
+-- Ràng buộc cho bảng `accounts_eventuser`
+--
+ALTER TABLE `accounts_eventuser`
+  ADD CONSTRAINT `accounts_eventuser_product_id_45b63c0a_fk_store_product_id` FOREIGN KEY (`product_id`) REFERENCES `store_product` (`id`),
+  ADD CONSTRAINT `accounts_eventuser_user_id_0cdbd1a7_fk_accounts_account_id` FOREIGN KEY (`user_id`) REFERENCES `accounts_account` (`id`);
+
+--
+-- Ràng buộc cho bảng `accounts_userprofile`
+--
+ALTER TABLE `accounts_userprofile`
+  ADD CONSTRAINT `accounts_userprofile_user_id_92240672_fk_accounts_account_id` FOREIGN KEY (`user_id`) REFERENCES `accounts_account` (`id`);
+
+--
+-- Ràng buộc cho bảng `auth_group_permissions`
+--
+ALTER TABLE `auth_group_permissions`
+  ADD CONSTRAINT `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
+  ADD CONSTRAINT `auth_group_permissions_group_id_b120cbf9_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`);
+
+--
+-- Ràng buộc cho bảng `auth_permission`
+--
+ALTER TABLE `auth_permission`
+  ADD CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`);
+
+--
+-- Ràng buộc cho bảng `carts_cartitem`
+--
+ALTER TABLE `carts_cartitem`
+  ADD CONSTRAINT `carts_cartitem_cart_id_9cb0a756_fk_carts_cart_id` FOREIGN KEY (`cart_id`) REFERENCES `carts_cart` (`id`),
+  ADD CONSTRAINT `carts_cartitem_product_id_acd010e4_fk_store_product_id` FOREIGN KEY (`product_id`) REFERENCES `store_product` (`id`),
+  ADD CONSTRAINT `carts_cartitem_user_id_4d21e0d9_fk_accounts_account_id` FOREIGN KEY (`user_id`) REFERENCES `accounts_account` (`id`);
+
+--
+-- Ràng buộc cho bảng `carts_cartitem_variations`
+--
+ALTER TABLE `carts_cartitem_variations`
+  ADD CONSTRAINT `carts_cartitem_varia_cartitem_id_8be23372_fk_carts_car` FOREIGN KEY (`cartitem_id`) REFERENCES `carts_cartitem` (`id`),
+  ADD CONSTRAINT `carts_cartitem_varia_variation_id_ef9f9ee3_fk_store_var` FOREIGN KEY (`variation_id`) REFERENCES `store_variation` (`id`);
+
+--
+-- Ràng buộc cho bảng `category_categorymain`
+--
+ALTER TABLE `category_categorymain`
+  ADD CONSTRAINT `category_categorymai_parent_category_id_900924fe_fk_category_` FOREIGN KEY (`parent_category_id`) REFERENCES `category_categorymain` (`id`);
+
+--
+-- Ràng buộc cho bảng `category_subcategory`
+--
+ALTER TABLE `category_subcategory`
+  ADD CONSTRAINT `category_subcategory_category_id_f8728062_fk_category_` FOREIGN KEY (`category_id`) REFERENCES `category_categorymain` (`id`);
+
+--
+-- Ràng buộc cho bảng `django_admin_log`
+--
+ALTER TABLE `django_admin_log`
+  ADD CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
+  ADD CONSTRAINT `django_admin_log_user_id_c564eba6_fk_accounts_account_id` FOREIGN KEY (`user_id`) REFERENCES `accounts_account` (`id`);
+
+--
+-- Ràng buộc cho bảng `orders_order`
+--
+ALTER TABLE `orders_order`
+  ADD CONSTRAINT `orders_order_payment_id_46928ccc_fk_orders_payment_id` FOREIGN KEY (`payment_id`) REFERENCES `orders_payment` (`id`),
+  ADD CONSTRAINT `orders_order_user_id_e9b59eb1_fk_accounts_account_id` FOREIGN KEY (`user_id`) REFERENCES `accounts_account` (`id`);
+
+--
+-- Ràng buộc cho bảng `orders_orderproduct`
+--
+ALTER TABLE `orders_orderproduct`
+  ADD CONSTRAINT `orders_orderproducts_order_id_b2226dca_fk_orders_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders_order` (`id`),
+  ADD CONSTRAINT `orders_orderproducts_payment_id_ab3c973c_fk_orders_payment_id` FOREIGN KEY (`payment_id`) REFERENCES `orders_payment` (`id`),
+  ADD CONSTRAINT `orders_orderproducts_product_id_0e2f6e40_fk_store_product_id` FOREIGN KEY (`product_id`) REFERENCES `store_product` (`id`),
+  ADD CONSTRAINT `orders_orderproducts_user_id_b83f51e1_fk_accounts_account_id` FOREIGN KEY (`user_id`) REFERENCES `accounts_account` (`id`);
+
+--
+-- Ràng buộc cho bảng `orders_orderproduct_variation`
+--
+ALTER TABLE `orders_orderproduct_variation`
+  ADD CONSTRAINT `orders_orderproduct__orderproduct_id_dd1279b0_fk_orders_or` FOREIGN KEY (`orderproduct_id`) REFERENCES `orders_orderproduct` (`id`),
+  ADD CONSTRAINT `orders_orderproduct__variation_id_70d7944b_fk_store_var` FOREIGN KEY (`variation_id`) REFERENCES `store_variation` (`id`);
+
+--
+-- Ràng buộc cho bảng `orders_payment`
+--
+ALTER TABLE `orders_payment`
+  ADD CONSTRAINT `orders_payment_user_id_cfa9f321_fk_accounts_account_id` FOREIGN KEY (`user_id`) REFERENCES `accounts_account` (`id`);
+
+--
+-- Ràng buộc cho bảng `orders_review`
+--
+ALTER TABLE `orders_review`
+  ADD CONSTRAINT `orders_review_order_product_id_ebcd5d31_fk_orders_or` FOREIGN KEY (`order_product_id`) REFERENCES `orders_orderproduct` (`id`);
+
+--
+-- Ràng buộc cho bảng `store_product`
+--
+ALTER TABLE `store_product`
+  ADD CONSTRAINT `store_product_category_main_id_79161f97_fk_category_` FOREIGN KEY (`category_main_id`) REFERENCES `category_categorymain` (`id`),
+  ADD CONSTRAINT `store_product_sub_category_id_0afd4673_fk_category_` FOREIGN KEY (`sub_category_id`) REFERENCES `category_subcategory` (`id`);
+
+--
+-- Ràng buộc cho bảng `store_productimage`
+--
+ALTER TABLE `store_productimage`
+  ADD CONSTRAINT `store_productimage_product_id_e50e4046_fk_store_product_id` FOREIGN KEY (`product_id`) REFERENCES `store_product` (`id`);
+
+--
+-- Ràng buộc cho bảng `store_variation`
+--
+ALTER TABLE `store_variation`
+  ADD CONSTRAINT `store_variation_Product_id_f77e3134_fk_store_product_id` FOREIGN KEY (`Product_id`) REFERENCES `store_product` (`id`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
