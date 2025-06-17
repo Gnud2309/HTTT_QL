@@ -2,6 +2,49 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
+    <style>
+        /* Scrollable table containers */
+        .scrollable-table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        .scrollable-table-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .scrollable-table-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .scrollable-table-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        
+        .scrollable-table-container::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        
+        /* Ensure table headers stay visible */
+        .table thead th {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+        }
+        
+        /* Loading and error containers */
+        .loading-error-container {
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+    
     <!-- CONTENT WRAPPER -->
     <div class="ec-content-wrapper">
         <div class="content">
@@ -9,8 +52,8 @@
             <div class="row">
                 <div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
                     <div class="card card-mini dash-card card-1">
-                        <div class="card-body">
-                            <h2 class="mb-1 user-signins"></h2>
+                        <div class="card-body text-white">
+                            <h2 class="mb-1 user-signins text-white"></h2>
                             <p>Daily Signins</p>
                             <span class="mdi mdi-account-arrow-left"></span>
                         </div>
@@ -18,8 +61,8 @@
                 </div>
                 <div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
                     <div class="card card-mini dash-card card-2">
-                        <div class="card-body">
-                            <h2 class="mb-1 daily-signups"></h2>
+                        <div class="card-body text-white">
+                            <h2 class="mb-1 daily-signups text-white"></h2>
                             <p>Daily Signups</p>
                             <span class="mdi mdi-account-clock"></span>
                         </div>
@@ -27,8 +70,8 @@
                 </div>
                 <div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
                     <div class="card card-mini dash-card card-3">
-                        <div class="card-body">
-                            <h2 class="mb-1 daily-order"></h2>
+                        <div class="card-body text-white">
+                            <h2 class="mb-1 daily-order text-white"></h2>
                             <p>Daily Order</p>
                             <span class="mdi mdi-package-variant"></span>
                         </div>
@@ -36,8 +79,8 @@
                 </div>
                 <div class="col-xl-3 col-sm-6 p-b-15 lbl-card">
                     <div class="card card-mini dash-card card-4">
-                        <div class="card-body">
-                            <h2 class="mb-1 daily-payment"></h2>
+                        <div class="card-body text-white">
+                            <h2 class="mb-1 daily-payment text-white"></h2>
                             <p>Daily Revenue</p>
                             <span class="mdi mdi-currency-usd"></span>
                         </div>
@@ -345,181 +388,13 @@
             </div>
 
             <div class="row">
-                <div class="col-12 p-b-15">
-                    <!-- Recent Order Table -->
-                    <div class="card card-table-border-none card-default recent-orders" id="recent-orders">
-                        <div class="card-header justify-content-between">
-                            <h2>Recent Orders</h2>
-                            <div class="date-range-report">
-                                <input type="hidden" class="start_date" name="start_date">
-                                <input type="hidden" class="end_date" name="end_date">
-                                <span></span>
-                            </div>
-                        </div>
-                        <div class="card-body pt-0 pb-5">
-                            <table class="table card-table table-responsive table-responsive-large"
-                                   style="width:100%">
-                                <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Product Name</th>
-                                    <th class="d-none d-lg-table-cell">Order Date</th>
-                                    <th class="d-none d-lg-table-cell">Order Cost</th>
-                                    <th>Status</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>24541</td>
-                                    <td>
-                                        <a class="text-dark" href="#"> Coach Swagger</a>
-                                    </td>
-                                    <td class="d-none d-lg-table-cell">Oct 20, 2018</td>
-                                    <td class="d-none d-lg-table-cell">$230</td>
-                                    <td>
-                                        <span class="badge badge-success">Completed</span>
-                                    </td>
-                                    <td class="text-right">
-                                        <div class="dropdown show d-inline-block widget-dropdown">
-                                            <a class="dropdown-toggle icon-burger-mini" href="#"
-                                               role="button" id="dropdown-recent-order1"
-                                               data-bs-toggle="dropdown" aria-haspopup="true"
-                                               aria-expanded="false" data-display="static"></a>
-                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                <li class="dropdown-item">
-                                                    <a href="#">View</a>
-                                                </li>
-                                                <li class="dropdown-item">
-                                                    <a href="#">Remove</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>24541</td>
-                                    <td>
-                                        <a class="text-dark" href="#"> Toddler Shoes, Gucci Watch</a>
-                                    </td>
-                                    <td class="d-none d-lg-table-cell">Nov 15, 2018</td>
-                                    <td class="d-none d-lg-table-cell">$550</td>
-                                    <td>
-                                        <span class="badge badge-primary">Delayed</span>
-                                    </td>
-                                    <td class="text-right">
-                                        <div class="dropdown show d-inline-block widget-dropdown">
-                                            <a class="dropdown-toggle icon-burger-mini" href="#"
-                                               role="button" id="dropdown-recent-order2"
-                                               data-bs-toggle="dropdown" aria-haspopup="true"
-                                               aria-expanded="false" data-display="static"></a>
-                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                <li class="dropdown-item">
-                                                    <a href="#">View</a>
-                                                </li>
-                                                <li class="dropdown-item">
-                                                    <a href="#">Remove</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>24541</td>
-                                    <td>
-                                        <a class="text-dark" href="#"> Hat Black Suits</a>
-                                    </td>
-                                    <td class="d-none d-lg-table-cell">Nov 18, 2018</td>
-                                    <td class="d-none d-lg-table-cell">$325</td>
-                                    <td>
-                                        <span class="badge badge-warning">On Hold</span>
-                                    </td>
-                                    <td class="text-right">
-                                        <div class="dropdown show d-inline-block widget-dropdown">
-                                            <a class="dropdown-toggle icon-burger-mini" href="#"
-                                               role="button" id="dropdown-recent-order3"
-                                               data-bs-toggle="dropdown" aria-haspopup="true"
-                                               aria-expanded="false" data-display="static"></a>
-                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                <li class="dropdown-item">
-                                                    <a href="#">View</a>
-                                                </li>
-                                                <li class="dropdown-item">
-                                                    <a href="#">Remove</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>24541</td>
-                                    <td>
-                                        <a class="text-dark" href="#"> Backpack Gents, Swimming Cap Slin</a>
-                                    </td>
-                                    <td class="d-none d-lg-table-cell">Dec 13, 2018</td>
-                                    <td class="d-none d-lg-table-cell">$200</td>
-                                    <td>
-                                        <span class="badge badge-success">Completed</span>
-                                    </td>
-                                    <td class="text-right">
-                                        <div class="dropdown show d-inline-block widget-dropdown">
-                                            <a class="dropdown-toggle icon-burger-mini" href="#"
-                                               role="button" id="dropdown-recent-order4"
-                                               data-bs-toggle="dropdown" aria-haspopup="true"
-                                               aria-expanded="false" data-display="static"></a>
-                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                <li class="dropdown-item">
-                                                    <a href="#">View</a>
-                                                </li>
-                                                <li class="dropdown-item">
-                                                    <a href="#">Remove</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>24541</td>
-                                    <td>
-                                        <a class="text-dark" href="#"> Speed 500 Ignite</a>
-                                    </td>
-                                    <td class="d-none d-lg-table-cell">Dec 23, 2018</td>
-                                    <td class="d-none d-lg-table-cell">$150</td>
-                                    <td>
-                                        <span class="badge badge-danger">Cancelled</span>
-                                    </td>
-                                    <td class="text-right">
-                                        <div class="dropdown show d-inline-block widget-dropdown">
-                                            <a class="dropdown-toggle icon-burger-mini" href="#"
-                                               role="button" id="dropdown-recent-order5"
-                                               data-bs-toggle="dropdown" aria-haspopup="true"
-                                               aria-expanded="false" data-display="static"></a>
-                                            <ul class="dropdown-menu dropdown-menu-right">
-                                                <li class="dropdown-item">
-                                                    <a href="#">View</a>
-                                                </li>
-                                                <li class="dropdown-item">
-                                                    <a href="#">Remove</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
                 <div class="col-xl-5">
                     <!-- New Customers -->
                     <div class="card ec-cust-card card-table-border-none card-default">
                         <div class="card-header justify-content-between ">
-                            <h2>New Customers</h2>
+                            <h2>Top Province</h2>
                             <div>
-                                <button class="text-black-50 mr-2 font-size-20">
+                                <button class="text-black-50 mr-2 font-size-20" id="refresh-new-customers">
                                     <i class="mdi mdi-cached"></i>
                                 </button>
                                 <div class="dropdown show d-inline-block widget-dropdown">
@@ -528,144 +403,41 @@
                                        aria-expanded="false" data-display="static">
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-right">
-                                        <li class="dropdown-item"><a href="#">Action</a></li>
-                                        <li class="dropdown-item"><a href="#">Another action</a></li>
-                                        <li class="dropdown-item"><a href="#">Something else here</a></li>
+                                        <li class="dropdown-item"><a href="#" id="update-new-customers">Update Data</a></li>
+                                        <li class="dropdown-item"><a href="#">Detailed Log</a></li>
+                                        <li class="dropdown-item"><a href="#">Statistics</a></li>
+                                        <li class="dropdown-item"><a href="#">Clear Data</a></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body pt-0 pb-15px">
-                            <table class="table ">
-                                <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="media">
-                                            <div class="media-image mr-3 rounded-circle">
-                                                <a href="profile.html"><img
-                                                        class="profile-img rounded-circle w-45"
-                                                        src="{% static 'adminapp/assets/img/user/u1.jpg' %}"
-                                                        alt="customer image"></a>
-                                            </div>
-                                            <div class="media-body align-self-center">
-                                                <a href="profile.html">
-                                                    <h6 class="mt-0 text-dark font-weight-medium">Selena
-                                                        Wagner</h6>
-                                                </a>
-                                                <small>@selena.oi</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>2 Orders</td>
-                                    <td class="text-dark d-none d-md-block">$150</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="media">
-                                            <div class="media-image mr-3 rounded-circle">
-                                                <a href="profile.html"><img
-                                                        class="profile-img rounded-circle w-45"
-                                                        src="{% static 'adminapp/assets/img/user/u2.jpg' %}"
-                                                        alt="customer image"></a>
-                                            </div>
-                                            <div class="media-body align-self-center">
-                                                <a href="profile.html">
-                                                    <h6 class="mt-0 text-dark font-weight-medium">Walter
-                                                        Reuter</h6>
-                                                </a>
-                                                <small>@walter.me</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>5 Orders</td>
-                                    <td class="text-dark d-none d-md-block">$200</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="media">
-                                            <div class="media-image mr-3 rounded-circle">
-                                                <a href="profile.html"><img
-                                                        class="profile-img rounded-circle w-45"
-                                                        src="{% static 'adminapp/assets/img/user/u3.jpg' %}"
-                                                        alt="customer image"></a>
-                                            </div>
-                                            <div class="media-body align-self-center">
-                                                <a href="profile.html">
-                                                    <h6 class="mt-0 text-dark font-weight-medium">Larissa
-                                                        Gebhardt</h6>
-                                                </a>
-                                                <small>@larissa.gb</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>1 Order</td>
-                                    <td class="text-dark d-none d-md-block">$50</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="media">
-                                            <div class="media-image mr-3 rounded-circle">
-                                                <a href="profile.html"><img
-                                                        class="profile-img rounded-circle w-45"
-                                                        src="{% static 'adminapp/assets/img/user/u4.jpg' %}"
-                                                        alt="customer image"></a>
-                                            </div>
-                                            <div class="media-body align-self-center">
-                                                <a href="profile.html">
-                                                    <h6 class="mt-0 text-dark font-weight-medium">Albrecht
-                                                        Straub</h6>
-                                                </a>
-                                                <small>@albrech.as</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>2 Orders</td>
-                                    <td class="text-dark d-none d-md-block">$100</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="media">
-                                            <div class="media-image mr-3 rounded-circle">
-                                                <a href="profile.html"><img
-                                                        class="profile-img rounded-circle w-45"
-                                                        src="{% static 'adminapp/assets/img/user/u5.jpg' %}"
-                                                        alt="customer image"></a>
-                                            </div>
-                                            <div class="media-body align-self-center">
-                                                <a href="profile.html">
-                                                    <h6 class="mt-0 text-dark font-weight-medium">Leopold
-                                                        Ebert</h6>
-                                                </a>
-                                                <small>@leopold.et</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>1 Order</td>
-                                    <td class="text-dark d-none d-md-block">$60</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="media">
-                                            <div class="media-image mr-3 rounded-circle">
-                                                <a href="profile.html"><img
-                                                        class="profile-img rounded-circle w-45"
-                                                        src="{% static 'adminapp/assets/img/user/u3.jpg' %}"
-                                                        alt="customer image"></a>
-                                            </div>
-                                            <div class="media-body align-self-center">
-                                                <a href="profile.html">
-                                                    <h6 class="mt-0 text-dark font-weight-medium">Larissa
-                                                        Gebhardt</h6>
-                                                </a>
-                                                <small>@larissa.gb</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>1 Order</td>
-                                    <td class="text-dark d-none d-md-block">$50</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                        <div class="card-body pt-0 pb-15px" id="new-customers-container">
+                            <!-- Loading indicator -->
+                            <div class="loading-error-container" id="new-customers-loading">
+                                <div class="text-center">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <p class="mt-2">Loading new customers data...</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Error message -->
+                            <div class="loading-error-container" id="new-customers-error" style="display: none;">
+                                <div class="text-center">
+                                    <i class="mdi mdi-alert-circle text-danger" style="font-size: 2rem;"></i>
+                                    <p class="mt-2 text-danger">Failed to load new customers data</p>
+                                    <button class="btn btn-sm btn-primary" onclick="loadNewCustomers()">Retry</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Data will be dynamically inserted here -->
+                            <div class="scrollable-table-container" id="new-customers-table" style="display: none;">
+                                <table class="table">
+                                    <tbody id="new-customers-list">
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -676,7 +448,7 @@
                         <div class="card-header justify-content-between">
                             <h2>Top Products</h2>
                             <div>
-                                <button class="text-black-50 mr-2 font-size-20"><i
+                                <button class="text-black-50 mr-2 font-size-20" id="refresh-top-products"><i
                                         class="mdi mdi-cached"></i></button>
                                 <div class="dropdown show d-inline-block widget-dropdown">
                                     <a class="dropdown-toggle icon-burger-mini" href="#" role="button"
@@ -684,7 +456,7 @@
                                        aria-expanded="false" data-display="static">
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-right">
-                                        <li class="dropdown-item"><a href="#">Update Data</a></li>
+                                        <li class="dropdown-item"><a href="#" id="update-top-products">Update Data</a></li>
                                         <li class="dropdown-item"><a href="#">Detailed Log</a></li>
                                         <li class="dropdown-item"><a href="#">Statistics</a></li>
                                         <li class="dropdown-item"><a href="#">Clear Data</a></li>
@@ -692,63 +464,29 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body mt-10px mb-10px py-0">
-                            <div class="row media d-flex pt-15px pb-15px">
-                                <div
-                                        class="col-lg-3 col-md-3 col-2 media-image align-self-center rounded">
-                                    <a href="#"><img src="{% static 'adminapp/assets/img/products/p1.jpg' %}"
-                                                     alt="customer image"></a>
-                                </div>
-                                <div class="col-lg-9 col-md-9 col-10 media-body align-self-center ec-pos">
-                                    <a href="#">
-                                        <h6 class="mb-10px text-dark font-weight-medium">Baby cotton shoes</h6>
-                                    </a>
-                                    <p class="float-md-right sale"><span class="mr-2">58</span>Sales</p>
-                                    <p class="d-none d-md-block">Statement belting with double-turnlock hardware
-                                        adds "swagger" to a simple.</p>
-                                    <p class="mb-0 ec-price">
-                                        <span class="text-dark">$520</span>
-                                        <del>$580</del>
-                                    </p>
+                        <div class="card-body mt-10px mb-10px py-0" id="top-products-container">
+                            <!-- Loading indicator -->
+                            <div class="loading-error-container" id="top-products-loading">
+                                <div class="text-center">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <p class="mt-2">Loading top products...</p>
                                 </div>
                             </div>
-                            <div class="row media d-flex pt-15px pb-15px">
-                                <div
-                                        class="col-lg-3 col-md-3 col-2 media-image align-self-center rounded">
-                                    <a href="#"><img src="{% static 'adminapp/assets/img/products/p2.jpg' %}"
-                                                     alt="customer image"></a>
-                                </div>
-                                <div class="col-lg-9 col-md-9 col-10 media-body align-self-center ec-pos">
-                                    <a href="#">
-                                        <h6 class="mb-10px text-dark font-weight-medium">Hoodies for men</h6>
-                                    </a>
-                                    <p class="float-md-right sale"><span class="mr-2">20</span>Sales</p>
-                                    <p class="d-none d-md-block">Statement belting with double-turnlock hardware
-                                        adds "swagger" to a simple.</p>
-                                    <p class="mb-0 ec-price">
-                                        <span class="text-dark">$250</span>
-                                        <del>$300</del>
-                                    </p>
+                            
+                            <!-- Error message -->
+                            <div class="loading-error-container" id="top-products-error" style="display: none;">
+                                <div class="text-center">
+                                    <i class="mdi mdi-alert-circle text-danger" style="font-size: 2rem;"></i>
+                                    <p class="mt-2 text-danger">Failed to load top products</p>
+                                    <button class="btn btn-sm btn-primary" onclick="loadTopProducts()">Retry</button>
                                 </div>
                             </div>
-                            <div class="row media d-flex pt-15px pb-15px">
-                                <div
-                                        class="col-lg-3 col-md-3 col-2 media-image align-self-center rounded">
-                                    <a href="#"><img src="{% static 'adminapp/assets/img/products/p3.jpg' %}"
-                                                     alt="customer image"></a>
-                                </div>
-                                <div class="col-lg-9 col-md-9 col-10 media-body align-self-center ec-pos">
-                                    <a href="#">
-                                        <h6 class="mb-10px text-dark font-weight-medium">Long slive t-shirt</h6>
-                                    </a>
-                                    <p class="float-md-right sale"><span class="mr-2">10</span>Sales</p>
-                                    <p class="d-none d-md-block">Statement belting with double-turnlock hardware
-                                        adds "swagger" to a simple.</p>
-                                    <p class="mb-0 ec-price">
-                                        <span class="text-dark">$480</span>
-                                        <del>$654</del>
-                                    </p>
-                                </div>
+                            
+                            <!-- Products will be dynamically inserted here -->
+                            <div class="scrollable-table-container" id="top-products-list" style="display: none;">
+                                <!-- Products will be inserted here -->
                             </div>
                         </div>
                     </div>
@@ -766,130 +504,246 @@
                 return $('meta[name="csrf-token"]').attr('content');
             }
 
+            // Flag to track if charts are ready
+            var chartsReady = false;
+
+            // Check if charts are initialized
+            function checkChartsReady() {
+                if (myDoughnutChart && myUChart && myAcqChart && myLine && config) {
+                    chartsReady = true;
+                    console.log('All charts are ready for updates');
+                }
+            }
+
+            // Check charts every 100ms until they're ready
+            var chartCheckInterval = setInterval(function() {
+                checkChartsReady();
+                if (chartsReady) {
+                    clearInterval(chartCheckInterval);
+                }
+            }, 100);
+
+            // Function to load top products from API
+            function loadTopProducts() {
+                // Show loading indicator
+                $('#top-products-loading').show();
+                $('#top-products-error').hide();
+                $('#top-products-list').hide();
+                $('#top-products-list').empty();
+
+                $.ajax({
+                    url: 'http://localhost:5000/api/v1/gold/top-product',
+                    type: 'GET',
+                    dataType: 'json',
+                    crossDomain: true,
+                    success: function(response) {
+                        $('#top-products-loading').hide();
+                        
+                        if (response.success && response.data && response.data.length > 0) {
+                            displayTopProducts(response.data);
+                        } else {
+                            $('#top-products-list').html('<div class="text-center py-4"><p class="text-muted">No top products available</p></div>');
+                            $('#top-products-list').show();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading top products:', error);
+                        $('#top-products-loading').hide();
+                        $('#top-products-error').show();
+                    }
+                });
+            }
+
+            // Make loadTopProducts globally accessible
+            window.loadTopProducts = loadTopProducts;
+
+            // Function to display top products
+            function displayTopProducts(products) {
+                var productsHtml = '';
+                
+                products.forEach(function(product, index) {
+                    // Use default product image or generate based on product ID
+                    var productImage = "{% static 'adminapp/assets/img/products/p' %}" + ((index % 3) + 1) + ".jpg";
+                    
+                    productsHtml += `
+                        <div class="row media d-flex pt-15px pb-15px">
+                            <div class="col-lg-3 col-md-3 col-2 media-image align-self-center rounded">
+                                <a href="#"><img src="${productImage}" alt="${product.product_name}"></a>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-10 media-body align-self-center ec-pos">
+                                <a href="#">
+                                    <h6 class="mb-10px text-dark font-weight-medium">${product.product_name}</h6>
+                                </a>
+                                <p class="float-md-right sale"><span class="mr-2">${product.frequency}</span>Sales</p>
+                                <p class="d-none d-md-block">Brand: ${product.brand_name || 'N/A'}</p>
+                                <p class="mb-0 ec-price">
+                                    <span class="text-dark">$${product.price || '0.00'}</span>
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                $('#top-products-list').html(productsHtml);
+                $('#top-products-list').show();
+            }
+
+            // Event handlers for top products
+            $('#refresh-top-products').click(function() {
+                loadTopProducts();
+            });
+
+            $('#update-top-products').click(function(e) {
+                e.preventDefault();
+                loadTopProducts();
+            });
+
             function updateCharts() {
-                // Update Order Status Chart
-                $.ajax({
-                    url: '/admin/api/order-status/',
-                    type: 'POST',
-                    data: JSON.stringify({
-                        start_date: $('#order-overview .start_date').val(),
-                        end_date: $('#order-overview .end_date').val()
+                // Only update charts if they're ready
+                if (!chartsReady) {
+                    console.log('Charts not ready yet, skipping update');
+                    return;
+                }
+
+                // Get common parameters
+                var csrfToken = getCSRFToken();
+                var orderOverviewDates = {
+                    start_date: $('#order-overview .start_date').val(),
+                    end_date: $('#order-overview .end_date').val()
+                };
+                var userOverviewDates = {
+                    start_date: $('#user-overview .start_date').val(),
+                    end_date: $('#user-overview .end_date').val()
+                };
+                var userAcquisitionDates = {
+                    start_date: $('#user-acquisition .start_date').val(),
+                    end_date: $('#user-acquisition .end_date').val()
+                };
+                var userActivityDates = {
+                    start_date: $('#user-activity .start_date').val(),
+                    end_date: $('#user-activity .end_date').val(),
+                    period: $('#order-time').val() || 'daily'
+                };
+                var analyticsCountryDates = {
+                    start_date: $('#analytics-country .start_date').val(),
+                    end_date: $('#analytics-country .end_date').val()
+                };
+
+                // Make all AJAX calls in parallel for maximum speed
+                $.when(
+                    // Order Status Chart
+                    $.ajax({
+                        url: '/admin/api/order-status/',
+                        type: 'POST',
+                        data: JSON.stringify(orderOverviewDates),
+                        contentType: 'application/json',
+                        dataType: 'json',
+                        headers: {'X-CSRFToken': csrfToken}
                     }),
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    headers: {'X-CSRFToken': getCSRFToken()},
-                    success: function(data) {
-                        if (Array.isArray(data.labels) && Array.isArray(data.data) && Array.isArray(data.backgroundColor)) {
-                            myDoughnutChart.data.labels = data.labels;
-                            myDoughnutChart.data.datasets.forEach((dataset) => {
-                                dataset.data = data.data;
-                                dataset.backgroundColor = data.backgroundColor;
-                            });
-                            myDoughnutChart.update();
-                        }
-                    }
-                });
-
-                // Update Login Frequency Chart
-                $.ajax({
-                    url: '/admin/api/get-login-frequency/',
-                    type: 'POST',
-                    data: JSON.stringify({
-                        start_date: $('#user-overview .start_date').val(),
-                        end_date: $('#user-overview .end_date').val()
+                    // Login Frequency Chart
+                    $.ajax({
+                        url: '/admin/api/get-login-frequency/',
+                        type: 'POST',
+                        data: JSON.stringify(userOverviewDates),
+                        contentType: 'application/json',
+                        dataType: 'json',
+                        headers: {'X-CSRFToken': csrfToken}
                     }),
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    headers: {'X-CSRFToken': getCSRFToken()},
-                    success: function(response) {
-                        if (myUChart) {
-                            myUChart.data.datasets[0].data = response.data;
-                            myUChart.update();
-                        }
-                    }
-                });
-
-                // Update User Acquisition Chart
-                $.ajax({
-                    url: '/admin/api/get-user-acquisition/',
-                    type: 'POST',
-                    data: JSON.stringify({
-                        start_date: $('#user-acquisition .start_date').val(),
-                        end_date: $('#user-acquisition .end_date').val()
+                    // User Acquisition Chart
+                    $.ajax({
+                        url: '/admin/api/get-user-acquisition/',
+                        type: 'POST',
+                        data: JSON.stringify(userAcquisitionDates),
+                        contentType: 'application/json',
+                        dataType: 'json',
+                        headers: {'X-CSRFToken': csrfToken}
                     }),
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    headers: {'X-CSRFToken': getCSRFToken()},
-                    success: function(response) {
-                        if (myAcqChart) {
-                            myAcqChart.data.datasets[0].data = response.View;
-                            myAcqChart.data.datasets[1].data = response.Cart;
-                            myAcqChart.data.datasets[2].data = response.Pay;
-                            var maxViewValue = Math.max(...response.View);
-                            myAcqChart.options.scales.yAxes[0].ticks.suggestedMax = maxViewValue + 1;
-                            myAcqChart.update();
-                        }
-                    }
-                });
-
-                // Update Order Line Chart
-                $.ajax({
-                    url: '/admin/api/update_order_line_chart/',
-                    type: 'POST',
-                    data: JSON.stringify({
-                        start_date: $('#user-activity .start_date').val(),
-                        end_date: $('#user-activity .end_date').val(),
-                        period: $('#order-time').val() || 'daily'
+                    // Order Line Chart
+                    $.ajax({
+                        url: '/admin/api/update_order_line_chart/',
+                        type: 'POST',
+                        data: JSON.stringify(userActivityDates),
+                        contentType: 'application/json',
+                        dataType: 'json',
+                        headers: {'X-CSRFToken': csrfToken}
                     }),
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    headers: {'X-CSRFToken': getCSRFToken()},
-                    success: function(response) {
-                        if (myLine) {
-                            config.data.labels = response.labels;
-                            config.data.datasets[0].data = response.accepted;
-                            config.data.datasets[1].data = response.ready_to_ship;
-                            config.data.datasets[2].data = response.on_shipping;
-                            config.data.datasets[3].data = response.delivered;
-                            config.data.datasets[4].data = response.cancelled;
-                            config.data.datasets[5].data = response.returned;
-
-                            var allData = response.accepted.concat(
-                                response.ready_to_ship, 
-                                response.on_shipping, 
-                                response.delivered, 
-                                response.cancelled, 
-                                response.returned
-                            );
-                            var maxYValue = Math.max.apply(null, allData);
-                            var stepSize = Math.ceil(maxYValue / 10);
-
-                            config.options.scales.yAxes[0].ticks.max = maxYValue + stepSize;
-                            config.options.scales.yAxes[0].ticks.stepSize = stepSize;
-
-                            myLine.update();
-                        }
+                    // Purchase by City Chart
+                    $.ajax({
+                        url: '/admin/api/top_purchase/',
+                        type: 'POST',
+                        data: JSON.stringify(analyticsCountryDates),
+                        contentType: 'application/json',
+                        dataType: 'json',
+                        headers: {'X-CSRFToken': csrfToken}
+                    })
+                ).then(function(
+                    orderStatusData, loginFrequencyData, userAcquisitionData, orderLineData, purchaseData
+                ) {
+                    // Update all charts simultaneously
+                    
+                    // 1. Update Order Status Chart
+                    if (myDoughnutChart && Array.isArray(orderStatusData[0].labels) && 
+                        Array.isArray(orderStatusData[0].data) && Array.isArray(orderStatusData[0].backgroundColor)) {
+                        myDoughnutChart.data.labels = orderStatusData[0].labels;
+                        myDoughnutChart.data.datasets.forEach((dataset) => {
+                            dataset.data = orderStatusData[0].data;
+                            dataset.backgroundColor = orderStatusData[0].backgroundColor;
+                        });
+                        myDoughnutChart.update('none');
                     }
-                });
 
-                // Update Purchase by City Map and Chart
-                $.ajax({
-                    url: '/admin/api/top_purchase/',
-                    type: 'POST',
-                    data: JSON.stringify({
-                        start_date: $('#analytics-country .start_date').val(),
-                        end_date: $('#analytics-country .end_date').val()
-                    }),
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    headers: {'X-CSRFToken': getCSRFToken()},
-                    success: function(response) {
-                        if (hbChart1) {
-                            hbChart1.data.labels = response.labels;
-                            hbChart1.data.datasets[0].data = response.data;
-                            hbChart1.update();
-                        }
+                    // 2. Update Login Frequency Chart
+                    if (myUChart && loginFrequencyData[0].data) {
+                        myUChart.data.datasets[0].data = loginFrequencyData[0].data;
+                        myUChart.update('none');
                     }
+
+                    // 3. Update User Acquisition Chart
+                    if (myAcqChart && userAcquisitionData[0].View && userAcquisitionData[0].Cart && userAcquisitionData[0].Pay) {
+                        myAcqChart.data.datasets[0].data = userAcquisitionData[0].View;
+                        myAcqChart.data.datasets[1].data = userAcquisitionData[0].Cart;
+                        myAcqChart.data.datasets[2].data = userAcquisitionData[0].Pay;
+                        var maxViewValue = Math.max(...userAcquisitionData[0].View);
+                        myAcqChart.options.scales.yAxes[0].ticks.suggestedMax = maxViewValue + 1;
+                        myAcqChart.update('none');
+                    }
+
+                    // 4. Update Order Line Chart
+                    if (myLine && config && orderLineData[0].labels) {
+                        config.data.labels = orderLineData[0].labels;
+                        config.data.datasets[0].data = orderLineData[0].accepted;
+                        config.data.datasets[1].data = orderLineData[0].ready_to_ship;
+                        config.data.datasets[2].data = orderLineData[0].on_shipping;
+                        config.data.datasets[3].data = orderLineData[0].delivered;
+                        config.data.datasets[4].data = orderLineData[0].cancelled;
+                        config.data.datasets[5].data = orderLineData[0].returned;
+
+                        var allData = orderLineData[0].accepted.concat(
+                            orderLineData[0].ready_to_ship, 
+                            orderLineData[0].on_shipping, 
+                            orderLineData[0].delivered, 
+                            orderLineData[0].cancelled, 
+                            orderLineData[0].returned
+                        );
+                        var maxYValue = Math.max.apply(null, allData);
+                        var stepSize = Math.ceil(maxYValue / 10);
+
+                        config.options.scales.yAxes[0].ticks.max = maxYValue + stepSize;
+                        config.options.scales.yAxes[0].ticks.stepSize = stepSize;
+
+                        myLine.update('none');
+                    }
+
+                    // 5. Update Purchase by City Chart
+                    if (hbChart1 && purchaseData[0].labels && purchaseData[0].data) {
+                        hbChart1.data.labels = purchaseData[0].labels;
+                        hbChart1.data.datasets[0].data = purchaseData[0].data;
+                        hbChart1.update('none');
+                    }
+
+                    console.log('All charts updated successfully');
+                }).fail(function(xhr, status, error) {
+                    console.error('Error updating charts:', error);
                 });
             }
 
@@ -917,11 +771,95 @@
 
             // Initial updates
             update();
-            updateCharts();
+            loadTopProducts(); // Load top products on page load
+            loadNewCustomers(); // Load new customers on page load
+            
+            // Initial chart update with small delay to ensure charts are ready
+            setTimeout(function() {
+                updateCharts();
+            }, 200);
 
             // Set intervals for updates
             setInterval(update, 5000);
             setInterval(updateCharts, 5000);
+            setInterval(loadTopProducts, 5000); // Refresh top products every 30 seconds
+            setInterval(loadNewCustomers, 5000); // Refresh new customers every 30 seconds
+
+            // Function to load new customers from API
+            function loadNewCustomers() {
+                // Show loading indicator
+                $('#new-customers-loading').show();
+                $('#new-customers-error').hide();
+                $('#new-customers-table').hide();
+                $('#new-customers-list').empty();
+
+                $.ajax({
+                    url: 'http://localhost:5000/api/v1/gold/top-new-user-province',
+                    type: 'GET',
+                    dataType: 'json',
+                    crossDomain: true,
+                    success: function(response) {
+                        $('#new-customers-loading').hide();
+                        
+                        if (response.success && response.data && response.data.length > 0) {
+                            displayNewCustomers(response.data);
+                        } else {
+                            $('#new-customers-list').html('<tr><td colspan="2" class="text-center text-muted">No new customers data available</td></tr>');
+                            $('#new-customers-table').show();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading new customers:', error);
+                        $('#new-customers-loading').hide();
+                        $('#new-customers-error').show();
+                    }
+                });
+            }
+
+            // Function to display new customers
+            function displayNewCustomers(customers) {
+                var customersHtml = '';
+                
+                customers.forEach(function(customer, index) {
+                    // Use default user image or generate based on index
+                    var userImage = "{% static 'adminapp/assets/img/user/u' %}" + ((index % 5) + 1) + ".jpg";
+                    
+                    customersHtml += `
+                        <tr>
+                            <td>
+                                <div class="media">
+                                    <div class="media-image mr-3 rounded-circle">
+                                        <a href="#"><img class="profile-img rounded-circle w-45" src="${userImage}" alt="province icon"></a>
+                                    </div>
+                                    <div class="media-body align-self-center">
+                                        <a href="#">
+                                            <h6 class="mt-0 text-dark font-weight-medium">${customer.province}</h6>
+                                        </a>
+                                        <small>Province</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-dark font-weight-medium">${customer.count} Users</td>
+                        </tr>
+                    `;
+                });
+                
+                $('#new-customers-list').html(customersHtml);
+                $('#new-customers-table').show();
+            }
+
+            // Make loadNewCustomers globally accessible
+            window.loadNewCustomers = loadNewCustomers;
+
+            // Event handlers for new customers
+            $('#refresh-new-customers').click(function() {
+                loadNewCustomers();
+            });
+
+            $('#update-new-customers').click(function(e) {
+                e.preventDefault();
+                loadNewCustomers();
+            });
         })
     </script>
 {% endblock %}

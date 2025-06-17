@@ -125,3 +125,6 @@ mysql-replication==0.30.0
 
 pymysql==1.1.0
 pyodbc==5.0.1
+
+Flask==3.0.0
+Flask-CORS==4.0.0
