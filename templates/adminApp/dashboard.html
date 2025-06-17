@@ -766,6 +766,133 @@
                 return $('meta[name="csrf-token"]').attr('content');
             }
 
+            function updateCharts() {
+                // Update Order Status Chart
+                $.ajax({
+                    url: '/admin/api/order-status/',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        start_date: $('#order-overview .start_date').val(),
+                        end_date: $('#order-overview .end_date').val()
+                    }),
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    headers: {'X-CSRFToken': getCSRFToken()},
+                    success: function(data) {
+                        if (Array.isArray(data.labels) && Array.isArray(data.data) && Array.isArray(data.backgroundColor)) {
+                            myDoughnutChart.data.labels = data.labels;
+                            myDoughnutChart.data.datasets.forEach((dataset) => {
+                                dataset.data = data.data;
+                                dataset.backgroundColor = data.backgroundColor;
+                            });
+                            myDoughnutChart.update();
+                        }
+                    }
+                });
+
+                // Update Login Frequency Chart
+                $.ajax({
+                    url: '/admin/api/get-login-frequency/',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        start_date: $('#user-overview .start_date').val(),
+                        end_date: $('#user-overview .end_date').val()
+                    }),
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    headers: {'X-CSRFToken': getCSRFToken()},
+                    success: function(response) {
+                        if (myUChart) {
+                            myUChart.data.datasets[0].data = response.data;
+                            myUChart.update();
+                        }
+                    }
+                });
+
+                // Update User Acquisition Chart
+                $.ajax({
+                    url: '/admin/api/get-user-acquisition/',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        start_date: $('#user-acquisition .start_date').val(),
+                        end_date: $('#user-acquisition .end_date').val()
+                    }),
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    headers: {'X-CSRFToken': getCSRFToken()},
+                    success: function(response) {
+                        if (myAcqChart) {
+                            myAcqChart.data.datasets[0].data = response.View;
+                            myAcqChart.data.datasets[1].data = response.Cart;
+                            myAcqChart.data.datasets[2].data = response.Pay;
+                            var maxViewValue = Math.max(...response.View);
+                            myAcqChart.options.scales.yAxes[0].ticks.suggestedMax = maxViewValue + 1;
+                            myAcqChart.update();
+                        }
+                    }
+                });
+
+                // Update Order Line Chart
+                $.ajax({
+                    url: '/admin/api/update_order_line_chart/',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        start_date: $('#user-activity .start_date').val(),
+                        end_date: $('#user-activity .end_date').val(),
+                        period: $('#order-time').val() || 'daily'
+                    }),
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    headers: {'X-CSRFToken': getCSRFToken()},
+                    success: function(response) {
+                        if (myLine) {
+                            config.data.labels = response.labels;
+                            config.data.datasets[0].data = response.accepted;
+                            config.data.datasets[1].data = response.ready_to_ship;
+                            config.data.datasets[2].data = response.on_shipping;
+                            config.data.datasets[3].data = response.delivered;
+                            config.data.datasets[4].data = response.cancelled;
+                            config.data.datasets[5].data = response.returned;
+
+                            var allData = response.accepted.concat(
+                                response.ready_to_ship, 
+                                response.on_shipping, 
+                                response.delivered, 
+                                response.cancelled, 
+                                response.returned
+                            );
+                            var maxYValue = Math.max.apply(null, allData);
+                            var stepSize = Math.ceil(maxYValue / 10);
+
+                            config.options.scales.yAxes[0].ticks.max = maxYValue + stepSize;
+                            config.options.scales.yAxes[0].ticks.stepSize = stepSize;
+
+                            myLine.update();
+                        }
+                    }
+                });
+
+                // Update Purchase by City Map and Chart
+                $.ajax({
+                    url: '/admin/api/top_purchase/',
+                    type: 'POST',
+                    data: JSON.stringify({
+                        start_date: $('#analytics-country .start_date').val(),
+                        end_date: $('#analytics-country .end_date').val()
+                    }),
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    headers: {'X-CSRFToken': getCSRFToken()},
+                    success: function(response) {
+                        if (hbChart1) {
+                            hbChart1.data.labels = response.labels;
+                            hbChart1.data.datasets[0].data = response.data;
+                            hbChart1.update();
+                        }
+                    }
+                });
+            }
+
             function update() {
                 $.ajax({
                     type: "POST",
@@ -788,10 +915,13 @@
                 })
             }
 
+            // Initial updates
             update();
-            setTimeout(function () {
-                update();
-            }, 60000)
+            updateCharts();
+
+            // Set intervals for updates
+            setInterval(update, 5000);
+            setInterval(updateCharts, 5000);
         })
     </script>
 {% endblock %}

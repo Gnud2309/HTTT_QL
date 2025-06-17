@@ -12,6 +12,8 @@ from datetime import datetime
 import json
 import os
 from dotenv import load_dotenv
+import asyncio
+import concurrent.futures
 
 # Configure logging
 logging.basicConfig(
@@ -25,41 +27,18 @@ load_dotenv()
 
 class MySQLReplicator:
     def __init__(self, table_mappings, column_mappings=None, source_db_config=None, target_db_config=None):
-        """
-        Initialize the replicator with table mappings and database configurations
         
-        Args:
-            table_mappings (dict): Mapping of source tables to target tables
-                Format: {
-                    'source_db.table_name': 'target_db.schema.table_name',
-                    'source_db.another_table': 'target_db.schema.another_table'
-                }
-            column_mappings (dict): Mapping of columns for each table
-            source_db_config (dict, optional): Source MySQL database connection settings
-            target_db_config (dict, optional): Target SQL Server database connection settings
-        """
         # Source database configuration (MySQL)
-        self.source_config = source_db_config or {
-            'host': os.getenv('SOURCE_DB_HOST', 'localhost'),
-            'port': int(os.getenv('SOURCE_DB_PORT', 3306)),
-            'user': os.getenv('SOURCE_DB_USER', 'root'),
-            'password': os.getenv('SOURCE_DB_PASSWORD', ''),
-        }
+        self.source_config = source_db_config 
         
         # Target database configuration (SQL Server)
-        self.target_config = target_db_config or {
-            'host': os.getenv('TARGET_DB_HOST', 'localhost'),
-            'port': int(os.getenv('TARGET_DB_PORT', 1433)),
-            'user': os.getenv('TARGET_DB_USER', 'sa'),
-            'password': os.getenv('TARGET_DB_PASSWORD', ''),
-            'driver': '{ODBC Driver 17 for SQL Server}',
-            'database': 'DataWarehouse'  # Main database name
-        }
+        self.target_config = target_db_config 
         
         # Table mappings
         self.table_mappings = table_mappings
         # Reverse mapping for quick lookup
         self.reverse_mappings = {v: k for k, v in self.table_mappings.items()}
+        
         
         # Column mappings
         self.column_mappings = column_mappings or {}
@@ -73,7 +52,7 @@ class MySQLReplicator:
         # Initialize target connection
         self.target_conn = None
         self.target_cursor = None
-        
+        print("Starting replication...")
         logging.info(f"Initialized replicator with {len(self.table_mappings)} table mappings")
         logging.info(f"Source databases: {', '.join(self.source_databases)}")
         logging.info(f"Target database: {self.target_database}")
@@ -164,7 +143,7 @@ class MySQLReplicator:
                 
                 query = f"INSERT INTO [{schema}].[{table_name}] ({columns_str}) VALUES ({placeholders})"
                 self.target_cursor.execute(query, mapped_values)
-            
+            logging.info(query)
             self.target_conn.commit()
             logging.info(f"Applied INSERT from {source_table} to {target_table}")
         except Exception as e:
@@ -204,7 +183,7 @@ class MySQLReplicator:
                 query = f"UPDATE [{schema}].[{table_name}] SET {set_clause} WHERE {where_clause}"
                 
                 self.target_cursor.execute(query, values)
-            
+            logging.info(query)
             self.target_conn.commit()
             logging.info(f"Applied UPDATE from {source_table} to {target_table}")
         except Exception as e:
@@ -238,7 +217,7 @@ class MySQLReplicator:
                 query = f"DELETE FROM [{schema}].[{table_name}] WHERE {where_clause}"
                 
                 self.target_cursor.execute(query, mapped_values)
-            
+            logging.info(query)
             self.target_conn.commit()
             logging.info(f"Applied DELETE from {source_table} to {target_table}")
         except Exception as e:
@@ -253,28 +232,8 @@ class MySQLReplicator:
     def get_source_table(self, target_table):
         """Get the source table name for a target table"""
         return self.reverse_mappings.get(target_table, target_table)
-    def run_silver_transformations(self):
-        """Execute all bronze-to-silver transformation stored procedures."""
-        self.clear_silver_tables()
-        procedures = [
-            "TransformBronzeCustEventToSilver",
-            "TransformBronzeProductInfoToSilver",
-            "TransformBronzeSaleOrderProductToSilver",
 
-            "TransformBronzeSaleOrderToSilver",
-            "TransformBronzeSalePaymentToSilver",
-            "TransformCustInfoBronzeToSilver"
-        ]
-        try:
-            for proc in procedures:
-                logging.info(f"Executing stored procedure: {proc}")
-                self.target_cursor.execute(f"EXEC {proc}")
-                self.target_conn.commit()
-                logging.info(f"Successfully executed: {proc}")
-        except Exception as e:
-            logging.error(f"Error executing stored procedures: {str(e)}")
-            raise
-    def clear_silver_tables(self):
+    async def clear_silver_tables(self):
         """Delete all records from the silver tables before transformation."""
         tables = [
             "silver.sale_order_product",
@@ -284,20 +243,149 @@ class MySQLReplicator:
             "silver.crm_cust_info",
             "silver.product_info"
         ]
-        try:
-            for table in tables:
+        
+        async def clear_table(table):
+            try:
                 logging.info(f"Deleting all records from: {table}")
-                self.target_cursor.execute(f"DELETE FROM {table}")
-                self.target_conn.commit()
+                # Use ThreadPoolExecutor for database operations
+                with concurrent.futures.ThreadPoolExecutor() as executor:
+                    await asyncio.get_event_loop().run_in_executor(
+                        executor,
+                        lambda: self.target_cursor.execute(f"DELETE FROM {table}")
+                    )
+                    await asyncio.get_event_loop().run_in_executor(
+                        executor,
+                        lambda: self.target_conn.commit()
+                    )
                 logging.info(f"Successfully cleared: {table}")
+            except Exception as e:
+                logging.error(f"Error clearing table {table}: {str(e)}")
+                raise
+
+        # Create tasks for all tables
+        tasks = [clear_table(table) for table in tables]
+        # Wait for all clear operations to complete
+        await asyncio.gather(*tasks)
+
+    async def run_silver_transformations(self):
+        """Execute all bronze-to-silver transformation stored procedures."""
+        # Wait for clear_silver_tables to complete
+        # await self.clear_silver_tables()
+        
+        procedures = [
+            "TransformBronzeCustEventToSilver",
+            "TransformBronzeProductInfoToSilver",
+            "TransformBronzeSaleOrderProductToSilver",
+            "TransformBronzeSaleOrderToSilver",
+            "TransformBronzeSalePaymentToSilver",
+            "TransformCustInfoBronzeToSilver"
+        ]
+        
+        try:
+            for proc in procedures:
+                logging.info(f"Executing stored procedure: {proc}")
+                # Use ThreadPoolExecutor for database operations
+                with concurrent.futures.ThreadPoolExecutor() as executor:
+                    await asyncio.get_event_loop().run_in_executor(
+                        executor,
+                        lambda: self.target_cursor.execute(f"EXEC {proc}")
+                    )
+                    await asyncio.get_event_loop().run_in_executor(
+                        executor,
+                        lambda: self.target_conn.commit()
+                    )
+                logging.info(f"Successfully executed: {proc}")
         except Exception as e:
-            logging.error(f"Error clearing silver tables: {str(e)}")
+            logging.error(f"Error executing stored procedures: {str(e)}")
             raise
+
+    def sync_all_data_from_source(self):
+        """Sync all data from source MySQL to target SQL Server before starting replication"""
+        try:
+            logging.info("Starting full data sync from source to target...")
+            
+            # Connect to source MySQL database
+            source_conn = pymysql.connect(**self.source_config)
+            source_cursor = source_conn.cursor(pymysql.cursors.DictCursor)
+            
+            # Connect to target SQL Server
+            self.connect_to_target()
+            
+            for source_table, target_table in self.table_mappings.items():
+                try:
+                    # Extract database and table names
+                    source_db, source_table_name = source_table.split('.')
+                    schema, table_name = self._get_target_table_parts(target_table)
+                    
+                    logging.info(f"Syncing data from {source_table} to {target_table}")
+                    
+                    # First, delete all records from target table
+                    logging.info(f"Deleting all records from {target_table}")
+                    self.target_cursor.execute(f"DELETE FROM [{schema}].[{table_name}]")
+                    self.target_conn.commit()
+                    logging.info(f"Cleared {target_table}")
+                    
+                    # Get column mapping for this table
+                    column_mapping = self.column_mappings.get(source_table, {})
+                    
+                    # Build SELECT query for source
+                    if column_mapping:
+                        # Use mapped columns
+                        source_columns = list(column_mapping.keys())
+                        target_columns = list(column_mapping.values())
+                    else:
+                        # Get all columns from source table
+                        source_cursor.execute(f"SHOW COLUMNS FROM {source_db}.{source_table_name}")
+                        columns_info = source_cursor.fetchall()
+                        source_columns = [col['Field'] for col in columns_info]
+                        target_columns = source_columns  # Use same column names
+                    
+                    source_columns_str = ", ".join(source_columns)
+                    target_columns_str = ", ".join(target_columns)
+                    
+                    # Fetch all data from source
+                    source_cursor.execute(f"SELECT {source_columns_str} FROM {source_db}.{source_table_name}")
+                    rows = source_cursor.fetchall()
+                    
+                    if rows:
+                        # Prepare INSERT query for target
+                        placeholders = ", ".join(["?"] * len(target_columns))
+                        insert_query = f"INSERT INTO [{schema}].[{table_name}] ({target_columns_str}) VALUES ({placeholders})"
+                        
+                        # Insert all rows
+                        for row in rows:
+                            values = [row[col] for col in source_columns]
+                            self.target_cursor.execute(insert_query, values)
+                        
+                        self.target_conn.commit()
+                        logging.info(f"Synced {len(rows)} rows from {source_table} to {target_table}")
+                    else:
+                        logging.info(f"No data found in {source_table}")
+                        
+                except Exception as e:
+                    logging.error(f"Error syncing {source_table} to {target_table}: {str(e)}")
+                    self.target_conn.rollback()
+                    raise
+            
+            # Close source connection
+            source_cursor.close()
+            source_conn.close()
+            
+            logging.info("Full data sync completed successfully")
+            
+        except Exception as e:
+            logging.error(f"Error during full data sync: {str(e)}")
+            raise
+
     def start_replication(self):
         """Start reading and applying binary logs"""
         try:
-            # Connect to target database
-            self.connect_to_target()
+            # First sync all data from source to target
+            self.sync_all_data_from_source()
+            
+            # Connect to target database (if not already connected)
+            if not self.target_conn:
+                self.connect_to_target()
             
             # Get list of source tables to monitor (without database names)
             source_tables = [table.split('.')[1] for table in self.table_mappings.keys()]
@@ -322,7 +410,8 @@ class MySQLReplicator:
                         self.apply_update(binlogevent)
                     elif isinstance(binlogevent, DeleteRowsEvent):
                         self.apply_delete(binlogevent)
-                    # self.run_silver_transformations()
+                    # Run silver transformations asynchronously
+                    asyncio.run(self.run_silver_transformations())
                 except Exception as e:
                     logging.error(f"Error processing event: {str(e)}")
                     continue
@@ -431,7 +520,7 @@ if __name__ == "__main__":
             'user_id': 'user_id',
             'product_id': 'product_id',
             'quantity': 'quantity',
-            'price': 'product_price',
+            'product_price': 'product_price',
             'discount_amount': 'discount_amount',
             'ordered': 'ordered',
             'payment_id': 'payment_id',
@@ -457,7 +546,7 @@ if __name__ == "__main__":
         'driver': '{ODBC Driver 17 for SQL Server}',
         'database': 'DataWarehouse'  # Main database name
     }
-    
+
     try:
         # Initialize replicator with table mappings, column mappings, and connection settings
         replicator = MySQLReplicator(
