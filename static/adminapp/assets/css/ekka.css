@@ -24985,3 +24985,47 @@ div.dataTables_wrapper div.dataTables_filter {
   font-size: 18px;
   color: #fff;
 }
+/* --- Custom Dashboard Palette Override --- */
+.card-1 {
+  background: #5578ad !important;
+  color: #fff !important;
+}
+.card-2 {
+  background: #8890c3 !important;
+  color: #fff !important;
+}
+.card-3 {
+  background: #b5abd7 !important;
+  color: #fff !important;
+}
+.card-4 {
+  background: #dcc8ea !important;
+  color: #333 !important;
+}
+.dash-card .card-body span {
+  background: #ffe8ff !important;
+  color: #5578ad !important;
+}
+.card-mini {
+  border: 1px solid #b5abd7 !important;
+  box-shadow: 0 2px 12px 0 #b5abd733 !important;
+}
+.card-default .card-footer, .card-default .card-header {
+  background: #ffe8ff !important;
+  border-color: #dcc8ea !important;
+}
+.card-table-border-none .card-header {
+  background: #b5abd7 !important;
+  color: #fff !important;
+}
+.Sold-card-table tbody td, .Sold-card-table thead th {
+  border-bottom: 1px solid #b5abd7 !important;
+}
+.ec-cust-card {
+  background: #dcc8ea !important;
+  border: 1px solid #b5abd7 !important;
+}
+.ec-card-top-prod {
+  background: #ffe8ff !important;
+  border: 1px solid #dcc8ea !important;
+}
