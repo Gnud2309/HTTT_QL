@@ -183,22 +183,42 @@
                                         <div class="ec-check-bill-form">
                                             <div class="row">
                                                 <span class="ec-bill-wrap ec-bill-half col-lg-12">
-                                                       <label for="full_name">Full Name*</label>
-                                                       <input type="text" name="full_name" id="full_name"
-                                                              placeholder="Enter your full name" value ="{{ request.user.full_name }}" required/>
+                                                    <label for="full_name">Full Name*</label>
+                                                    <input type="text" 
+                                                           name="full_name" 
+                                                           id="full_name"
+                                                           placeholder="Enter your full name" 
+                                                           value="{{ request.user.full_name }}" 
+                                                           required 
+                                                           oninput="validateField('full_name', 'full_name_error', 'Full Name is required')"/>
+                                                     <small id="full_name_error" style="color: red; font-size: 0.8em; display: block; margin-top: 2px;"></small>
                                                 </span>
+                                                
 
                                                 <span class="ec-bill-wrap ec-bill-half col-md-6">
-                                                        <label for="email">Email*</label>
-                                                        <input type="email" name="email" id='email' value="{{ request.user.email }}" placeholder="Enter your email"
-                                                               required/>
-                                                    </span>
+                                                    <label for="email">Email*</label>
+                                                    <input type="email" 
+                                                           name="email" 
+                                                           id="email" 
+                                                           placeholder="Enter your email" 
+                                                           value="{{ request.user.email }}" 
+                                                           required 
+                                                           onblur="validateEmail('email', 'email_error')"/>
+                                                    <small id="email_error" style="color: red; font-size: 0.8em; display: block; margin-top: 2px;"></small>
+                                                </span>
+                                                
 
                                                 <span class="ec-bill-wrap ec-bill-half col-md-6">
-                                                         <label for="phone">Phone*</label>
-                                                         <input type="text" name="phone" id="phone" value="{{ request.user.phone_number }}" placeholder="Enter your phone"
-                                                                required/>
-                                                    </span>
+                                                    <label for="phone">Phone*</label>
+                                                    <input type="text" 
+                                                           name="phone" 
+                                                           id="phone" 
+                                                           placeholder="Enter your phone" 
+                                                           value="{{ request.user.phone_number }}" 
+                                                           required 
+                                                           oninput="validatePhone('phone', 'phone_error')"/>
+                                                    <small id="phone_error" style="color: red; font-size: 0.8em; display: block; margin-top: 2px;"></small>
+                                                </span>
 
                                                 <span class="ec-bill-wrap ec-bill-half col-md-6">
                                                        <label for="city">City</label>
@@ -721,6 +741,7 @@
         })
     })
 </script>
+
 <script>
     function updateSelect(selectId, data, selectedValue) {
         let select = $('#' + selectId);
@@ -741,9 +762,10 @@
         });
     }
 
+    
     function loadLocations(type, parentId = '', selectedValue = '') {
         $.ajax({
-            url: '{% url 'get_locations' %}',
+            url: "{% url 'get_locations' %}",
             type: 'GET',
             data: {type: type, parentId: parentId},
             success: function (data) {
@@ -779,6 +801,8 @@
 <!-- Main Js -->
 <script src="{% static 'webapp/assets/js/vendor/index.js' %}"></script>
 <script src="{% static 'webapp/assets/js/main.js' %}"></script>
+<!-- My Js -->
+<script src="{% static 'validate/validate.js' %}"></script>
 </body>
 </html>
 

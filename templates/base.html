@@ -198,47 +198,51 @@
    </div>
 <!-- Cart Floating Button end -->
 
+{% include 'chatbot_widget.html' %}
 <!-- Vendor JS -->
 <script src="{% static 'webapp/assets/js/vendor/jquery-3.5.1.min.js' %}"></script>
-<script type="text/javascript">
-    let username = null;
-    let date_joined = null;
-    $.ajax({
-        method: 'GET',
-        url: '{% url 'account_infor' %}',
-        dataType: 'json',
-        success: function (response){
-            if(response.username !== "none"){
-                console.log(response);
-                username = response.username;
-                date_joined = response.date_joined;
-            }
-        }
-        
-    });
-    (function (d, t) {
-        var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
-        v.onload = function () {
-            window.voiceflow.chat.load({
-                verify: {projectID: '{{ id_chat }}' },
-                url: 'https://general-runtime.voiceflow.com',
-                versionID: 'development',
-                launch: {
-                    event: {
-                        type: "launch",
-                        payload: {
-                            username: username,
-                            date_joined: date_joined
-                        }
-                    }
-                }
-            });
-        }
-        v.src = "https://cdn.voiceflow.com/widget/bundle.mjs";
-        v.type = "text/javascript";
-        s.parentNode.insertBefore(v, s);
-    })(document, 'script');
-</script>
+{#<script type="text/javascript">#}
+{#    let username = null;#}
+{#    let date_joined = null;#}
+{#    $.ajax({#}
+{#        method: 'GET',#}
+{#        url: '{% url 'account_infor' %}',#}
+{#        dataType: 'json',#}
+{#        success: function (response){#}
+{#            if(response.username !== "none"){#}
+{#                console.log(response);#}
+{#                username = response.username;#}
+{#                date_joined = response.date_joined;#}
+{#            }#}
+{#        }#}
+{##}
+{#    });#}
+{#    (function (d, t) {#}
+{#        var v = d.createElement(t), s = d.getElementsByTagName(t)[0];#}
+{#        v.onload = function () {#}
+{#            window.voiceflow.chat.load({#}
+{#                verify: {projectID: '{{ id_chat }}' },#}
+{#                url: 'http://127.0.0.1:5001/chat',#}
+{#                versionID: 'development',#}
+{#                launch: {#}
+{#                    event: {#}
+{#                        type: "launch",#}
+{#                        payload: {#}
+{#                            username: username,#}
+{#                            date_joined: date_joined#}
+{#                        }#}
+{#                    }#}
+{#                }#}
+{#            });#}
+{#        }#}
+{#        v.src = "https://cdn.voiceflow.com/widget/bundle.mjs";#}
+{#        v.type = "text/javascript";#}
+{#        s.parentNode.insertBefore(v, s);#}
+{#    })(document, 'script');#}
+{#</script>#}
+
+
+
 <script src="{% static 'webapp/assets/js/vendor/popper.min.js' %}"></script>
 <script src="{% static 'webapp/assets/js/vendor/bootstrap.min.js' %}"></script>
 <script src="{% static 'webapp/assets/js/vendor/jquery-migrate-3.3.0.min.js' %}"></script>
@@ -296,6 +300,33 @@
 <script src="{% static 'webapp/assets/js/main.js' %}"></script>
 
 {% block jsblock %}
+    <script src="{% static 'webapp/assets/js/demo-8.js' %}"></script>
+    <script src="{% static 'webapp/assets/js/chatbot.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.post-link').click(function (e) {
+                e.preventDefault();
+                var page = $(this).data('page');
+                if (page) {
+                    window.location.href = '?page=' + page;
+                }
+            });
+
+            var swiper = new Swiper('.swiper-container', {
+                slidesPerView: 1,
+                spaceBetween: 30,
+                loop: true,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+            });
+        });
+    </script>
 {% endblock %}
 </body>
 </html>

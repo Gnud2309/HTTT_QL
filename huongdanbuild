@@ -2,15 +2,6 @@ Bước 1:
 Cài đặt các thư viện cần thiết
 pip install -r requirements.txt
 
-Bước 2:
---Tạo 1 database có tên EcomRecomendation
-CREATE DATABASE EcomRecomendation
-
-Bước 3:
---chạy 2 lệnh sau để build database 
-python manage.py makemigrations
-python manage.py migrate
-
 Bước 4:
 --Tạo tài khoản admin để quản lý trang web
 python manage.py createsuperuser
