@@ -8,12 +8,16 @@ urlpatterns = [
     #dashboard overview
     path('api/update_dash/', views.update_dash, name='update_dash'),
     path('api/order-status/', views.order_status_data, name='order-status-data'),
-    path('api/get-login-frequency/', views.get_login_frequency, name='get-login-frequency'),
+    path('api/get-login-frequency/', views.get_login_frequency, name='get_login_frequency'),
     path('api/get-user-acquisition/', views.get_user_acquisition, name='get_user_acquisition'),
     path('api/get-payment-by-city/', views.get_payment_by_city, name='get-payment-by-city'),
     path('api/top_purchase/', views.top_purchase, name='top_purchase'),
     path('api/recent_orders/', views.recent_orders, name='recent_orders'),
     path('api/update_order_line_chart/', views.get_order_stats, name='get_order_stats'),
+    path('api/get-order-alerts/', views.get_order_alerts, name='get_order_alerts'),  # New endpoint
+    path('api/get-user-alerts/', views.get_user_alerts, name='get_user_alerts'),  # New endpoint
+    path('api/get-gemini-chat/', views.get_gemini_chat, name='get_gemini_chat'),  # New endpoint
+
 
     #data export
     path('api/download-order-report/', views.download_order_report, name='download-order-report'),

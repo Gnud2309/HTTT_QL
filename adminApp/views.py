@@ -40,6 +40,30 @@ from django.utils import timezone
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.utils import timezone
+from datetime import timedelta
+from orders.models import Order
+from django.contrib.auth.decorators import login_required
+from django.utils.dateparse import parse_date
+import json
+from django.db.models import Count
+from decouple import config, UndefinedValueError
+import json
+import requests
+from dateutil.parser import parse as parse_date
+from datetime import datetime, timedelta, date
+import logging
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse, HttpResponse
+from django.utils import timezone
+from dateutil.parser import parse as parse_date
+from datetime import datetime, timedelta
+import json
+from django.db.models import Count
+from django.db.models.functions import TruncHour, TruncDate, TruncMonth
+from orders.models import Order
+from django.db.models import Q
 
 
 def get_locations(id, parent_id):
@@ -1017,3 +1041,352 @@ def process_folder(request):
 #         return JsonResponse({'error': form.errors}, status=400)
     
 #     return JsonResponse({'error': 'Invalid request'}, status=405)
+
+@login_required(login_url='login')
+def get_order_alerts(request):
+    if request.method == 'POST' and request.user.is_superuser:
+        try:
+            # Parse request body
+            if not request.body:
+                return JsonResponse({'error': 'Empty request body'}, status=400)
+            
+            data = json.loads(request.body)
+            
+            # Get and validate inputs
+            start_date_str = data.get('start_date', '2025-06-01')
+            end_date_str = data.get('end_date', '2025-06-17')
+            time_period = data.get('time_period', 'hour').lower()
+            
+            if time_period not in ['hour', 'day', 'month']:
+                return JsonResponse({'error': f'Invalid time_period: {time_period}'}, status=400)
+            
+            # Parse dates
+            try:
+                start_date = parse_date(start_date_str).date()
+                end_date = parse_date(end_date_str).date()
+            except (ValueError, TypeError) as e:
+                return JsonResponse({'error': f'Invalid date format: {str(e)}'}, status=400)
+
+            # Aggregate data based on time period
+            if time_period == 'hour':
+                orders = Order.objects.filter(
+                    created_at__date__range=[start_date, end_date]
+                ).annotate(
+                    hour=TruncHour('created_at')
+                ).values('order_status', 'hour').annotate(total=Count('id')).order_by('hour')
+            elif time_period == 'day':
+                orders = Order.objects.filter(
+                    created_at__date__range=[start_date, end_date]
+                ).values('order_status', 'created_at__date').annotate(total=Count('id')).order_by('created_at__date')
+            else:  # month
+                orders = Order.objects.filter(
+                    created_at__date__range=[start_date, end_date]
+                ).annotate(
+                    month=TruncMonth('created_at')
+                ).values('order_status', 'month').annotate(total=Count('id')).order_by('month')
+
+            daily_counts = {}
+            for order in orders:
+                if time_period == 'hour':
+                    time_key = order['hour'].strftime('%Y-%m-%d %H:00:00')
+                elif time_period == 'month':
+                    time_key = order['month'].strftime('%Y-%m-01')
+                else:  # day
+                    time_key = order['created_at__date']
+                
+                status = order['order_status']
+                if time_key not in daily_counts:
+                    daily_counts[time_key] = {
+                        'Accepted': 0, 'Ready to ship': 0, 'On shipping': 0,
+                        'Delivered': 0, 'Cancelled': 0, 'Return': 0
+                    }
+                daily_counts[time_key][status] = order['total']
+
+            # Ensure end_date is not in the future
+            today = timezone.now().date()
+
+            alerts = []
+            total_days = (end_date - start_date).days + 1
+            
+            if total_days >= 1:  # Minimum data requirement
+                # Calculate mid-point
+                mid_point = start_date + timedelta(days=total_days // 2)
+
+                # Split into first and second halves
+                if time_period == 'hour':
+                    hours = [
+                        datetime.combine(start_date, datetime.min.time()) + timedelta(hours=x)
+                        for x in range(int((end_date - start_date).days * 24) + 24)
+                    ]
+                    mid_hour = hours[len(hours) // 2] if hours else datetime.combine(start_date, datetime.min.time())
+                    first_half_times = [h.strftime('%Y-%m-%d %H:00:00') for h in hours if h <= mid_hour]
+                    second_half_times = [h.strftime('%Y-%m-%d %H:00:00') for h in hours if h > mid_hour and h.date() <= today]
+                elif time_period == 'month':
+                    months = [
+                        (start_date + timedelta(days=x*30)).replace(day=1)
+                        for x in range((end_date.year - start_date.year) * 12 + end_date.month - start_date.month + 1)
+                    ]
+                    mid_month = months[len(months) // 2] if months else start_date
+                    first_half_times = [m.strftime('%Y-%m-01') for m in months if m <= mid_month]
+                    second_half_times = [m.strftime('%Y-%m-01') for m in months if m > mid_month and m.date() <= today]
+                else:  # day
+                    first_half_days = [start_date + timedelta(days=x) for x in range((mid_point - start_date).days + 1)]
+                    second_half_days = [
+                        mid_point + timedelta(days=x)
+                        for x in range((end_date - mid_point).days + 1)
+                        if (mid_point + timedelta(days=x)) <= today
+                    ]
+                    first_half_times = first_half_days
+                    second_half_times = second_half_days
+
+                # Calculate averages
+                first_half_avg = {
+                    'Accepted': 0, 'Ready to ship': 0, 'On shipping': 0,
+                    'Delivered': 0, 'Cancelled': 0, 'Return': 0
+                }
+                second_half_avg = {
+                    'Accepted': 0, 'Ready to ship': 0, 'On shipping': 0,
+                    'Delivered': 0, 'Cancelled': 0, 'Return': 0
+                }
+                total_orders = 0
+
+                # Aggregate for first half
+                for time_key in first_half_times:
+                    counts = daily_counts.get(str(time_key), {})
+                    for status in first_half_avg:
+                        first_half_avg[status] += counts.get(status, 0)
+
+                # Aggregate for second half
+                for time_key in second_half_times:
+                    counts = daily_counts.get(str(time_key), {})
+                    for status in second_half_avg:
+                        second_half_avg[status] += counts.get(status, 0)
+
+                first_half_count = len(first_half_times)
+                second_half_count = len(second_half_times)
+
+                if first_half_count > 0:
+                    for status in first_half_avg:
+                        first_half_avg[status] /= first_half_count
+                if second_half_count > 0:
+                    for status in second_half_avg:
+                        second_half_avg[status] /= second_half_count
+
+                total_orders = sum(sum(day.values()) for day in daily_counts.values())
+
+                # Rule 1: Rising then reducing Accepted trend
+                threshold_drop = 1.2 if time_period in ['day', 'month'] else 1.5
+                if first_half_avg['Accepted'] > second_half_avg['Accepted'] * threshold_drop and first_half_avg['Accepted'] > 0:
+                    alert_msg = "Warning: Accepted orders are rising in the first half but have reduced significantly in the second half."
+                    suggestion = "Consider launching a targeted marketing campaign to boost demand, such as discounts or promotions."
+                    if time_period == 'hour':
+                        alert_msg += " (Hourly spike detected)"
+                        suggestion += " Focus on peak hours."
+                    alerts.append({'trend_alert': alert_msg, 'suggestion': suggestion})
+
+                # Rule 2: High Cancellation Rate
+                cancelled_total = sum(daily_counts.get(time_key, {}).get('Cancelled', 0) for time_key in daily_counts)
+                threshold_cancel = 15 if time_period in ['day', 'month'] else 25
+                if total_orders > 0 and (cancelled_total / total_orders) * 100 > threshold_cancel:
+                    alert_msg = f"Warning: Cancellation rate exceeds {threshold_cancel}% of total orders."
+                    suggestion = "Review product quality or customer service to reduce cancellations."
+                    if time_period == 'hour':
+                        alert_msg += " (Hourly cancellations may indicate specific issues)"
+                    alerts.append({'trend_alert': alert_msg, 'suggestion': suggestion})
+
+                # Rule 3: Low Delivery Rate
+                accepted_total = sum(daily_counts.get(time_key, {}).get('Accepted', 0) for time_key in daily_counts)
+                delivered_total = sum(daily_counts.get(time_key, {}).get('Delivered', 0) for time_key in daily_counts)
+                threshold_delivery = 20 if time_period in ['day', 'month'] else 10
+                if accepted_total > 0 and (delivered_total / accepted_total) * 100 < threshold_delivery:
+                    alert_msg = f"Warning: Delivered orders are less than {threshold_delivery}% of Accepted orders."
+                    suggestion = "Investigate shipping delays or increase logistics capacity."
+                    if time_period == 'hour':
+                        alert_msg += " (Hourly delivery lag detected)"
+                    alerts.append({'trend_alert': alert_msg, 'suggestion': suggestion})
+
+                # Rule 4: Rapid Increase in Ready to Ship
+                threshold_increase = 1.5 if time_period in ['day', 'month'] else 2.0
+                if first_half_avg['Ready to ship'] > 0 and second_half_avg['Ready to ship'] > first_half_avg['Ready to ship'] * threshold_increase:
+                    alert_msg = f"Warning: Ready to Ship orders have increased by over {int((threshold_increase - 1) * 100)}% in the second half."
+                    suggestion = "Ensure warehouse capacity and staffing to handle the surge."
+                    if time_period == 'hour':
+                        alert_msg += " (Hourly surge detected)"
+                    alerts.append({'trend_alert': alert_msg, 'suggestion': suggestion})
+
+                # Rule 5: Stagnant On Shipping
+                if first_half_avg['On shipping'] >= second_half_avg['On shipping'] and second_half_avg['Ready to ship'] > first_half_avg['Ready to ship']:
+                    alert_msg = "Warning: On Shipping orders are stagnant or decreasing while Ready to Ship increases."
+                    suggestion = "Check for logistics bottlenecks or improve shipping process efficiency."
+                    if time_period == 'hour':
+                        alert_msg += " (Hourly bottleneck possible)"
+                    alerts.append({'trend_alert': alert_msg, 'suggestion': suggestion})
+
+            response_data = {
+                'alerts': alerts,
+                'time_period': time_period,
+                'start_date': start_date.strftime('%Y-%m-%d'),
+                'end_date': end_date.strftime('%Y-%m-%d')
+            }
+            return JsonResponse(response_data)
+
+        except json.JSONDecodeError as e:
+            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+        except ValueError as e:
+            return JsonResponse({'error': f'Invalid date format: {str(e)}'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f'Unexpected error: {str(e)}'}, status=500)
+    return HttpResponse('You are not authorized to view this page', status=403)
+
+@login_required(login_url='login')
+def get_user_alerts(request):
+    if request.method == 'POST' and request.user.is_superuser:
+        try:
+            data = json.loads(request.body)
+            start_date = parse_datetime(data['start_date'])
+            end_date = parse_datetime(data['end_date'])
+            end_date = end_date + timedelta(days=1)
+        except (ValueError, KeyError):
+            return JsonResponse({'error': 'Invalid data'}, status=400)
+
+        # Check if date range is exactly 1 day
+        date_range = (end_date - start_date).days
+        if date_range != 1:
+            return JsonResponse({'alerts': [{'trend_alert': 'No significant user activity detected.', 'suggestion': 'System is operating normally.'}]})
+
+        # Aggregate login events for the day
+        login_events = EventUser.objects.filter(
+            event_timestamp__range=[start_date, end_date],
+            event_type='login'
+        ).annotate(hour=ExtractHour('event_timestamp')).values('hour').annotate(count=Count('id')).order_by('hour')
+        login_data = [0] * 24  # Hourly data for the day
+        for event in login_events:
+            hour_index = event['hour']
+            if hour_index < 24:
+                login_data[hour_index] += event['count']
+
+        # Get users who have not placed orders in the date range
+        ordered_users = Order.objects.filter(
+            created_at__range=[start_date, end_date],
+            is_ordered=True
+        ).values_list('user', flat=True).distinct()
+        all_users = Account.objects.values_list('id', flat=True)
+        inactive_users = set(all_users) - set(ordered_users)
+
+        alerts = []
+        total_users = len(all_users)
+        inactive_count = len(inactive_users)
+
+        # Rule: High percentage of users with no orders
+        if total_users > 0 and (inactive_count / total_users) * 100 > 90:  # More than 90% inactive
+            alert_msg = f"{inactive_count} out of {total_users} users ({(inactive_count/total_users*100):.1f}%) did not place orders today."
+            suggestion = "Consider targeted promotions or engagement campaigns to activate inactive users."
+            alerts.append({'trend_alert': alert_msg, 'suggestion': suggestion})
+
+        # Rule: Low login activity
+        if sum(login_data) < 10:  # Less than 10 logins in the day
+            alert_msg = "Low user login activity detected today."
+            suggestion = "Consider sending reminders or notifications to encourage user engagement."
+            alerts.append({'trend_alert': alert_msg, 'suggestion': suggestion})
+
+        # Rule: High login in an hour
+        high_login_hour = max(login_data)
+        if high_login_hour > 5:  # More than 5 logins in any hour
+            high_login_hour_index = login_data.index(high_login_hour)
+            alert_msg = f"High user login activity detected at hour {high_login_hour_index}:00 with {high_login_hour} logins."
+            suggestion = "Monitor system performance and consider scaling resources if needed."
+            alerts.append({'trend_alert': alert_msg, 'suggestion': suggestion})
+
+        response_data = {
+            'alerts': alerts if alerts else [{'trend_alert': 'No significant user activity detected.', 'suggestion': 'System is operating normally.'}]
+        }
+        return JsonResponse(response_data)
+
+    return HttpResponse('You are not authorized to view this page', status=403)
+
+# Fetch API key from environment variables
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+if not GEMINI_API_KEY:
+    raise ValueError("GEMINI_API_KEY must be set in environment variables")
+
+GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
+
+@login_required(login_url='login')
+def get_gemini_chat(request):
+    if request.method == 'POST' and request.user.is_superuser:
+        try:
+            if not request.body:
+                return JsonResponse({'error': 'Empty request body'}, status=400)
+            
+            data = json.loads(request.body)
+            
+            start_date_str = data.get('start_date', '2025-06-01')
+            end_date_str = data.get('end_date', '2025-06-17')
+            time_period = data.get('time_period', 'day').lower()
+            user_message = data.get('user_message', '').strip()
+            context = data.get('context', 'order').lower()
+            alerts = data.get('alerts', [])  # Alerts provided by front-end
+
+            if time_period not in ['hour', 'day', 'month']:
+                return JsonResponse({'error': f'Invalid time_period: {time_period}'}, status=400)
+            
+            try:
+                start_date = parse_date(start_date_str).date()
+                end_date = parse_date(end_date_str).date()
+            except (ValueError, TypeError) as e:
+                return JsonResponse({'error': f'Invalid date format: {str(e)}'}, status=400)
+            
+            today = timezone.now().date()
+            if end_date > today:
+                end_date = today
+            if start_date > end_date:
+                return JsonResponse({'error': 'Start date cannot be after end date'}, status=400)
+
+            if not user_message:  # Initial rule-based response
+                response_text = f'Analyzing {context.replace("users", "Current Users").replace("order", "Order Details")} from {start_date} to {end_date} with {time_period} granularity.'
+                if alerts:
+                    response_text += ' Alerts:'
+                    for i, alert in enumerate(alerts, 1):
+                        response_text += f' {i}. {alert.get("trend_alert", "No alert description")} Suggestion: {alert.get("suggestion", "No suggestion available")}.'
+                else:
+                    response_text += ' No alerts available for the selected period.'
+                response_text += ' That’s the overview! Let me know if you’d like more details or have other questions.'
+            else:  # Follow-up response using Gemini
+                # Prepare context for Gemini with detailed data
+                context_data = f"Data from {start_date} to {end_date} with {time_period} granularity. Alerts: {json.dumps(alerts)}. "
+                prompt = f"{context_data} User asked: {user_message}. Provide a concise response with short, precise suggestions, using **bold** for key points and newlines where needed."
+
+                # Call Gemini API
+                headers = {'Content-Type': 'application/json'}
+                payload = {
+                    "contents": [{
+                        "parts": [{
+                            "text": prompt
+                        }]
+                    }]
+                }
+                response = requests.post(GEMINI_API_URL, headers=headers, json=payload)
+                response.raise_for_status()
+                gemini_response = response.json()
+
+                # Extract the response text from Gemini
+                try:
+                    response_text = gemini_response['candidates'][0]['content']['parts'][0]['text']
+                except (KeyError, IndexError) as e:
+                    response_text = "Sorry, I couldn’t process that request. Please try again."
+
+            response_data = {
+                'alerts': alerts if not user_message else [],  # Pass back alerts for initial response
+                'response': response_text
+            }
+            return JsonResponse(response_data)
+
+        except requests.exceptions.RequestException as e:
+            return JsonResponse({'error': f'API request failed: {str(e)}'}, status=500)
+        except json.JSONDecodeError as e:
+            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+        except ValueError as e:
+            return JsonResponse({'error': f'Invalid date format: {str(e)}'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f'Unexpected error: {str(e)}'}, status=500)
+    return HttpResponse('You are not authorized to view this page', status=403)

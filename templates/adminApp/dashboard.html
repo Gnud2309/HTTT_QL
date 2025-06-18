@@ -97,8 +97,8 @@
                                 <div class="card-header justify-content-between">
                                     <h2>Order Details</h2>
                                     <div class="date-range-report">
-                                        <input type="hidden" class="start_date" name="start_date">
-                                        <input type="hidden" class="end_date" name="end_date">
+                                        <input type="hidden" class="start_date" name="start_date" id="orderStartDate">
+                                        <input type="hidden" class="end_date" name="end_date" id="orderEndDate">
                                         <span></span>
                                     </div>
                                 </div>
@@ -108,6 +108,8 @@
                                             <canvas id="activity" class="chartjs"></canvas>
                                         </div>
                                     </div>
+                                    <!-- Alert Section within Order Details -->
+                                    <div id="order-alerts" style="margin-top: 15px;"></div>
                                 </div>
                                 <div class="card-footer d-flex flex-wrap bg-white border-top">
                                     <div class="form-group row">
@@ -123,7 +125,6 @@
                         </div>
                     </div>
                 </div>
-
 
                 <div class="col-xl-4 col-md-12 p-b-15">
                     <!-- Doughnut Chart -->
@@ -239,13 +240,16 @@
                         <div class="card-header justify-content-between">
                             <h2>Current Users</h2>
                             <div class="date-range-report">
-                                <input type="hidden" class="start_date" name="start_date">
-                                <input type="hidden" class="end_date" name="end_date">
+                                <input type="hidden" class="start_date" name="start_date" id="currentUserStartDate">
+                                <input type="hidden" class="end_date" name="end_date" id="currentUserEndDate">
                                 <span></span>
                             </div>
                         </div>
                         <div class="card-body">
                             <canvas id="currentUser" class="chartjs"></canvas>
+                        </div>
+                        <div class="alert-container">
+                            <div id="user-alerts" style="padding-left: 20px; padding-right: 20px; padding-bottom: 10px;"></div>
                         </div>
                         <div class="card-footer d-flex flex-wrap bg-white border-top">
                             <a href="#" class="text-uppercase py-3">In-Detail Overview</a>
@@ -494,7 +498,39 @@
             </div>
         </div>
     </div>
+
+    <!-- AI Discuss Button -->
+    <button id="ai-discuss-btn" class="btn btn-primary btn-lg shadow-sm d-flex align-items-center" style="position: fixed; bottom: 20px; right: 20px; z-index: 1001; border-radius: 50px; padding: 10px 20px;">
+        <i class="mdi mdi-comment-text-outline mr-2"></i> AI Insights
+    </button>
+
+    <!-- Chatbox -->
+    <div id="chatbox" class="card shadow-lg" style="display: none; position: fixed; bottom: 80px; right: 20px; width: 350px; max-width: 90%; height: 450px; z-index: 1000; border-radius: 10px; overflow: hidden;">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center" style="padding: 10px 15px;">
+            <h5 class="mb-0">AI Insights Chat</h5>
+            <button id="chat-close" class="btn btn-sm btn-light p-1" style="border-radius: 50%;">
+                <i class="mdi mdi-close"></i>
+            </button>
+        </div>
+        <div id="chat-messages" class="card-body" style="height: 340px; overflow-y: auto; background: #f8f9fa;">
+            <div id="chat-loading" style="display: none; text-align: center; padding: 10px;">
+                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer bg-white p-2">
+            <div class="input-group">
+                <input type="text" id="chat-input" class="form-control" placeholder="Ask about order insights..." aria-label="Chat input" style="border-radius: 20px 0 0 20px;">
+                <button id="chat-send" class="btn btn-primary" style="border-radius: 0 20px 20px 0;">
+                    <i class="mdi mdi-send"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
+
 {% block jsblock %}
     <script src="{% static 'adminapp/assets/js/chart.js' %}"></script>
     <script src="{% static 'adminapp/assets/js/excel.js' %}"></script>
@@ -601,7 +637,7 @@
             function updateCharts() {
                 // Only update charts if they're ready
                 if (!chartsReady) {
-                    console.log('Charts not ready yet, skipping update');
+                    // console.log('Charts not ready yet, skipping update');
                     return;
                 }
 
@@ -741,7 +777,7 @@
                         hbChart1.update('none');
                     }
 
-                    console.log('All charts updated successfully');
+                    // console.log('All charts updated successfully');
                 }).fail(function(xhr, status, error) {
                     console.error('Error updating charts:', error);
                 });
@@ -750,9 +786,7 @@
             function update() {
                 $.ajax({
                     type: "POST",
-                    headers: {
-                        'X-CSRFToken': getCSRFToken()
-                    },
+                    headers: { 'X-CSRFToken': getCSRFToken() },
                     url: "{% url 'update_dash' %}",
                     dataType: 'json',
                     success: function (response) {
@@ -762,105 +796,344 @@
                         $('.daily-payment').text(response.daily_total_order);
                     },
                     error: function (xhr, status, error) {
-                        console.log("Error: " + error);
-                        console.log("Status: " + status);
-                        console.log(xhr.responseText);
+                        console.error('Dashboard Update Error:', status, error);
                     }
-                })
+                });
             }
 
-            // Initial updates
-            update();
-            loadTopProducts(); // Load top products on page load
-            loadNewCustomers(); // Load new customers on page load
-            
-            // Initial chart update with small delay to ensure charts are ready
-            setTimeout(function() {
-                updateCharts();
-            }, 200);
+            function updateAlerts() {
+                var odStartDate = $('#user-activity .start_date').val();
+                var odEndDate = $('#user-activity .end_date').val();
+                var cuStartDate = $('#user-overview .start_date').val();
+                var cuEndDate = $('#user-overview .end_date').val();
+                var timePeriod = $('#order-time').val();
+                
+                if (!odStartDate || !odEndDate || !timePeriod) {
+                    console.error('Invalid inputs: odStartDate=', odStartDate, 'odEndDate=', odEndDate, 'timePeriod=', timePeriod);
+                    $('#order-alerts').html('<div class="alert alert-danger" role="alert">Please select start date, end date, and time period.</div>');
+                    return;
+                }
 
-            // Set intervals for updates
-            setInterval(update, 5000);
-            setInterval(updateCharts, 5000);
-            setInterval(loadTopProducts, 5000); // Refresh top products every 30 seconds
-            setInterval(loadNewCustomers, 5000); // Refresh new customers every 30 seconds
-
-            // Function to load new customers from API
-            function loadNewCustomers() {
-                // Show loading indicator
-                $('#new-customers-loading').show();
-                $('#new-customers-error').hide();
-                $('#new-customers-table').hide();
-                $('#new-customers-list').empty();
+                if (odStartDate > odEndDate) {
+                    console.error('Start date is after end date:', odStartDate, '>', odEndDate);
+                    $('#order-alerts').html('<div class="alert alert-danger" role="alert">Start date cannot be after end date.</div>');
+                    return;
+                }
+                
+                console.log('Fetching alerts with odStartDate:', odStartDate, 'odEndDate:', odEndDate, 'timePeriod:', timePeriod);
 
                 $.ajax({
-                    url: 'http://localhost:5000/api/v1/gold/top-new-user-province',
-                    type: 'GET',
+                    type: "POST",
+                    headers: { 'X-CSRFToken': getCSRFToken() },
+                    url: "{% url 'get_order_alerts' %}",
+                    data: JSON.stringify({ start_date: odStartDate, end_date: odEndDate, time_period: timePeriod }),
+                    contentType: "application/json",
                     dataType: 'json',
-                    crossDomain: true,
-                    success: function(response) {
-                        $('#new-customers-loading').hide();
-                        
-                        if (response.success && response.data && response.data.length > 0) {
-                            displayNewCustomers(response.data);
+                    success: function (response) {
+                        console.log('AJAX Response:', response);
+                        var alertContainer = $('#order-alerts');
+                        alertContainer.empty();
+                        if (response.alerts && response.alerts.length > 0) {
+                            console.log('Number of alerts received:', response.alerts.length);
+                            response.alerts.forEach(function(alert, index) {
+                                var alertDiv = $(`
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert" style="margin-bottom: 10px;">
+                                        <strong>Alert:</strong> <span class="trend-alert">${alert.trend_alert}</span><br>
+                                        <strong>Suggestion:</strong> <span class="suggestion">${alert.suggestion}</span>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                `);
+                                alertContainer.append(alertDiv);
+                                console.log('Added alert at index', index, 'with:', alert);
+                            });
                         } else {
-                            $('#new-customers-list').html('<tr><td colspan="2" class="text-center text-muted">No new customers data available</td></tr>');
-                            $('#new-customers-table').show();
+                            console.log('No alerts in response');
+                            alertContainer.append('<div class="alert alert-info" role="alert">No alerts available for the selected period.</div>');
                         }
                     },
-                    error: function(xhr, status, error) {
-                        console.error('Error loading new customers:', error);
-                        $('#new-customers-loading').hide();
-                        $('#new-customers-error').show();
+                    error: function (xhr, status, error) {
+                        console.error('Alert Update Error:', status, error, 'Response:', xhr.responseText);
+                        $('#order-alerts').html(`<div class="alert alert-danger" role="alert">Failed to load alerts: ${xhr.responseText || error}</div>`);
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    headers: { 'X-CSRFToken': getCSRFToken() },
+                    url: "{% url 'get_user_alerts' %}",  // Ensure this matches the view name
+                    data: JSON.stringify({ start_date: cuStartDate, end_date: cuEndDate }),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log('User Alert Response:', response);
+                        var userAlertContainer = $('#user-alerts');
+                        userAlertContainer.empty();
+                        if (response.alerts && response.alerts.length > 0) {
+                            response.alerts.forEach(function(alert, index) {
+                                var alertDiv = $(`
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert" style="margin-bottom: 10px;">
+                                        <strong>Alert:</strong> <span class="trend-alert">${alert.trend_alert}</span><br>
+                                        <strong>Suggestion:</strong> <span class="suggestion">${alert.suggestion}</span>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                `);
+                                userAlertContainer.append(alertDiv);
+                            });
+                        } else {
+                            userAlertContainer.append('<div class="alert alert-info" role="alert">No user alerts available for the selected period.</div>');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('User Alert Update Error:', status, error, 'Response:', xhr.responseText);
+                        $('#user-alerts').html(`<div class="alert alert-danger" role="alert">Failed to load user alerts: ${xhr.responseText || error}</div>`);
                     }
                 });
             }
 
-            // Function to display new customers
-            function displayNewCustomers(customers) {
-                var customersHtml = '';
-                
-                customers.forEach(function(customer, index) {
-                    // Use default user image or generate based on index
-                    var userImage = "{% static 'adminapp/assets/img/user/u' %}" + ((index % 5) + 1) + ".jpg";
-                    
-                    customersHtml += `
-                        <tr>
-                            <td>
-                                <div class="media">
-                                    <div class="media-image mr-3 rounded-circle">
-                                        <a href="#"><img class="profile-img rounded-circle w-45" src="${userImage}" alt="province icon"></a>
-                                    </div>
-                                    <div class="media-body align-self-center">
-                                        <a href="#">
-                                            <h6 class="mt-0 text-dark font-weight-medium">${customer.province}</h6>
-                                        </a>
-                                        <small>Province</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-dark font-weight-medium">${customer.count} Users</td>
-                        </tr>
-                    `;
-                });
-                
-                $('#new-customers-list').html(customersHtml);
-                $('#new-customers-table').show();
+            // Store previous values to detect changes
+            let prevCuStartDate = $('#user-overview .start_date').val();
+            let prevCuEndDate = $('#user-overview .end_date').val();
+            let prevOdStartDate = $('#user-activity .start_date').val();
+            let prevOdEndDate = $('#user-activity .end_date').val();
+
+            // Function to check and update alerts
+            function checkAndUpdateAlerts() {
+                var cuStartDate = $('#user-overview .start_date').val();
+                var cuEndDate = $('#user-overview .end_date').val();
+                var odStartDate = $('#user-activity .start_date').val();
+                var odEndDate = $('#user-activity .end_date').val();
+
+                // Check if Current Users dates changed
+                if (cuStartDate !== prevCuStartDate || cuEndDate !== prevCuEndDate) {
+                    console.log('Current Users date range changed:', cuStartDate, cuEndDate);
+                    prevCuStartDate = cuStartDate;
+                    prevCuEndDate = cuEndDate;
+                    updateAlerts(); // Trigger user alerts
+                }
+
+                // Check if Order Details dates changed
+                if (odStartDate !== prevOdStartDate || odEndDate !== prevOdEndDate) {
+                    console.log('Order Details date range changed:', odStartDate, odEndDate);
+                    prevOdStartDate = odStartDate;
+                    prevOdEndDate = odEndDate;
+                    updateAlerts(); // Trigger order alerts
+                }
             }
 
-            // Make loadNewCustomers globally accessible
-            window.loadNewCustomers = loadNewCustomers;
+            // Poll every 2 seconds to detect changes in hidden inputs
+            setInterval(checkAndUpdateAlerts, 2000);
 
-            // Event handlers for new customers
-            $('#refresh-new-customers').click(function() {
-                loadNewCustomers();
-            });
+            $('#order-time').on('change', updateAlerts);
+            $('#user-activity .start_date, #user-activity .end_date').on('change', updateAlerts);
+            $('#user-overview .start_date, #user-overview .end_date').on('change', updateAlerts);
+            update();
+            updateAlerts();
+            setInterval(update, 6000);
 
-            $('#update-new-customers').click(function(e) {
-                e.preventDefault();
-                loadNewCustomers();
+            let chatVisible = false;
+            let lastContext = 'order'; // Track last selected context
+
+            function toggleChatbox() {
+                chatVisible = !chatVisible;
+                $('#chatbox').toggle(chatVisible);
+                if (chatVisible) {
+                    // Only load initial response if chat is empty
+                    console.log($('#chat-messages').children());
+                    if ($('#chat-messages').children().length === 1) {
+                        loadChatInitialResponse();
+                    }
+                    $('#chat-input').focus();
+                    fetchInitialAlerts(); // Keep this to ensure alerts are fetched
+                }
+            }
+
+            $('#ai-discuss-btn').on('click', toggleChatbox);
+            $('#chat-close').on('click', toggleChatbox);
+
+            function appendMessage(sender, message, isError = false, isInteractive = false) {
+                const chatMessages = $('#chat-messages');
+                const messageClass = isError ? 'text-danger' : sender === 'You' ? 'text-end bg-light p-2 rounded' : 'p-2 rounded';
+                const senderColor = isError ? '' : sender === 'You' ? 'text-primary' : 'text-dark';
+                let messageHtml = `
+                    <div class="mb-2 ${messageClass}">
+                        <strong class="${senderColor}">${sender}:</strong> ${message}
+                    </div>
+                `;
+                if (isInteractive) {
+                    messageHtml = `
+                        <div class="mb-2 p-2 rounded" style="background: #e9ecef;">
+                            <strong class="text-dark">${sender}:</strong> ${message}
+                            <button class="btn btn-sm btn-primary mt-2 mr-2" id="chat-option-order">Order Details</button>
+                            <button class="btn btn-sm btn-info mt-2" id="chat-option-users">Current Users</button>
+                        </div>
+                    `;
+                }
+                chatMessages.append(messageHtml);
+                chatMessages.scrollTop(chatMessages[0].scrollHeight);
+
+                if (isInteractive) {
+                    $('#chat-option-order').on('click', function() {
+                        handleChatOption('order');
+                    });
+                    $('#chat-option-users').on('click', function() {
+                        handleChatOption('users');
+                    });
+                }
+            }
+
+            function showLoading(show) {
+                $('#chat-loading').toggle(show);
+            }
+
+            function fetchInitialAlerts() {
+                showLoading(true);
+                updateAlerts(); // Reuse existing alert update logic
+                showLoading(false); // Hide loading after alerts are updated
+            }
+
+            function handleChatOption(option) {
+                showLoading(true);
+                const startDate = option === 'order' ? $('#user-activity .start_date').val() || '2025-06-01' : $('#user-overview .start_date').val() || '2025-06-01';
+                const endDate = option === 'order' ? $('#user-activity .end_date').val() || '2025-06-17' : $('#user-overview .end_date').val() || '2025-06-17';
+                const timePeriod = $('#order-time').val() || 'day';
+                const context = option;
+
+                if (!startDate || !endDate || !timePeriod) {
+                    console.error('Invalid data for', option, ':', { startDate, endDate, timePeriod });
+                    appendMessage('System', 'Data not available. Please ensure dates are set.', true);
+                    showLoading(false);
+                    return;
+                }
+
+                lastContext = context; // Update last context
+                $('#chat-option-' + option).addClass('active').siblings().removeClass('active');
+
+                // Get current alerts from the DOM
+                const alerts = context === 'order' 
+                    ? $('#order-alerts .alert-warning').map(function() {
+                        return {
+                            trend_alert: $(this).find('.trend-alert').text(),
+                            suggestion: $(this).find('.suggestion').text(),
+                            alert_type: 'Trend' // Assuming trend alerts based on your HTML
+                        };
+                    }).get()
+                    : $('#user-alerts .alert-warning').map(function() {
+                        return {
+                            trend_alert: $(this).find('.trend-alert').text(),
+                            suggestion: $(this).find('.suggestion').text(),
+                            alert_type: 'Trend'
+                        };
+                    }).get();
+
+                const csrfToken = getCSRFToken();
+                $.ajax({
+                    type: "POST",
+                    headers: { 'X-CSRFToken': csrfToken },
+                    url: "{% url 'get_gemini_chat' %}",
+                    data: JSON.stringify({ start_date: startDate, end_date: endDate, time_period: timePeriod, context: context, alerts: alerts }),
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log('Chat Option Response:', response);
+                        appendMessage('AI Insights', formatChatResponse(response, startDate, endDate, timePeriod));
+                        showLoading(false);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Chat Option Error:', status, error, 'Response:', xhr.responseText);
+                        appendMessage('System', `Error: ${xhr.responseText || error}`, true);
+                        showLoading(false);
+                    }
+                });
+            }
+
+            function loadChatInitialResponse() {
+                showLoading(true);
+                appendMessage('AI Insights', 'Hello! I can provide insights on your data. Please select a topic:', false, true);
+                showLoading(false);
+            }
+
+            function formatChatResponse(response, startDate, endDate, timePeriod, userInput = null) {
+                let formatted = ``;
+                if (!userInput) {  // Initial response or option selection
+                    let alerts = response.alerts || [];
+                    if (alerts.length > 0) {
+                        formatted += `Here are the insights for the period from ${startDate} to ${endDate} (${timePeriod.charAt(0).toUpperCase() + timePeriod.slice(1)}):<br><br>`;
+                        alerts.forEach(alert => {
+                            formatted += `<span>- <strong>Alert Type:</strong> ${alert.alert_type || 'Trend'}</span><br>`;
+                            formatted += `<span>- <strong>Description:</strong> ${alert.trend_alert || 'No specific trend detected.'}</span><br>`;
+                            formatted += `<span>- <strong>Suggestion:</strong> ${alert.suggestion || 'No suggestion available.'}</span><br><br>`;
+                        });
+                    } else {
+                        formatted += `No alerts or insights available for the period from ${startDate} to ${endDate}.<br><br>`;
+                    }
+                    formatted += `<span>Ask me more about this topic or switch to another!</span>`;
+                } else {  // Follow-up response using Gemini
+                    let geminiText = response.response || 'No response available.';
+                    geminiText = geminiText.replace(/\n/g, '<br>');
+                    geminiText = geminiText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    formatted += geminiText;
+                }
+                return formatted;
+            }
+
+            $('#chat-send').on('click', function() {
+                const userInput = $('#chat-input').val().trim();
+                console.log('User input captured:', userInput);
+                if (userInput) {
+                    appendMessage('You', userInput);
+                    $('#chat-input').val('');
+                    showLoading(true);
+
+                    const startDate = lastContext === 'order' ? $('#user-activity .start_date').val() || '2025-06-01' : $('#user-overview .start_date').val() || '2025-06-01';
+                    const endDate = lastContext === 'order' ? $('#user-activity .end_date').val() || '2025-06-17' : $('#user-overview .end_date').val() || '2025-06-17';
+                    const timePeriod = $('#order-time').val() || 'day';
+                    const context = lastContext;
+
+                    if (!startDate || !endDate || !timePeriod) {
+                        console.error('Invalid chat send inputs:', { startDate, endDate, timePeriod });
+                        appendMessage('System', 'Please select valid start date, end date, and time period.', true);
+                        showLoading(false);
+                        return;
+                    }
+
+                    // Get current alerts from the DOM
+                    const alerts = context === 'order' 
+                        ? $('#order-alerts .alert-warning').map(function() {
+                            return {
+                                trend_alert: $(this).find('.trend-alert').text(),
+                                suggestion: $(this).find('.suggestion').text(),
+                                alert_type: 'Trend'
+                            };
+                        }).get()
+                        : $('#user-alerts .alert-warning').map(function() {
+                            return {
+                                trend_alert: $(this).find('.trend-alert').text(),
+                                suggestion: $(this).find('.suggestion').text(),
+                                alert_type: 'Trend'
+                            };
+                        }).get();
+
+                    const csrfToken = getCSRFToken();
+                    $.ajax({
+                        type: "POST",
+                        headers: { 'X-CSRFToken': csrfToken },
+                        url: "{% url 'get_gemini_chat' %}",
+                        data: JSON.stringify({ start_date: startDate, end_date: endDate, time_period: timePeriod, user_message: userInput, context: context, alerts: alerts }),
+                        contentType: "application/json",
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log('Chat Send Response:', response);
+                            appendMessage('AI Insights', formatChatResponse(response, startDate, endDate, timePeriod, userInput));
+                            showLoading(false);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Chat Send Error:', status, error, 'Response:', xhr.responseText);
+                            appendMessage('System', `Error: ${xhr.responseText || error}`, true);
+                            showLoading(false);
+                        }
+                    });
+                }
             });
-        })
+        });
     </script>
 {% endblock %}
-			

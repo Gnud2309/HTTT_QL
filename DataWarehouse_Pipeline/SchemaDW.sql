@@ -1,5 +1,5 @@
--- CREATE DATABASE DataWarehouse;
--- GO
+CREATE DATABASE DataWarehouse;
+ GO
 
 USE DataWarehouse;
 GO
