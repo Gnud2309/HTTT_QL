@@ -1194,27 +1194,7 @@ def get_order_alerts(request):
                         alert_msg += " (Hourly cancellations may indicate specific issues)"
                     alerts.append({'trend_alert': alert_msg, 'suggestion': suggestion})
 
-                # Rule 3: Low Delivery Rate
-                accepted_total = sum(daily_counts.get(time_key, {}).get('Accepted', 0) for time_key in daily_counts)
-                delivered_total = sum(daily_counts.get(time_key, {}).get('Delivered', 0) for time_key in daily_counts)
-                threshold_delivery = 20 if time_period in ['day', 'month'] else 10
-                if accepted_total > 0 and (delivered_total / accepted_total) * 100 < threshold_delivery:
-                    alert_msg = f"Warning: Delivered orders are less than {threshold_delivery}% of Accepted orders."
-                    suggestion = "Investigate shipping delays or increase logistics capacity."
-                    if time_period == 'hour':
-                        alert_msg += " (Hourly delivery lag detected)"
-                    alerts.append({'trend_alert': alert_msg, 'suggestion': suggestion})
-
-                # Rule 4: Rapid Increase in Ready to Ship
-                threshold_increase = 1.5 if time_period in ['day', 'month'] else 2.0
-                if first_half_avg['Ready to ship'] > 0 and second_half_avg['Ready to ship'] > first_half_avg['Ready to ship'] * threshold_increase:
-                    alert_msg = f"Warning: Ready to Ship orders have increased by over {int((threshold_increase - 1) * 100)}% in the second half."
-                    suggestion = "Ensure warehouse capacity and staffing to handle the surge."
-                    if time_period == 'hour':
-                        alert_msg += " (Hourly surge detected)"
-                    alerts.append({'trend_alert': alert_msg, 'suggestion': suggestion})
-
-                # Rule 5: Stagnant On Shipping
+                # Rule 3: Stagnant On Shipping
                 if first_half_avg['On shipping'] >= second_half_avg['On shipping'] and second_half_avg['Ready to ship'] > first_half_avg['Ready to ship']:
                     alert_msg = "Warning: On Shipping orders are stagnant or decreasing while Ready to Ship increases."
                     suggestion = "Check for logistics bottlenecks or improve shipping process efficiency."
