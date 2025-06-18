@@ -1,7 +1,7 @@
 services:
   mysql8-container-new:
     container_name: mysql8-container-new
-    image: mysql:8.0
+    image: mariadb:10.11
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 123

@@ -1,7 +1,7 @@
 import os
 import requests
 from django.contrib.sites.shortcuts import get_current_site
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, Q, F
 from datetime import datetime, timedelta
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -34,13 +34,52 @@ from orders.forms import OrderForm, OrderUpdateForm
 from django.http import HttpResponse, JsonResponse
 from orders.models import Order, OrderProduct, Payment
 from django.contrib import messages
-import json
 import pandas as pd
 from django.utils import timezone
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db.models import Count, Sum, Q
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.paginator import Paginator
+from django.db.models.functions import TruncDay, TruncMonth, TruncYear, ExtractHour
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.conf import settings
+import openpyxl
+from openpyxl.styles import Font, PatternFill, Alignment
+from openpyxl.utils import get_column_letter
+from reportlab.lib.pagesizes import letter, A4
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, Image
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from io import BytesIO
 
+# Đăng ký font Times New Roman từ thư mục fonts
+font_dir = os.path.join(os.path.dirname(__file__), 'fonts')
+try:
+    pdfmetrics.registerFont(TTFont('TimesNewRoman', os.path.join(font_dir, 'TIMES.TTF')))
+    pdfmetrics.registerFont(TTFont('TimesNewRoman-Bold', os.path.join(font_dir, 'TIMESBD.TTF')))
+    
+    # Đăng ký họ font để có thể sử dụng bold/italic trong Paragraph
+    pdfmetrics.registerFontFamily('TimesNewRoman',
+                                 normal='TimesNewRoman',
+                                 bold='TimesNewRoman-Bold',
+                                 italic='TimesNewRoman',
+                                 boldItalic='TimesNewRoman-Bold')
+except Exception as e:
+    print(f"Font registration error: {e}")
+    # Fallback to default fonts if Times New Roman is not available
+    pass
 
 def get_locations(id, parent_id):
     api_url = "https://member.lazada.vn/locationtree/api/getSubAddressList?countryCode=VN"
@@ -1017,3 +1056,420 @@ def process_folder(request):
 #         return JsonResponse({'error': form.errors}, status=400)
     
 #     return JsonResponse({'error': 'Invalid request'}, status=405)
+
+@login_required(login_url='login')
+def download_overall_pdf_report(request):
+    if request.method == 'POST' and request.user.is_superuser:
+        try:
+            data = json.loads(request.body)
+            start_date = parse_datetime(data.get('start_date', timezone.now().strftime('%Y-%m-%d')))
+            end_date = parse_datetime(data.get('end_date', timezone.now().strftime('%Y-%m-%d')))
+            end_date = end_date + timedelta(days=1) - timedelta(seconds=1)
+        except (ValueError, KeyError):
+            start_date = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+            end_date = timezone.now().replace(hour=23, minute=59, second=59, microsecond=999999)
+
+        # Tạo buffer để lưu PDF
+        buffer = BytesIO()
+        
+        # Tạo document PDF
+        doc = SimpleDocTemplate(buffer, pagesize=A4, encoding='utf-8')
+        story = []
+        
+        # Lấy styles
+        styles = getSampleStyleSheet()
+        
+        # Tạo custom styles với font có sẵn
+        title_style = ParagraphStyle(
+            'CustomTitle',
+            parent=styles['Heading1'],
+            fontSize=24,
+            spaceAfter=30,
+            alignment=TA_CENTER,
+            textColor=colors.black,
+            fontName='TimesNewRoman-Bold'
+        )
+        
+        subtitle_style = ParagraphStyle(
+            'CustomSubtitle',
+            parent=styles['Heading2'],
+            fontSize=16,
+            spaceAfter=20,
+            alignment=TA_CENTER,
+            textColor=colors.black,
+            fontName='TimesNewRoman'
+        )
+        
+        header_style = ParagraphStyle(
+            'CustomHeader',
+            parent=styles['Heading3'],
+            fontSize=14,
+            spaceAfter=10,
+            textColor=colors.black,
+            fontName='TimesNewRoman-Bold'
+        )
+        
+        normal_style = ParagraphStyle(
+            'CustomNormal',
+            parent=styles['Normal'],
+            fontSize=10,
+            spaceAfter=6,
+            fontName='TimesNewRoman'
+        )
+        
+        # # Thêm logo vào đầu báo cáo
+        # logo_path = os.path.join(settings.BASE_DIR, 'static', 'webapp', 'assets', 'images', 'logo', 'logo.png')
+        # if os.path.exists(logo_path):
+        #     logo = Image(logo_path, width=1*inch, height=0.5*inch)
+        #     # Tạo table để đặt logo ở góc trái
+        #     logo_table = Table([[logo, '', '']], colWidths=[1.2*inch, 4*inch, 1.2*inch])
+        #     logo_table.setStyle(TableStyle([
+        #         ('ALIGN', (0, 0), (0, 0), 'LEFT'),
+        #         ('VALIGN', (0, 0), (0, 0), 'TOP'),
+        #     ]))
+        #     story.append(logo_table)
+        #     story.append(Spacer(1, 5))
+        
+        # Tiêu đề báo cáo - sử dụng Unicode
+        story.append(Paragraph(safe_unicode_text("BÁO CÁO TỔNG HỢP DOANH THU"), title_style))
+        story.append(Paragraph(safe_unicode_text("Hệ thống Quản lý Bán hàng Trực tuyến"), subtitle_style))
+        story.append(Paragraph(safe_unicode_text(f"Thời gian: {start_date.strftime('%d/%m/%Y')} - {end_date.strftime('%d/%m/%Y')}"), normal_style))
+        story.append(Paragraph(safe_unicode_text(f"Ngày xuất báo cáo: {timezone.now().strftime('%d/%m/%Y %H:%M:%S')}"), normal_style))
+        story.append(Paragraph(safe_unicode_text(f"Người xuất báo cáo: {request.user.full_name}"), normal_style))
+        story.append(Spacer(1, 20))
+        
+        # 1. THỐNG KÊ TỔNG QUAN
+        story.append(Paragraph(safe_unicode_text("1. THỐNG KÊ TỔNG QUAN"), header_style))
+        
+        # Lấy dữ liệu tổng quan
+        total_orders = Order.objects.filter(
+            created_at__gte=start_date,
+            created_at__lte=end_date
+        ).count()
+        
+        total_revenue = Payment.objects.filter(
+            order__created_at__gte=start_date,
+            order__created_at__lte=end_date,
+            order__is_ordered=True
+        ).aggregate(total=Sum('amount_paid'))['total'] or 0
+        
+        total_customers = Account.objects.filter(
+            date_joined__gte=start_date,
+            date_joined__lte=end_date
+        ).count()
+        
+        avg_order_value = total_revenue / total_orders if total_orders > 0 else 0
+        
+        # Bảng thống kê tổng quan
+        overview_data = [
+            [safe_unicode_text('Chỉ tiêu'), safe_unicode_text('Số lượng'), safe_unicode_text('Giá trị')],
+            [safe_unicode_text('Tổng đơn hàng'), str(total_orders), ''],
+            [safe_unicode_text('Tổng doanh thu'), '', f'{total_revenue:,.0f} VND'],
+            [safe_unicode_text('Khách hàng mới'), str(total_customers), ''],
+            [safe_unicode_text('Giá trị đơn hàng trung bình'), '', f'{avg_order_value:,.0f} VND'],
+        ]
+        
+        overview_table = Table(overview_data, colWidths=[3*inch, 1.5*inch, 2*inch])
+        overview_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'TimesNewRoman-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 12),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('FONTNAME', (0, 1), (-1, -1), 'TimesNewRoman'),
+            ('FONTSIZE', (0, 1), (-1, -1), 10),
+        ]))
+        
+        story.append(overview_table)
+        story.append(Spacer(1, 20))
+        
+        # 2. THỐNG KÊ ĐƠN HÀNG THEO TRẠNG THÁI
+        story.append(Paragraph(safe_unicode_text("2. THỐNG KÊ ĐƠN HÀNG THEO TRẠNG THÁI"), header_style))
+        
+        order_status_data = Order.objects.filter(
+            created_at__gte=start_date,
+            created_at__lte=end_date
+        ).values('order_status').annotate(
+            count=Count('id'),
+            total_revenue=Sum('payment__amount_paid')
+        ).order_by('-count')
+        
+        status_table_data = [[safe_unicode_text('Trạng thái'), safe_unicode_text('Số lượng'), safe_unicode_text('Doanh thu (VND)')]]
+        for status in order_status_data:
+            status_table_data.append([
+                safe_unicode_text(status['order_status']),
+                str(status['count']),
+                f"{status['total_revenue'] or 0:,.0f}"
+            ])
+        
+        status_table = Table(status_table_data, colWidths=[2.5*inch, 1.5*inch, 2*inch])
+        status_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'TimesNewRoman-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 12),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('FONTNAME', (0, 1), (-1, -1), 'TimesNewRoman'),
+            ('FONTSIZE', (0, 1), (-1, -1), 10),
+        ]))
+        
+        story.append(status_table)
+        story.append(Spacer(1, 20))
+        
+        # 3. THỐNG KÊ DOANH THU THEO THÀNH PHỐ
+        story.append(Paragraph(safe_unicode_text("3. THỐNG KÊ DOANH THU THEO THÀNH PHỐ"), header_style))
+        
+        city_ids = {
+            'R1973756': safe_unicode_text('TP. Hồ Chí Minh'),
+            'R1875748': safe_unicode_text('An Giang'),
+            'R1873533': safe_unicode_text('Bạc Liêu'),
+            'R1904296': safe_unicode_text('Bà Rịa-Vũng Tàu'),
+            'R1902941': safe_unicode_text('Bắc Giang'),
+            'R1903471': safe_unicode_text('Bắc Kạn'),
+            'R1902690': safe_unicode_text('Bắc Ninh'),
+            'R1875968': safe_unicode_text('Bến Tre'),
+            'R1906037': safe_unicode_text('Bình Dương'),
+            'R1889794': safe_unicode_text('Bình Định'),
+            'R1898841': safe_unicode_text('Bình Phước'),
+            'R1904231': safe_unicode_text('Bình Thuận'),
+            'R1873490': safe_unicode_text('Cà Mau'),
+            'R1844412': safe_unicode_text('Cao Bằng'),
+            'R1874283': safe_unicode_text('Cần Thơ'),
+            'R1891418': safe_unicode_text('Đà Nẵng'),
+            'R1884034': safe_unicode_text('Đắk Lắk'),
+            'R1884042': safe_unicode_text('Đắk Nông'),
+            'R1903340': safe_unicode_text('Điện Biên'),
+            'R1904421': safe_unicode_text('Đồng Nai'),
+            'R1875866': safe_unicode_text('Đồng Tháp'),
+            'R1884018': safe_unicode_text('Gia Lai'),
+            'R1903478': safe_unicode_text('Hà Giang'),
+            'R1902686': safe_unicode_text('Hải Dương'),
+            'R1902682': safe_unicode_text('Hải Phòng'),
+            'R1901010': safe_unicode_text('Hà Nam'),
+            'R1903516': safe_unicode_text('Hà Nội'),
+            'R1898458': safe_unicode_text('Hà Tĩnh'),
+            'R1874249': safe_unicode_text('Hậu Giang'),
+            'R1902973': safe_unicode_text('Hòa Bình'),
+            'R1901032': safe_unicode_text('Hưng Yên'),
+            'R1887959': safe_unicode_text('Khánh Hòa'),
+            'R1874471': safe_unicode_text('Kiên Giang'),
+            'R1879515': safe_unicode_text('Kon Tum'),
+            'R1903322': safe_unicode_text('Lai Châu'),
+            'R5522596': safe_unicode_text('Lạng Sơn'),
+            'R1903400': safe_unicode_text('Lào Cai'),
+            'R1885367': safe_unicode_text('Lâm Đồng'),
+            'R1877236': safe_unicode_text('Long An'),
+            'R1901008': safe_unicode_text('Nam Định'),
+            'R1898509': safe_unicode_text('Nghệ An'),
+            'R1900963': safe_unicode_text('Ninh Bình'),
+            'R1886159': safe_unicode_text('Ninh Thuận'),
+            'R1902930': safe_unicode_text('Phú Thọ'),
+            'R1889204': safe_unicode_text('Phú Yên'),
+            'R1896050': safe_unicode_text('Quảng Bình'),
+            'R1891352': safe_unicode_text('Quảng Nam'),
+            'R1890793': safe_unicode_text('Quảng Ngãi'),
+            'R1902947': safe_unicode_text('Quảng Ninh'),
+            'R1895630': safe_unicode_text('Quảng Trị'),
+            'R1873632': safe_unicode_text('Sóc Trăng'),
+            'R1903291': safe_unicode_text('Sơn La'),
+            'R1898961': safe_unicode_text('Tây Ninh'),
+            'R1901019': safe_unicode_text('Thái Bình'),
+            'R1902967': safe_unicode_text('Thái Nguyên'),
+            'R1898590': safe_unicode_text('Thanh Hóa'),
+            'R1891483': safe_unicode_text('Thừa Thiên-Huế'),
+            'R1876011': safe_unicode_text('Tiền Giang'),
+            'R1873642': safe_unicode_text('Trà Vinh'),
+            'R1903418': safe_unicode_text('Tuyên Quang'),
+            'R1875887': safe_unicode_text('Vĩnh Long'),
+            'R1902889': safe_unicode_text('Vĩnh Phúc'),
+            'R1903199': safe_unicode_text('Yên Bái')
+        }
+        
+        city_revenue_data = Payment.objects.filter(
+            order__created_at__gte=start_date,
+            order__created_at__lte=end_date,
+            order__is_ordered=True,
+            order__city__in=city_ids.keys()
+        ).values('order__city').annotate(
+            total_revenue=Sum('amount_paid'),
+            order_count=Count('order')
+        ).order_by('-total_revenue')
+        
+        city_table_data = [[safe_unicode_text('Thành phố'), safe_unicode_text('Số đơn hàng'), safe_unicode_text('Doanh thu (VND)')]]
+        for city_data in city_revenue_data:
+            city_name = city_ids.get(city_data['order__city'], safe_unicode_text('Khác'))
+            city_table_data.append([
+                city_name,
+                str(city_data['order_count']),
+                f"{city_data['total_revenue']:,.0f}"
+            ])
+        
+        city_table = Table(city_table_data, colWidths=[3*inch, 1.5*inch, 2*inch])
+        city_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'TimesNewRoman-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 12),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('FONTNAME', (0, 1), (-1, -1), 'TimesNewRoman'),
+            ('FONTSIZE', (0, 1), (-1, -1), 10),
+        ]))
+        
+        story.append(city_table)
+        story.append(Spacer(1, 20))
+        
+        # 4. TOP SẢN PHẨM BÁN CHẠY
+        story.append(Paragraph(safe_unicode_text("4. TOP SẢN PHẨM BÁN CHẠY"), header_style))
+        
+        top_products = OrderProduct.objects.filter(
+            order__created_at__gte=start_date,
+            order__created_at__lte=end_date,
+            order__is_ordered=True
+        ).values('product__product_name').annotate(
+            total_quantity=Sum('quantity'),
+            total_revenue=Sum(F('quantity') * F('product_price'))
+        ).order_by('-total_quantity')[:10]
+        
+        product_table_data = [[safe_unicode_text('Tên sản phẩm'), safe_unicode_text('Số lượng bán'), safe_unicode_text('Doanh thu (VND)')]]
+        for product in top_products:
+            product_name = product['product__product_name']
+            if len(product_name) > 40:
+                product_name = product_name[:40] + '...'
+            product_table_data.append([
+                safe_unicode_text(product_name),
+                str(product['total_quantity']),
+                f"{product['total_revenue']:,.0f}"
+            ])
+        
+        product_table = Table(product_table_data, colWidths=[3.5*inch, 1.5*inch, 1.5*inch])
+        product_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'TimesNewRoman-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 12),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('FONTNAME', (0, 1), (-1, -1), 'TimesNewRoman'),
+            ('FONTSIZE', (0, 1), (-1, -1), 10),
+        ]))
+        
+        story.append(product_table)
+        story.append(Spacer(1, 20))
+        
+        # 5. KẾT LUẬN VÀ ĐỀ XUẤT
+        story.append(Paragraph(safe_unicode_text("5. KẾT LUẬN VÀ ĐỀ XUẤT"), header_style))
+        
+        # Tính toán các chỉ số
+        success_rate = (Order.objects.filter(
+            created_at__gte=start_date,
+            created_at__lte=end_date,
+            order_status='Delivered'
+        ).count() / total_orders * 100) if total_orders > 0 else 0
+        
+        top_city = city_revenue_data.first()
+        top_city_name = city_ids.get(top_city['order__city'], safe_unicode_text('Khác')) if top_city else 'N/A'
+        
+        conclusion_text = f"""
+        <b>{safe_unicode_text('Kết luận:')}</b><br/>
+        • {safe_unicode_text('Tổng doanh thu trong kỳ:')} {total_revenue:,.0f} VND<br/>
+        • {safe_unicode_text('Tổng số đơn hàng:')} {total_orders} {safe_unicode_text('đơn')}<br/>
+        • {safe_unicode_text('Tỷ lệ đơn hàng thành công:')} {success_rate:.1f}%<br/>
+        • {safe_unicode_text('Thành phố có doanh thu cao nhất:')} {top_city_name}<br/>
+        • {safe_unicode_text('Giá trị đơn hàng trung bình:')} {avg_order_value:,.0f} VND<br/><br/>
+        
+        <b>{safe_unicode_text('Đề xuất:')}</b><br/>
+        • {safe_unicode_text('Tập trung marketing vào các thành phố có tiềm năng cao')}<br/>
+        • {safe_unicode_text('Tối ưu hóa quy trình xử lý đơn hàng để tăng tỷ lệ thành công')}<br/>
+        • {safe_unicode_text('Phát triển sản phẩm bán chạy để tăng doanh thu')}<br/>
+        • {safe_unicode_text('Cải thiện trải nghiệm khách hàng để tăng giá trị đơn hàng trung bình')}
+        """
+        
+        story.append(Paragraph(conclusion_text, normal_style))
+        story.append(Spacer(1, 30))
+        
+        # Chữ ký - nằm bên phải với khoảng cách để ký tên
+        signature_style = ParagraphStyle(
+            'SignatureStyle',
+            parent=styles['Normal'],
+            fontSize=12,
+            spaceAfter=6,
+            fontName='TimesNewRoman-Bold',
+            alignment=TA_RIGHT,
+            rightIndent=0,
+            leftIndent=0
+        )
+        
+        # Thêm khoảng trống để ký tên
+        story.append(Spacer(1, 50))
+        
+        # Cấu trúc chữ ký theo yêu cầu
+        # 1. Ngày tháng năm
+        current_date = timezone.now()
+        day = current_date.strftime('%d')
+        month = current_date.strftime('%m')
+        year = current_date.strftime('%Y')
+        date_text = f"Hà Nội, ngày {day} tháng {month} năm {year}"
+        story.append(Paragraph(safe_unicode_text(date_text), signature_style))
+        
+        # 2. "Người lập báo cáo"
+        story.append(Paragraph(safe_unicode_text("Người lập báo cáo"), signature_style))
+        
+        # 3. Khoảng cách 2cm (khoảng 0.8 inch)
+        story.append(Spacer(1, 30))
+        
+        # 4. Dòng tên
+        story.append(Paragraph(safe_unicode_text(request.user.full_name), signature_style))
+        
+        # Build PDF
+        doc.build(story)
+        
+        # Lấy PDF từ buffer
+        pdf = buffer.getvalue()
+        buffer.close()
+        
+        # Tạo response
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="bao_cao_tong_hop_{start_date.strftime("%Y%m%d")}_{end_date.strftime("%Y%m%d")}.pdf"'
+        response.write(pdf)
+        
+        return response
+    
+    return HttpResponse("Invalid request", status=400)
+
+def parse_datetime(date_string):
+    """Parse date string to datetime object"""
+    try:
+        return datetime.strptime(date_string, '%Y-%m-%d')
+    except ValueError:
+        return timezone.now()
+
+def parse_date(date_string):
+    """Parse date string to date object"""
+    try:
+        return datetime.strptime(date_string, '%Y-%m-%d').date()
+    except ValueError:
+        return timezone.now().date()
+
+def safe_unicode_text(text):
+    """Convert text to safe Unicode for ReportLab"""
+    if text is None:
+        return ""
+    try:
+        # Ensure text is properly encoded
+        if isinstance(text, bytes):
+            text = text.decode('utf-8')
+        return str(text)
+    except (UnicodeDecodeError, UnicodeEncodeError):
+        # Fallback to ASCII if Unicode fails
+        return str(text).encode('ascii', 'ignore').decode('ascii')

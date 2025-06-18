@@ -18,6 +18,7 @@ urlpatterns = [
     #data export
     path('api/download-order-report/', views.download_order_report, name='download-order-report'),
     path('api/download-export_payments/', views.export_payments_to_excel, name='export_payments_to_excel'),
+    path('api/download-overall-pdf-report/', views.download_overall_pdf_report, name='download-overall-pdf-report'),
 
     #user based urls 
     path('user_list', views.user_list, name='user_list'),
